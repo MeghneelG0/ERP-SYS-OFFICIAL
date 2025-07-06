@@ -1,20 +1,20 @@
-import { notFound } from "next/navigation"
-import { Button } from "@workspace/ui/components/button"
-import Link from "next/link"
-import { ArrowLeft, Edit } from "lucide-react"
-import FormPreview from "@/components/formbuilder/form-preview"
+import { notFound } from "next/navigation";
+import { Button } from "@workspace/ui/components/button";
+import Link from "next/link";
+import { ArrowLeft, Edit } from "lucide-react";
+import FormPreview from "@/components/formbuilder/form-preview";
 
 interface KpiViewPageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 export default async function KpiViewPage({ params }: KpiViewPageProps) {
-  const kpi = await getKpiById(params.id)
+  const kpi = await getKpiById(params.id);
 
   if (!kpi) {
-    notFound()
+    notFound();
   }
 
   if (!kpi.hasForm || !kpi.form) {
@@ -32,7 +32,9 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
 
         <div className="text-center py-12 border rounded-lg bg-gray-50">
           <h3 className="text-lg font-medium mb-2">No form created yet</h3>
-          <p className="text-gray-500 mb-6">This KPI doesn't have an associated form</p>
+          <p className="text-gray-500 mb-6">
+            This KPI doesn't have an associated form
+          </p>
           <Link href={`/kpi/${kpi.id}/form`}>
             <Button>
               <Edit className="mr-2 h-4 w-4" />
@@ -41,7 +43,7 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
           </Link>
         </div>
       </main>
-    )
+    );
   }
 
   return (
@@ -62,13 +64,18 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
           </Link>
         </div>
         <h1 className="text-3xl font-bold mt-4">KPI: {kpi.name}</h1>
-        <p className="text-gray-600 mt-2">View and submit the form for this KPI</p>
+        <p className="text-gray-600 mt-2">
+          View and submit the form for this KPI
+        </p>
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <FormPreview formTitle={kpi.name} elements={kpi.form.elements} kpiId={kpi.id} />
+        <FormPreview
+          formTitle={kpi.name}
+          elements={kpi.form.elements}
+          kpiId={kpi.id}
+        />
       </div>
     </main>
-  )
+  );
 }
-

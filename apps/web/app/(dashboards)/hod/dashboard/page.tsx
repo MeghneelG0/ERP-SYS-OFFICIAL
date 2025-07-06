@@ -1,16 +1,49 @@
 "use client";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
-import { BarChart3, BookOpen, CalendarIcon, FileText, LineChart, PieChart, Users, UserPlus } from "lucide-react"
-import { Button } from "@workspace/ui/components/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Progress } from "@workspace/ui/components/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table"
-import { Badge } from "@workspace/ui/components/badge"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
+import {
+  BarChart3,
+  BookOpen,
+  CalendarIcon,
+  FileText,
+  LineChart,
+  PieChart,
+  Users,
+  UserPlus,
+} from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Progress } from "@workspace/ui/components/progress";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@workspace/ui/components/table";
+import { Badge } from "@workspace/ui/components/badge";
 
 export function DashboardContent() {
-    const [openAssignDialog, setOpenAssignDialog] = useState(false)
+  const [openAssignDialog, setOpenAssignDialog] = useState(false);
   return (
     <div className="mx-auto max-w-7xl">
       <div className="flex items-center justify-between mb-6">
@@ -38,48 +71,64 @@ export function DashboardContent() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Total KPI 3 Entries</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total KPI 3 Entries
+                </CardTitle>
                 <LineChart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">24</div>
-                <p className="text-xs text-muted-foreground">+4 from last month</p>
+                <p className="text-xs text-muted-foreground">
+                  +4 from last month
+                </p>
                 <Progress className="mt-2" value={75} />
               </CardContent>
             </Card>
 
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Total KPI 4 Entries</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total KPI 4 Entries
+                </CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">18</div>
-                <p className="text-xs text-muted-foreground">+2 from last month</p>
+                <p className="text-xs text-muted-foreground">
+                  +2 from last month
+                </p>
                 <Progress className="mt-2" value={60} />
               </CardContent>
             </Card>
 
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Pending Verification</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Pending Verification
+                </CardTitle>
                 <PieChart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">7</div>
-                <p className="text-xs text-muted-foreground">-3 since last week</p>
+                <p className="text-xs text-muted-foreground">
+                  -3 since last week
+                </p>
                 <Progress className="mt-2" value={30} />
               </CardContent>
             </Card>
 
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Completion Rate
+                </CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">92%</div>
-                <p className="text-xs text-muted-foreground">+5% from last month</p>
+                <p className="text-xs text-muted-foreground">
+                  +5% from last month
+                </p>
                 <Progress className="mt-2" value={92} />
               </CardContent>
             </Card>
@@ -89,7 +138,9 @@ export function DashboardContent() {
             <Card className="col-span-4 bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>Recent Submissions</CardTitle>
-                <CardDescription>Latest KPI entries submitted across departments</CardDescription>
+                <CardDescription>
+                  Latest KPI entries submitted across departments
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -104,7 +155,9 @@ export function DashboardContent() {
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell className="font-medium">Computer Science</TableCell>
+                      <TableCell className="font-medium">
+                        Computer Science
+                      </TableCell>
                       <TableCell>KPI 3</TableCell>
                       <TableCell>Web Development</TableCell>
                       <TableCell className="text-right">
@@ -112,7 +165,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Electrical Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Electrical Engineering
+                      </TableCell>
                       <TableCell>KPI 4</TableCell>
                       <TableCell>Power Systems</TableCell>
                       <TableCell className="text-right">
@@ -120,7 +175,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Mechanical Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Mechanical Engineering
+                      </TableCell>
                       <TableCell>KPI 3</TableCell>
                       <TableCell>CAD/CAM</TableCell>
                       <TableCell className="text-right">
@@ -128,7 +185,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Civil Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Civil Engineering
+                      </TableCell>
                       <TableCell>KPI 4</TableCell>
                       <TableCell>Structural Analysis</TableCell>
                       <TableCell className="text-right">
@@ -136,7 +195,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Electronics & Communication</TableCell>
+                      <TableCell className="font-medium">
+                        Electronics & Communication
+                      </TableCell>
                       <TableCell>KPI 3</TableCell>
                       <TableCell>VLSI Design</TableCell>
                       <TableCell className="text-right">
@@ -144,7 +205,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Chemical Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Chemical Engineering
+                      </TableCell>
                       <TableCell>KPI 4</TableCell>
                       <TableCell>Thermodynamics</TableCell>
                       <TableCell className="text-right">
@@ -164,7 +227,9 @@ export function DashboardContent() {
             <Card className="col-span-3 bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>Department Participation</CardTitle>
-                <CardDescription>KPI submission rates by department</CardDescription>
+                <CardDescription>
+                  KPI submission rates by department
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -172,7 +237,9 @@ export function DashboardContent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">Computer Science</span>
+                        <span className="text-sm font-medium">
+                          Computer Science
+                        </span>
                       </div>
                       <span className="text-sm font-medium">95%</span>
                     </div>
@@ -183,7 +250,9 @@ export function DashboardContent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">Electrical Engineering</span>
+                        <span className="text-sm font-medium">
+                          Electrical Engineering
+                        </span>
                       </div>
                       <span className="text-sm font-medium">85%</span>
                     </div>
@@ -194,7 +263,9 @@ export function DashboardContent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">Mechanical Engineering</span>
+                        <span className="text-sm font-medium">
+                          Mechanical Engineering
+                        </span>
                       </div>
                       <span className="text-sm font-medium">78%</span>
                     </div>
@@ -205,7 +276,9 @@ export function DashboardContent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">Civil Engineering</span>
+                        <span className="text-sm font-medium">
+                          Civil Engineering
+                        </span>
                       </div>
                       <span className="text-sm font-medium">65%</span>
                     </div>
@@ -216,7 +289,9 @@ export function DashboardContent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">Electronics & Communication</span>
+                        <span className="text-sm font-medium">
+                          Electronics & Communication
+                        </span>
                       </div>
                       <span className="text-sm font-medium">90%</span>
                     </div>
@@ -232,11 +307,15 @@ export function DashboardContent() {
           <Card className="bg-card text-card-foreground">
             <CardHeader>
               <CardTitle>KPI Analytics</CardTitle>
-              <CardDescription>Detailed analysis of KPI submissions and verification rates</CardDescription>
+              <CardDescription>
+                Detailed analysis of KPI submissions and verification rates
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[400px] w-full rounded-md border border-dashed flex items-center justify-center">
-                <p className="text-muted-foreground">Analytics Dashboard Placeholder</p>
+                <p className="text-muted-foreground">
+                  Analytics Dashboard Placeholder
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -246,17 +325,20 @@ export function DashboardContent() {
           <Card className="bg-card text-card-foreground">
             <CardHeader>
               <CardTitle>Generated Reports</CardTitle>
-              <CardDescription>Download and view generated reports</CardDescription>
+              <CardDescription>
+                Download and view generated reports
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[400px] w-full rounded-md border border-dashed flex items-center justify-center">
-                <p className="text-muted-foreground">Reports Dashboard Placeholder</p>
+                <p className="text-muted-foreground">
+                  Reports Dashboard Placeholder
+                </p>
               </div>
             </CardContent>
           </Card>
-        </TabsContent>              
-
+        </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

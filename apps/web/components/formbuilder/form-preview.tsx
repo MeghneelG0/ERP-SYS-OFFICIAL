@@ -1,45 +1,62 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import type { FormElementInstance } from "@/lib/types"
-import { Checkbox } from "@workspace/ui/components/checkbox"
-import { Input } from "@workspace/ui/components/input"
-import { Label } from "@workspace/ui/components/label"
-import { RadioGroup, RadioGroupItem } from "@workspace/ui/components/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select"
-import { Textarea } from "@workspace/ui/components/textarea"
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Button } from "@workspace/ui/components/button"
-import { Loader2 } from "lucide-react"
-import { toast } from "sonner"
-
-
+import type { FormElementInstance } from "@/lib/types";
+import { Checkbox } from "@workspace/ui/components/checkbox";
+import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@workspace/ui/components/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Button } from "@workspace/ui/components/button";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface FormPreviewProps {
-  formTitle: string
-  elements: FormElementInstance[]
-  description?: string
-  isPreview?: boolean
+  formTitle: string;
+  elements: FormElementInstance[];
+  description?: string;
+  isPreview?: boolean;
 }
 
-export default function FormPreview({ formTitle, elements, description, isPreview = false }: FormPreviewProps) {
-  const [formData, setFormData] = useState<Record<string, any>>({})
-  const [files, setFiles] = useState<Record<string, FileList | null>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export default function FormPreview({
+  formTitle,
+  elements,
+  description,
+  isPreview = false,
+}: FormPreviewProps) {
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [files, setFiles] = useState<Record<string, FileList | null>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (id: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [id]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
   const handleFileChange = (id: string, fileList: FileList | null) => {
-    setFiles((prev) => ({ ...prev, [id]: fileList }))
-  }
-
+    setFiles((prev) => ({ ...prev, [id]: fileList }));
+  };
 
   const renderFormElement = (element: FormElementInstance) => {
-    const { id, type, attributes } = element
+    const { id, type, attributes } = element;
 
     switch (type) {
       case "text":
@@ -57,7 +74,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               required={attributes.required}
             />
           </div>
-        )
+        );
       case "textarea":
         return (
           <div className="space-y-2">
@@ -74,7 +91,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               required={attributes.required}
             />
           </div>
-        )
+        );
       case "number":
         return (
           <div className="space-y-2">
@@ -89,11 +106,13 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               min={attributes.min}
               max={attributes.max}
               value={formData[id] || ""}
-              onChange={(e) => handleChange(id, Number.parseInt(e.target.value))}
+              onChange={(e) =>
+                handleChange(id, Number.parseInt(e.target.value))
+              }
               required={attributes.required}
             />
           </div>
-        )
+        );
       case "select":
         return (
           <div className="space-y-2">
@@ -118,7 +137,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               </SelectContent>
             </Select>
           </div>
-        )
+        );
       case "checkbox":
         return (
           <div className="flex items-center space-x-2">
@@ -133,7 +152,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               {attributes.required && " *"}
             </Label>
           </div>
-        )
+        );
       case "radio":
         return (
           <div className="space-y-2">
@@ -154,7 +173,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               ))}
             </RadioGroup>
           </div>
-        )
+        );
       case "date":
         return (
           <div className="space-y-2">
@@ -170,7 +189,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               required={attributes.required}
             />
           </div>
-        )
+        );
       case "email":
         return (
           <div className="space-y-2">
@@ -187,7 +206,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               required={attributes.required}
             />
           </div>
-        )
+        );
       case "file":
         return (
           <div className="space-y-2">
@@ -217,11 +236,11 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
               </div>
             )}
           </div>
-        )
+        );
       default:
-        return <div>Unknown element type</div>
+        return <div>Unknown element type</div>;
     }
-  }
+  };
 
   if (elements.length === 0) {
     return (
@@ -229,7 +248,7 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
         <p>No form elements added yet</p>
         <p className="text-sm">Add elements to see the preview</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -248,5 +267,5 @@ export default function FormPreview({ formTitle, elements, description, isPrevie
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
