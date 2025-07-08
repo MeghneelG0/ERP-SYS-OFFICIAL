@@ -154,7 +154,7 @@ export default function AssignKpiToDepartmentPage() {
       </div>
 
       {/* Assigned Pillars Section */}
-      {selectedDepartmentId && (
+      {false && selectedDepartmentId && (
         <>
           <h2 className="text-xl font-semibold mb-2">Assigned Pillars</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
@@ -172,8 +172,12 @@ export default function AssignKpiToDepartmentPage() {
               ))
             )}
           </div>
+        </>
+      )}
 
-          {/* Assign Pillar Section */}
+      {/* Assign Pillar Section */}
+      {selectedDepartmentId && (
+        <>
           <h2 className="text-xl font-semibold mb-2">Assign Pillar</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
             {unassignedPillars.length === 0 ? (
