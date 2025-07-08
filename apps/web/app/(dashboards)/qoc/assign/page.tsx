@@ -210,7 +210,7 @@ export default function AssignKpiToDepartmentPage() {
                   id="pillar-select"
                   className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary min-w-[250px]"
                   value={selectedPillarId ?? ""}
-                  onChange={e => handlePillarSelect(e.target.value)}
+                  onChange={(e) => handlePillarSelect(e.target.value)}
                 >
                   <option value="" disabled>
                     Select Pillar
@@ -240,9 +240,15 @@ export default function AssignKpiToDepartmentPage() {
                       fieldsCount={kpi.elements.length}
                       value={kpi.value}
                       assigned
-                      onView={() => {/* TODO: View KPI */}}
-                      onEdit={() => {/* TODO: Edit KPI */}}
-                      onDelete={() => {/* TODO: Delete KPI */}}
+                      onView={() => {
+                        /* TODO: View KPI */
+                      }}
+                      onEdit={() => {
+                        /* TODO: Edit KPI */
+                      }}
+                      onDelete={() => {
+                        /* TODO: Delete KPI */
+                      }}
                       onUnassign={() => handleUnassignKpi(kpi)}
                     />
                   ))
@@ -260,9 +266,15 @@ export default function AssignKpiToDepartmentPage() {
                       description={kpi.description}
                       fieldsCount={kpi.elements.length}
                       value={kpi.value}
-                      onView={() => {/* TODO: View KPI */}}
-                      onEdit={() => {/* TODO: Edit KPI */}}
-                      onDelete={() => {/* TODO: Delete KPI */}}
+                      onView={() => {
+                        /* TODO: View KPI */
+                      }}
+                      onEdit={() => {
+                        /* TODO: Edit KPI */
+                      }}
+                      onDelete={() => {
+                        /* TODO: Delete KPI */
+                      }}
                       onAssign={() => handleAssignKpi(kpi)}
                     />
                   ))
