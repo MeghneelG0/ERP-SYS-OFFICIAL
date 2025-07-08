@@ -24,6 +24,8 @@ import type { AssignKpiPayload } from "@/lib/types";
 import { useFetchAssignedKpis } from "@/hooks/dept";
 import { Badge } from "@workspace/ui/components/badge";
 import { Eye } from "lucide-react";
+import { PillarCard } from "@/components/qoc/pillar-card";
+import { KpiCard } from "@/components/qoc/kpi-card";
 
 // TODO: Implement these hooks and APIs
 // import { useFetchDepartments } from "@/hooks/departments";
@@ -160,15 +162,13 @@ export default function AssignKpiToDepartmentPage() {
               <p>No pillars assigned to this department.</p>
             ) : (
               assignedPillars.map((pillar) => (
-                <Card
+                <PillarCard
                   key={pillar.id}
-                  className={`cursor-pointer ${selectedPillarId === pillar.id ? "border-primary" : ""}`}
-                  onClick={() => handlePillarSelect(pillar.id)}
-                >
-                  <CardHeader>
-                    <CardTitle>{pillar.pillar_name}</CardTitle>
-                  </CardHeader>
-                </Card>
+                  pillarName={pillar.pillar_name}
+                  selected={selectedPillarId === pillar.id}
+                  onView={() => handlePillarSelect(pillar.id)}
+                  assigned
+                />
               ))
             )}
           </div>
@@ -180,26 +180,12 @@ export default function AssignKpiToDepartmentPage() {
               <p>All pillars assigned to this department.</p>
             ) : (
               unassignedPillars.map((pillar) => (
-                <Card key={pillar.id}>
-                  <CardHeader>
-                    <CardTitle>{pillar.pillar_name}</CardTitle>
-                  </CardHeader>
-                  <CardFooter className="flex gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => handleAssignPillar(pillar)}
-                    >
-                      Assign to Department
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handlePillarSelect(pillar.id)}
-                    >
-                      View Pillar
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <PillarCard
+                  key={pillar.id}
+                  pillarName={pillar.pillar_name}
+                  onAssign={() => handleAssignPillar(pillar)}
+                  onView={() => handlePillarSelect(pillar.id)}
+                />
               ))
             )}
           </div>
@@ -207,136 +193,80 @@ export default function AssignKpiToDepartmentPage() {
       )}
 
       {/* KPIs for Selected Pillar */}
-      {selectedPillarId && (
-        <div ref={kpiSectionRef}>
-          {/* Pillar viewing indication - improved UI for dark & light themes */}
-          <div className="mb-6 flex items-center gap-3 px-5 py-3 rounded-lg bg-primary/90 text-primary-foreground border border-primary/40 shadow-sm dark:bg-primary dark:text-primary-foreground dark:border-primary/60">
-            <span className="inline-flex items-center justify-center bg-primary/70 text-primary-foreground rounded-full p-2 dark:bg-primary-foreground/10 dark:text-primary-foreground">
-              <Eye className="w-5 h-5" />
-            </span>
-            <span className="font-semibold text-lg">
-              Viewing{" "}
-              <span className="font-bold">
-                {(
-                  assignedPillars.find((p) => p.id === selectedPillarId) ||
-                  allPillars.find((p) => p.id === selectedPillarId)
-                )?.pillar_name ?? "Pillar"}
-              </span>{" "}
-              Pillar
-            </span>
-          </div>
-          <h2 className="text-xl font-semibold mb-2">Assigned KPIs</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
-            {assignedKpis.length === 0 ? (
-              <p>No KPIs assigned to this pillar.</p>
-            ) : (
-              assignedKpis.map((kpi) => (
-                <Card key={kpi.id}>
-                  <CardHeader>
-                    <CardTitle>{kpi.title}</CardTitle>
-                    <CardDescription>{kpi.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm">{kpi.elements.length} Fields</p>
-                    <p className="text-sm">Value: {kpi.value ?? "-"}</p>
-                  </CardContent>
-                  <CardFooter className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        /* TODO: View KPI */
-                      }}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        /* TODO: Edit KPI */
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => {
-                        /* TODO: Delete KPI */
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => handleUnassignKpi(kpi)}
-                    >
-                      Unassign
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-
-          <h2 className="text-xl font-semibold mb-2">Assign KPI</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {unassignedKpis.length === 0 ? (
-              <p>All KPIs assigned to this pillar.</p>
-            ) : (
-              unassignedKpis.map((kpi) => (
-                <Card key={kpi.id}>
-                  <CardHeader>
-                    <CardTitle>{kpi.title}</CardTitle>
-                    <CardDescription>{kpi.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm">{kpi.elements.length} Fields</p>
-                    <p className="text-sm">Value: {kpi.value ?? "-"}</p>
-                  </CardContent>
-                  <CardFooter className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        /* TODO: View KPI */
-                      }}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        /* TODO: Edit KPI */
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => {
-                        /* TODO: Delete KPI */
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={() => handleAssignKpi(kpi)}
-                    >
-                      Assign
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            )}
-          </div>
-        </div>
+      {selectedDepartmentId && (
+        <>
+          {/* Pillar Dropdown for viewing/assigning KPIs */}
+          {assignedPillars.length > 0 && (
+            <div className="mb-6 flex gap-4 items-center">
+              <label htmlFor="pillar-select" className="font-medium mr-2">
+                Pillar:
+              </label>
+              <div className="relative">
+                <select
+                  id="pillar-select"
+                  className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary min-w-[250px]"
+                  value={selectedPillarId ?? ""}
+                  onChange={e => handlePillarSelect(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Select Pillar
+                  </option>
+                  {assignedPillars.map((pillar) => (
+                    <option key={pillar.id} value={pillar.id}>
+                      {pillar.pillar_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+          {/* KPIs for Selected Pillar */}
+          {selectedPillarId && (
+            <div ref={kpiSectionRef}>
+              <h2 className="text-xl font-semibold mb-2">Assigned KPIs</h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
+                {assignedKpis.length === 0 ? (
+                  <p>No KPIs assigned to this pillar.</p>
+                ) : (
+                  assignedKpis.map((kpi) => (
+                    <KpiCard
+                      key={kpi.id}
+                      kpiName={kpi.title}
+                      description={kpi.description}
+                      fieldsCount={kpi.elements.length}
+                      value={kpi.value}
+                      assigned
+                      onView={() => {/* TODO: View KPI */}}
+                      onEdit={() => {/* TODO: Edit KPI */}}
+                      onDelete={() => {/* TODO: Delete KPI */}}
+                      onUnassign={() => handleUnassignKpi(kpi)}
+                    />
+                  ))
+                )}
+              </div>
+              <h2 className="text-xl font-semibold mb-2">Assign KPI</h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {unassignedKpis.length === 0 ? (
+                  <p>All KPIs assigned to this pillar.</p>
+                ) : (
+                  unassignedKpis.map((kpi) => (
+                    <KpiCard
+                      key={kpi.id}
+                      kpiName={kpi.title}
+                      description={kpi.description}
+                      fieldsCount={kpi.elements.length}
+                      value={kpi.value}
+                      onView={() => {/* TODO: View KPI */}}
+                      onEdit={() => {/* TODO: Edit KPI */}}
+                      onDelete={() => {/* TODO: Delete KPI */}}
+                      onAssign={() => handleAssignKpi(kpi)}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </main>
   );

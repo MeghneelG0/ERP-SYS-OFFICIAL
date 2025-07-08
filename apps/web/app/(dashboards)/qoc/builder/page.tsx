@@ -39,6 +39,8 @@ import {
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import type { FormConfig } from "@/lib/types";
+import { PillarCard } from "@/components/qoc/pillar-card";
+import { KpiCard } from "@/components/qoc/kpi-card";
 
 // TODO: Implement these hooks and APIs
 // import { useFetchPillarTemplates, useCreatePillarTemplate } from "@/hooks/pillarTemplates";
@@ -136,16 +138,13 @@ export default function KpiBuilderPage() {
             <p>No pillar templates found. Create one to get started.</p>
           ) : (
             pillarTemplates.map((pillar) => (
-              <Card
+              <PillarCard
                 key={pillar.id}
-                className={`cursor-pointer ${selectedPillarTemplate?.id === pillar.id ? "border-primary" : ""}`}
-                onClick={() => setSelectedPillarTemplate(pillar)}
-              >
-                <CardHeader>
-                  <CardTitle>{pillar.pillar_name}</CardTitle>
-                  <CardDescription>{pillar.description}</CardDescription>
-                </CardHeader>
-              </Card>
+                pillarName={pillar.pillar_name}
+                description={pillar.description}
+                selected={selectedPillarTemplate?.id === pillar.id}
+                onView={() => setSelectedPillarTemplate(pillar)}
+              />
             ))
           )}
         </div>
@@ -182,44 +181,16 @@ export default function KpiBuilderPage() {
               kpiTemplates
                 .filter((k) => k.pillarId === selectedPillarTemplate.id)
                 .map((kpi) => (
-                  <Card key={kpi.id}>
-                    <CardHeader>
-                      <CardTitle>{kpi.kpi_name}</CardTitle>
-                      <CardDescription>{kpi.kpi_description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {/* Add more KPI metadata here as needed */}
-                    </CardContent>
-                    <CardFooter className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          router.push(`/qoc/builder/form/${kpi.id}`)
-                        }
-                      >
-                        View
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          router.push(`/qoc/builder/form/${kpi.id}`)
-                        }
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => {
-                          /* TODO: Delete KPI template API */
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </CardFooter>
-                  </Card>
+                  <KpiCard
+                    key={kpi.id}
+                    kpiName={kpi.kpi_name}
+                    description={kpi.kpi_description}
+                    onView={() => router.push(`/qoc/builder/form/${kpi.id}`)}
+                    onEdit={() => router.push(`/qoc/builder/form/${kpi.id}`)}
+                    onDelete={() => {
+                      /* TODO: Delete KPI template API */
+                    }}
+                  />
                 ))
             )}
           </div>
