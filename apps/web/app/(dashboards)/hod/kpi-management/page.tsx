@@ -427,7 +427,7 @@ const DUMMY_KPIS = {
 export default function KpiManagementPage() {
   const [selectedPillar, setSelectedPillar] = useState<string>("")
 
-  const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
+  //const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
   const kpisForPillar = selectedPillar ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || [] : []
 
   return (
