@@ -1,16 +1,22 @@
-import { useQuery, useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query"
-import axios from "axios"
-import type { AssignedKPI } from "@/lib/types"
-import { toast } from "sonner"
-import { ProcessError } from "@/lib/types"
-import type { KpiFormData } from "@/lib/types"
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  type UseMutationResult,
+} from "@tanstack/react-query";
+import axios from "axios";
+import type { AssignedKPI } from "@/lib/types";
+import { toast } from "sonner";
+import { ProcessError } from "@/lib/types";
+import type { KpiFormData } from "@/lib/types";
 
 // Add this dummy data at the top of the file after imports
 const DUMMY_KPI_DATA = {
   "kpi-1": {
     kpi: {
       kpi_name: "Student Pass Rate",
-      kpi_description: "Track student pass rates across different courses and semesters",
+      kpi_description:
+        "Track student pass rates across different courses and semesters",
       elements: [
         {
           id: "course_code",
@@ -118,7 +124,8 @@ const DUMMY_KPI_DATA = {
   "kpi-2": {
     kpi: {
       kpi_name: "Faculty Performance",
-      kpi_description: "Evaluate faculty teaching effectiveness and student feedback",
+      kpi_description:
+        "Evaluate faculty teaching effectiveness and student feedback",
       elements: [
         {
           id: "faculty_name",
@@ -192,7 +199,8 @@ const DUMMY_KPI_DATA = {
   "kpi-3": {
     kpi: {
       kpi_name: "Student Satisfaction Survey",
-      kpi_description: "Collect and analyze student satisfaction across various services",
+      kpi_description:
+        "Collect and analyze student satisfaction across various services",
       elements: [
         {
           id: "student_id",
@@ -284,7 +292,8 @@ const DUMMY_KPI_DATA = {
   "kpi-4": {
     kpi: {
       kpi_name: "Faculty Research Publications",
-      kpi_description: "Track research publications and citations by faculty members",
+      kpi_description:
+        "Track research publications and citations by faculty members",
       elements: [
         {
           id: "faculty_name",
@@ -380,7 +389,8 @@ const DUMMY_KPI_DATA = {
   "kpi-5": {
     kpi: {
       kpi_name: "Infrastructure Utilization",
-      kpi_description: "Monitor utilization rates of campus facilities and resources",
+      kpi_description:
+        "Monitor utilization rates of campus facilities and resources",
       elements: [
         {
           id: "facility_name",
@@ -474,10 +484,10 @@ const DUMMY_KPI_DATA = {
       },
     ],
   },
-}
+};
 
 const fetchAssignedKPIs = async (): Promise<AssignedKPI[]> => {
-  const response = await axios.get("/api/assigned-kpi")
+  const response = await axios.get("/api/assigned-kpi");
   return response.data.assignedKpis.map((kpi: any) => ({
     assigned_kpi_id: kpi.assigned_kpi_id,
     kpi_name: kpi.kpi_name,
@@ -485,109 +495,115 @@ const fetchAssignedKPIs = async (): Promise<AssignedKPI[]> => {
     comments: kpi.comments,
     kpi_id: kpi.original_kpi_id,
     elements: kpi.elements,
-  }))
-}
+  }));
+};
 export function useFetchAssignedKPI() {
   return useQuery<AssignedKPI[]>({
     queryKey: ["assigned-kpis"],
     queryFn: fetchAssignedKPIs,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
-  })
+  });
 }
 
 const fetchKPIById = async (id: number) => {
-  const { data } = await axios.get(`/api/assigned-kpi/${id}`)
+  const { data } = await axios.get(`/api/assigned-kpi/${id}`);
 
-  const kpiName = data.assignedKpi.kpi_name
-  const elements = data.assignedKpi.elements
-  return { kpiName, elements }
-}
+  const kpiName = data.assignedKpi.kpi_name;
+  const elements = data.assignedKpi.elements;
+  return { kpiName, elements };
+};
 
 export const useFetchKPIById = (id: number) => {
   return useQuery({
     queryKey: ["kpi", id],
     queryFn: () => fetchKPIById(id),
     enabled: !!id,
-  })
-}
+  });
+};
 
 // Update the fetchAssignedKPIById function to use dummy data
 const fetchAssignedKPIById = async (id: string) => {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const data = DUMMY_KPI_DATA[id as keyof typeof DUMMY_KPI_DATA]
+  const data = DUMMY_KPI_DATA[id as keyof typeof DUMMY_KPI_DATA];
   if (!data) {
-    throw new Error(`KPI with id ${id} not found`)
+    throw new Error(`KPI with id ${id} not found`);
   }
 
-  return data
-}
+  return data;
+};
 
 export const useFetchAssignedKPIById = (id: string) => {
   return useQuery({
     queryKey: ["assigned-kpi", id],
     queryFn: () => fetchAssignedKPIById(id),
     enabled: !!id,
-  })
-}
+  });
+};
 
-export const saveDataToBackend = async (formData: KpiFormData): Promise<any> => {
+export const saveDataToBackend = async (
+  formData: KpiFormData,
+): Promise<any> => {
   try {
     const response = await axios.put(`/api/assigned-kpi/${formData.id}`, {
       form_input: formData.formData.entries,
-    })
-    return response.data
+    });
+    return response.data;
   } catch (error: any) {
     throw new ProcessError({
       name: "PROCESSING_ERROR",
       message: error.response?.data?.error || "Failed to save data",
       cause: error,
-    })
+    });
   }
-}
+};
 
-export function useSaveKpiData(): UseMutationResult<any, ProcessError, KpiFormData> {
-  const queryClient = useQueryClient()
+export function useSaveKpiData(): UseMutationResult<
+  any,
+  ProcessError,
+  KpiFormData
+> {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (formData: KpiFormData) => {
-      return saveDataToBackend(formData)
+      return saveDataToBackend(formData);
     },
     onSuccess: () => {
       toast.success("KPI data saved successfully", {
         description: "Your KPI data has been updated successfully.",
-      })
-      queryClient.invalidateQueries({ queryKey: ["kpiData"] }) // Adjust the queryKey as necessary
+      });
+      queryClient.invalidateQueries({ queryKey: ["kpiData"] }); // Adjust the queryKey as necessary
     },
     onError: (error: ProcessError) => {
       toast.error("Error saving KPI data", {
         description: error.message,
-      })
-      console.error("Save KPI data error:", error.name, error.cause)
+      });
+      console.error("Save KPI data error:", error.name, error.cause);
     },
-  })
+  });
 }
 
 type KpiData = {
-  assigned_kpi_id: number
-  kpi_name: string
-  kpi_description: string
-  kpi_status: string
-  form_input: Record<string, string | number>[] | null
-}
+  assigned_kpi_id: number;
+  kpi_name: string;
+  kpi_description: string;
+  kpi_status: string;
+  form_input: Record<string, string | number>[] | null;
+};
 
 const fetchAssignedKPIByDepartmentId = async (departmentId: string) => {
   const { data } = await axios.get(`/api/assigned-kpi`, {
     params: { department_id: departmentId },
-  })
-  return data
-}
+  });
+  return data;
+};
 
 export const useFetchKPISubmisson = (departmentId: string) => {
   return useQuery({
     queryKey: ["assigned-kpi", departmentId], // Include departmentId in the query key
     queryFn: () => fetchAssignedKPIByDepartmentId(departmentId),
     enabled: !!departmentId, // Only enable the query if departmentId is provided
-  })
-}
+  });
+};

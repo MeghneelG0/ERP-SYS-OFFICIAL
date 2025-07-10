@@ -1,5 +1,5 @@
-"use client"
-import { useState } from "react"
+"use client";
+import { useState } from "react";
 import {
   CalendarIcon,
   FileText,
@@ -9,11 +9,23 @@ import {
   Clock,
   RefreshCw,
   ChevronRight,
-} from "lucide-react"
-import { Button } from "@workspace/ui/components/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Progress } from "@workspace/ui/components/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+} from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Progress } from "@workspace/ui/components/progress";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
 import {
   Table,
   TableBody,
@@ -22,8 +34,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@workspace/ui/components/table"
-import { Badge } from "@workspace/ui/components/badge"
+} from "@workspace/ui/components/table";
+import { Badge } from "@workspace/ui/components/badge";
 
 // Dummy analytics data
 const ANALYTICS_DATA = {
@@ -43,9 +55,24 @@ const ANALYTICS_DATA = {
           { name: "Chemistry", completion: 88, kpis: 3 },
         ],
         recentActivity: [
-          { kpi: "Student Pass Rate", department: "Computer Science", status: "completed", date: "2024-01-15" },
-          { kpi: "Faculty Performance", department: "Mathematics", status: "pending", date: "2024-01-14" },
-          { kpi: "Course Evaluation", department: "Physics", status: "completed", date: "2024-01-13" },
+          {
+            kpi: "Student Pass Rate",
+            department: "Computer Science",
+            status: "completed",
+            date: "2024-01-15",
+          },
+          {
+            kpi: "Faculty Performance",
+            department: "Mathematics",
+            status: "pending",
+            date: "2024-01-14",
+          },
+          {
+            kpi: "Course Evaluation",
+            department: "Physics",
+            status: "completed",
+            date: "2024-01-13",
+          },
         ],
         trend: "+5.2%",
       },
@@ -62,9 +89,24 @@ const ANALYTICS_DATA = {
           { name: "Cultural", completion: 65, kpis: 2 },
         ],
         recentActivity: [
-          { kpi: "Student Satisfaction", department: "Student Affairs", status: "completed", date: "2024-01-12" },
-          { kpi: "Counseling Sessions", department: "Counseling", status: "pending", date: "2024-01-11" },
-          { kpi: "Sports Participation", department: "Sports", status: "completed", date: "2024-01-10" },
+          {
+            kpi: "Student Satisfaction",
+            department: "Student Affairs",
+            status: "completed",
+            date: "2024-01-12",
+          },
+          {
+            kpi: "Counseling Sessions",
+            department: "Counseling",
+            status: "pending",
+            date: "2024-01-11",
+          },
+          {
+            kpi: "Sports Participation",
+            department: "Sports",
+            status: "completed",
+            date: "2024-01-10",
+          },
         ],
         trend: "+2.1%",
       },
@@ -81,9 +123,24 @@ const ANALYTICS_DATA = {
           { name: "Patents", completion: 60, kpis: 3 },
         ],
         recentActivity: [
-          { kpi: "Research Publications", department: "Research Office", status: "pending", date: "2024-01-09" },
-          { kpi: "Innovation Projects", department: "Innovation Hub", status: "completed", date: "2024-01-08" },
-          { kpi: "Patent Applications", department: "Patents", status: "pending", date: "2024-01-07" },
+          {
+            kpi: "Research Publications",
+            department: "Research Office",
+            status: "pending",
+            date: "2024-01-09",
+          },
+          {
+            kpi: "Innovation Projects",
+            department: "Innovation Hub",
+            status: "completed",
+            date: "2024-01-08",
+          },
+          {
+            kpi: "Patent Applications",
+            department: "Patents",
+            status: "pending",
+            date: "2024-01-07",
+          },
         ],
         trend: "-1.3%",
       },
@@ -100,9 +157,24 @@ const ANALYTICS_DATA = {
           { name: "Security", completion: 93, kpis: 1 },
         ],
         recentActivity: [
-          { kpi: "Facility Utilization", department: "Facilities", status: "completed", date: "2024-01-14" },
-          { kpi: "IT Infrastructure", department: "IT Services", status: "completed", date: "2024-01-13" },
-          { kpi: "Security Systems", department: "Security", status: "completed", date: "2024-01-12" },
+          {
+            kpi: "Facility Utilization",
+            department: "Facilities",
+            status: "completed",
+            date: "2024-01-14",
+          },
+          {
+            kpi: "IT Infrastructure",
+            department: "IT Services",
+            status: "completed",
+            date: "2024-01-13",
+          },
+          {
+            kpi: "Security Systems",
+            department: "Security",
+            status: "completed",
+            date: "2024-01-12",
+          },
         ],
         trend: "+3.8%",
       },
@@ -156,11 +228,13 @@ const ANALYTICS_DATA = {
       { reason: "Other", count: 2, percentage: 5.9 },
     ],
   },
-}
+};
 
 export function DashboardContent() {
   //const [openAssignDialog, setOpenAssignDialog] = useState(false)
-  const [selectedPillar, setSelectedPillar] = useState(ANALYTICS_DATA.kpiCompletionRate.byPillar[0])
+  const [selectedPillar, setSelectedPillar] = useState(
+    ANALYTICS_DATA.kpiCompletionRate.byPillar[0],
+  );
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -188,53 +262,84 @@ export function DashboardContent() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">KPI Completion Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  KPI Completion Rate
+                </CardTitle>
                 <CheckCircle className="h-4 w-4 text-green-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{ANALYTICS_DATA.kpiCompletionRate.overall}%</div>
-                <p className="text-xs text-muted-foreground">+5.2% from last month</p>
-                <Progress className="mt-2" value={ANALYTICS_DATA.kpiCompletionRate.overall} />
+                <div className="text-2xl font-bold">
+                  {ANALYTICS_DATA.kpiCompletionRate.overall}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  +5.2% from last month
+                </p>
+                <Progress
+                  className="mt-2"
+                  value={ANALYTICS_DATA.kpiCompletionRate.overall}
+                />
               </CardContent>
             </Card>
 
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">On-Time Submission</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  On-Time Submission
+                </CardTitle>
                 <Clock className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{ANALYTICS_DATA.onTimeSubmission.rate}%</div>
+                <div className="text-2xl font-bold">
+                  {ANALYTICS_DATA.onTimeSubmission.rate}%
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  {ANALYTICS_DATA.onTimeSubmission.trend === "up" ? "+" : "-"}3.1% from last month
+                  {ANALYTICS_DATA.onTimeSubmission.trend === "up" ? "+" : "-"}
+                  3.1% from last month
                 </p>
-                <Progress className="mt-2" value={ANALYTICS_DATA.onTimeSubmission.rate} />
+                <Progress
+                  className="mt-2"
+                  value={ANALYTICS_DATA.onTimeSubmission.rate}
+                />
               </CardContent>
             </Card>
 
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Underperforming KPIs</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Underperforming KPIs
+                </CardTitle>
                 <AlertTriangle className="h-4 w-4 text-orange-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{ANALYTICS_DATA.underperformingKpis.length}</div>
-                <p className="text-xs text-muted-foreground">Need immediate attention</p>
+                <div className="text-2xl font-bold">
+                  {ANALYTICS_DATA.underperformingKpis.length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Need immediate attention
+                </p>
                 <Progress className="mt-2" value={25} />
               </CardContent>
             </Card>
 
             <Card className="bg-card text-card-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">KPI Recheck Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  KPI Recheck Rate
+                </CardTitle>
                 <RefreshCw className="h-4 w-4 text-purple-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{ANALYTICS_DATA.recheckRate.rate}%</div>
+                <div className="text-2xl font-bold">
+                  {ANALYTICS_DATA.recheckRate.rate}%
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  {ANALYTICS_DATA.recheckRate.trend === "down" ? "-" : "+"}2.3% from last month
+                  {ANALYTICS_DATA.recheckRate.trend === "down" ? "-" : "+"}2.3%
+                  from last month
                 </p>
-                <Progress className="mt-2" value={ANALYTICS_DATA.recheckRate.rate} />
+                <Progress
+                  className="mt-2"
+                  value={ANALYTICS_DATA.recheckRate.rate}
+                />
               </CardContent>
             </Card>
           </div>
@@ -243,7 +348,9 @@ export function DashboardContent() {
             <Card className="col-span-4 bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>Recent Submissions</CardTitle>
-                <CardDescription>Latest KPI entries submitted across departments</CardDescription>
+                <CardDescription>
+                  Latest KPI entries submitted across departments
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -258,7 +365,9 @@ export function DashboardContent() {
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell className="font-medium">Computer Science</TableCell>
+                      <TableCell className="font-medium">
+                        Computer Science
+                      </TableCell>
                       <TableCell>Student Pass Rate</TableCell>
                       <TableCell>Academic Excellence</TableCell>
                       <TableCell className="text-right">
@@ -268,7 +377,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Electrical Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Electrical Engineering
+                      </TableCell>
                       <TableCell>Faculty Performance</TableCell>
                       <TableCell>Academic Excellence</TableCell>
                       <TableCell className="text-right">
@@ -276,7 +387,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Mechanical Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Mechanical Engineering
+                      </TableCell>
                       <TableCell>Student Satisfaction</TableCell>
                       <TableCell>Student Development</TableCell>
                       <TableCell className="text-right">
@@ -286,7 +399,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Civil Engineering</TableCell>
+                      <TableCell className="font-medium">
+                        Civil Engineering
+                      </TableCell>
                       <TableCell>Research Publications</TableCell>
                       <TableCell>Research & Innovation</TableCell>
                       <TableCell className="text-right">
@@ -294,7 +409,9 @@ export function DashboardContent() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">Electronics & Communication</TableCell>
+                      <TableCell className="font-medium">
+                        Electronics & Communication
+                      </TableCell>
                       <TableCell>Infrastructure Usage</TableCell>
                       <TableCell>Infrastructure</TableCell>
                       <TableCell className="text-right">
@@ -316,14 +433,19 @@ export function DashboardContent() {
             <Card className="col-span-3 bg-card text-card-foreground">
               <CardHeader>
                 <CardTitle>KPI Status Overview</CardTitle>
-                <CardDescription>Current status distribution of all KPIs</CardDescription>
+                <CardDescription>
+                  Current status distribution of all KPIs
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-6">
                   {/* Approved KPIs */}
                   <div className="flex flex-col items-center space-y-2">
                     <div className="relative w-20 h-20">
-                      <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+                      <svg
+                        className="w-20 h-20 transform -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
                         <path
                           d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -344,19 +466,26 @@ export function DashboardContent() {
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold text-green-600">75%</span>
+                        <span className="text-lg font-bold text-green-600">
+                          75%
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <div className="text-sm font-medium">Approved</div>
-                      <div className="text-xs text-muted-foreground">89 KPIs</div>
+                      <div className="text-xs text-muted-foreground">
+                        89 KPIs
+                      </div>
                     </div>
                   </div>
 
                   {/* Pending KPIs */}
                   <div className="flex flex-col items-center space-y-2">
                     <div className="relative w-20 h-20">
-                      <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+                      <svg
+                        className="w-20 h-20 transform -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
                         <path
                           d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -377,19 +506,26 @@ export function DashboardContent() {
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold text-yellow-600">38%</span>
+                        <span className="text-lg font-bold text-yellow-600">
+                          38%
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <div className="text-sm font-medium">Pending</div>
-                      <div className="text-xs text-muted-foreground">45 KPIs</div>
+                      <div className="text-xs text-muted-foreground">
+                        45 KPIs
+                      </div>
                     </div>
                   </div>
 
                   {/* Rejected KPIs */}
                   <div className="flex flex-col items-center space-y-2">
                     <div className="relative w-20 h-20">
-                      <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+                      <svg
+                        className="w-20 h-20 transform -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
                         <path
                           d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -410,19 +546,26 @@ export function DashboardContent() {
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold text-red-600">18%</span>
+                        <span className="text-lg font-bold text-red-600">
+                          18%
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <div className="text-sm font-medium">Rejected</div>
-                      <div className="text-xs text-muted-foreground">22 KPIs</div>
+                      <div className="text-xs text-muted-foreground">
+                        22 KPIs
+                      </div>
                     </div>
                   </div>
 
                   {/* Overdue KPIs */}
                   <div className="flex flex-col items-center space-y-2">
                     <div className="relative w-20 h-20">
-                      <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+                      <svg
+                        className="w-20 h-20 transform -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
                         <path
                           d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -443,12 +586,16 @@ export function DashboardContent() {
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold text-red-700">12%</span>
+                        <span className="text-lg font-bold text-red-700">
+                          12%
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <div className="text-sm font-medium">Overdue</div>
-                      <div className="text-xs text-muted-foreground">14 KPIs</div>
+                      <div className="text-xs text-muted-foreground">
+                        14 KPIs
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -473,14 +620,18 @@ export function DashboardContent() {
                   <CheckCircle className="h-5 w-5 text-green-500" />
                   KPI Completion by Pillar
                 </CardTitle>
-                <CardDescription>Click on a pillar to view detailed information</CardDescription>
+                <CardDescription>
+                  Click on a pillar to view detailed information
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {ANALYTICS_DATA.kpiCompletionRate.byPillar.map((pillar) => (
                     <Button
                       key={pillar.id}
-                      variant={selectedPillar.id === pillar.id ? "default" : "outline"}
+                      variant={
+                        selectedPillar.id === pillar.id ? "default" : "outline"
+                      }
                       className="w-full justify-between h-auto p-4"
                       onClick={() => setSelectedPillar(pillar)}
                     >
@@ -493,7 +644,9 @@ export function DashboardContent() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">{pillar.completion}%</span>
+                        <span className="text-lg font-bold">
+                          {pillar.completion}%
+                        </span>
                         <ChevronRight className="h-4 w-4" />
                       </div>
                     </Button>
@@ -506,7 +659,10 @@ export function DashboardContent() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <div className="relative w-6 h-6">
-                    <svg className="w-6 h-6 transform -rotate-90" viewBox="0 0 36 36">
+                    <svg
+                      className="w-6 h-6 transform -rotate-90"
+                      viewBox="0 0 36 36"
+                    >
                       <path
                         d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -527,7 +683,9 @@ export function DashboardContent() {
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xs font-bold">{selectedPillar.completion}%</span>
+                      <span className="text-xs font-bold">
+                        {selectedPillar.completion}%
+                      </span>
                     </div>
                   </div>
                   {selectedPillar.name} Details
@@ -543,17 +701,28 @@ export function DashboardContent() {
                 <div className="space-y-6">
                   {/* Department Breakdown */}
                   <div>
-                    <h4 className="text-sm font-semibold mb-3">Department Performance</h4>
+                    <h4 className="text-sm font-semibold mb-3">
+                      Department Performance
+                    </h4>
                     <div className="space-y-3">
                       {selectedPillar.departments.map((dept, index) => (
                         <div key={index} className="space-y-1">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium">{dept.name}</span>
-                            <span className="text-sm font-bold">{dept.completion}%</span>
+                            <span className="text-sm font-medium">
+                              {dept.name}
+                            </span>
+                            <span className="text-sm font-bold">
+                              {dept.completion}%
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Progress value={dept.completion} className="flex-1" />
-                            <span className="text-xs text-muted-foreground">{dept.kpis} KPIs</span>
+                            <Progress
+                              value={dept.completion}
+                              className="flex-1"
+                            />
+                            <span className="text-xs text-muted-foreground">
+                              {dept.kpis} KPIs
+                            </span>
                           </div>
                         </div>
                       ))}
@@ -562,22 +731,41 @@ export function DashboardContent() {
 
                   {/* Recent Activity */}
                   <div>
-                    <h4 className="text-sm font-semibold mb-3">Recent Activity</h4>
+                    <h4 className="text-sm font-semibold mb-3">
+                      Recent Activity
+                    </h4>
                     <div className="space-y-2">
                       {selectedPillar.recentActivity.map((activity, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-2 bg-muted/50 rounded-lg"
+                        >
                           <div>
-                            <div className="text-sm font-medium">{activity.kpi}</div>
-                            <div className="text-xs text-muted-foreground">{activity.department}</div>
+                            <div className="text-sm font-medium">
+                              {activity.kpi}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {activity.department}
+                            </div>
                           </div>
                           <div className="text-right">
                             <Badge
-                              variant={activity.status === "completed" ? "default" : "secondary"}
-                              className={activity.status === "completed" ? "bg-green-500" : ""}
+                              variant={
+                                activity.status === "completed"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                              className={
+                                activity.status === "completed"
+                                  ? "bg-green-500"
+                                  : ""
+                              }
                             >
                               {activity.status}
                             </Badge>
-                            <div className="text-xs text-muted-foreground mt-1">{activity.date}</div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {activity.date}
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -587,18 +775,28 @@ export function DashboardContent() {
                   {/* Summary Stats */}
                   <div className="grid grid-cols-3 gap-4 pt-4 border-t">
                     <div className="text-center">
-                      <div className="text-lg font-bold text-blue-600">{selectedPillar.completed}</div>
-                      <div className="text-xs text-muted-foreground">Completed</div>
+                      <div className="text-lg font-bold text-blue-600">
+                        {selectedPillar.completed}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Completed
+                      </div>
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-bold text-orange-600">
                         {selectedPillar.total - selectedPillar.completed}
                       </div>
-                      <div className="text-xs text-muted-foreground">Pending</div>
+                      <div className="text-xs text-muted-foreground">
+                        Pending
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">{selectedPillar.departments.length}</div>
-                      <div className="text-xs text-muted-foreground">Departments</div>
+                      <div className="text-lg font-bold text-green-600">
+                        {selectedPillar.departments.length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Departments
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -613,7 +811,9 @@ export function DashboardContent() {
                 <Clock className="h-5 w-5 text-blue-500" />
                 On-Time Submission Trends
               </CardTitle>
-              <CardDescription>Monthly submission timeliness tracking</CardDescription>
+              <CardDescription>
+                Monthly submission timeliness tracking
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-6 md:grid-cols-2">
@@ -621,7 +821,10 @@ export function DashboardContent() {
                   {/* Current Rate Display */}
                   <div className="text-center">
                     <div className="relative w-24 h-24 mx-auto">
-                      <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
+                      <svg
+                        className="w-24 h-24 transform -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
                         <path
                           d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -642,23 +845,33 @@ export function DashboardContent() {
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xl font-bold text-blue-600">{ANALYTICS_DATA.onTimeSubmission.rate}%</span>
+                        <span className="text-xl font-bold text-blue-600">
+                          {ANALYTICS_DATA.onTimeSubmission.rate}%
+                        </span>
                       </div>
                     </div>
                     <div className="mt-2">
                       <div className="text-sm font-medium">Current Rate</div>
-                      <div className="text-xs text-green-600">+3.1% from last month</div>
+                      <div className="text-xs text-green-600">
+                        +3.1% from last month
+                      </div>
                     </div>
                   </div>
 
                   {/* Summary Stats */}
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                     <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">156</div>
-                      <div className="text-xs text-muted-foreground">On-Time</div>
+                      <div className="text-lg font-bold text-green-600">
+                        156
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        On-Time
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-orange-600">34</div>
+                      <div className="text-lg font-bold text-orange-600">
+                        34
+                      </div>
                       <div className="text-xs text-muted-foreground">Late</div>
                     </div>
                   </div>
@@ -667,20 +880,26 @@ export function DashboardContent() {
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold">Monthly Performance</h4>
                   <div className="space-y-3">
-                    {ANALYTICS_DATA.onTimeSubmission.monthlyData.map((month, index) => (
-                      <div key={index} className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium">{month.month} 2024</span>
-                          <span className="text-sm font-bold text-blue-600">{month.rate}%</span>
+                    {ANALYTICS_DATA.onTimeSubmission.monthlyData.map(
+                      (month, index) => (
+                        <div key={index} className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium">
+                              {month.month} 2024
+                            </span>
+                            <span className="text-sm font-bold text-blue-600">
+                              {month.rate}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${month.rate}%` }}
+                            ></div>
+                          </div>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${month.rate}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
@@ -694,7 +913,9 @@ export function DashboardContent() {
                 <AlertTriangle className="h-5 w-5 text-orange-500" />
                 Underperforming KPIs
               </CardTitle>
-              <CardDescription>KPIs that require immediate attention and improvement</CardDescription>
+              <CardDescription>
+                KPIs that require immediate attention and improvement
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -743,16 +964,24 @@ export function DashboardContent() {
                   <RefreshCw className="h-5 w-5 text-purple-500" />
                   KPI Recheck Analysis
                 </CardTitle>
-                <CardDescription>Analysis of KPI rejections and resubmissions</CardDescription>
+                <CardDescription>
+                  Analysis of KPI rejections and resubmissions
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-600">{ANALYTICS_DATA.recheckRate.rate}%</div>
-                    <p className="text-sm text-muted-foreground">Recheck Rate</p>
+                    <div className="text-3xl font-bold text-purple-600">
+                      {ANALYTICS_DATA.recheckRate.rate}%
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Recheck Rate
+                    </p>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="text-sm font-semibold">Top Recheck Reasons:</h4>
+                    <h4 className="text-sm font-semibold">
+                      Top Recheck Reasons:
+                    </h4>
                     {ANALYTICS_DATA.recheckRate.reasons.map((reason, index) => (
                       <div key={index} className="space-y-1">
                         <div className="flex justify-between text-sm">
@@ -773,36 +1002,48 @@ export function DashboardContent() {
                   <TrendingUp className="h-5 w-5 text-green-500" />
                   Performance Insights
                 </CardTitle>
-                <CardDescription>Key insights and recommendations</CardDescription>
+                <CardDescription>
+                  Key insights and recommendations
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="text-sm font-semibold text-green-800">Positive Trend</span>
+                      <span className="text-sm font-semibold text-green-800">
+                        Positive Trend
+                      </span>
                     </div>
                     <p className="text-sm text-green-700">
-                      Overall KPI completion rate has improved by 5.2% this month
+                      Overall KPI completion rate has improved by 5.2% this
+                      month
                     </p>
                   </div>
 
                   <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <AlertTriangle className="h-4 w-4 text-orange-600" />
-                      <span className="text-sm font-semibold text-orange-800">Attention Needed</span>
+                      <span className="text-sm font-semibold text-orange-800">
+                        Attention Needed
+                      </span>
                     </div>
                     <p className="text-sm text-orange-700">
-                      Research & Innovation pillar needs focus - 3 KPIs underperforming
+                      Research & Innovation pillar needs focus - 3 KPIs
+                      underperforming
                     </p>
                   </div>
 
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="h-4 w-4 text-blue-600" />
-                      <span className="text-sm font-semibold text-blue-800">Recommendation</span>
+                      <span className="text-sm font-semibold text-blue-800">
+                        Recommendation
+                      </span>
                     </div>
-                    <p className="text-sm text-blue-700">Implement data validation training to reduce recheck rate</p>
+                    <p className="text-sm text-blue-700">
+                      Implement data validation training to reduce recheck rate
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -811,5 +1052,5 @@ export function DashboardContent() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
