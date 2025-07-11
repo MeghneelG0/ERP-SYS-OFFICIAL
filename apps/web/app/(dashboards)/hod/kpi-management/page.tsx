@@ -1,11 +1,32 @@
-"use client"
-import { Button } from "@workspace/ui/components/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select"
-import Link from "next/link"
-import { useState } from "react"
-import { Badge } from "@workspace/ui/components/badge"
-import { GraduationCap, Users, FlaskConical, Building, BarChart3, Calendar, TrendingUp } from "lucide-react"
+"use client";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
+import Link from "next/link";
+import { useState } from "react";
+import { Badge } from "@workspace/ui/components/badge";
+import {
+  GraduationCap,
+  Users,
+  FlaskConical,
+  Building,
+  BarChart3,
+  Calendar,
+  TrendingUp,
+} from "lucide-react";
 
 // Dummy data structure
 const PILLARS = [
@@ -37,14 +58,15 @@ const PILLARS = [
     color: "bg-orange-500",
     description: "Infrastructure utilization and development",
   },
-]
+];
 
 const DUMMY_KPIS = {
   academic: [
     {
       id: "kpi-1",
       title: "Student Pass Rate",
-      description: "Track student pass rates across different courses and semesters",
+      description:
+        "Track student pass rates across different courses and semesters",
       value: 85,
       status: "active",
       lastUpdated: "2024-01-15",
@@ -125,7 +147,8 @@ const DUMMY_KPIS = {
     {
       id: "kpi-2",
       title: "Faculty Performance",
-      description: "Evaluate faculty teaching effectiveness and student feedback",
+      description:
+        "Evaluate faculty teaching effectiveness and student feedback",
       value: 4.2,
       status: "active",
       lastUpdated: "2024-01-10",
@@ -187,7 +210,8 @@ const DUMMY_KPIS = {
     {
       id: "kpi-3",
       title: "Student Satisfaction Survey",
-      description: "Collect and analyze student satisfaction across various services",
+      description:
+        "Collect and analyze student satisfaction across various services",
       value: 4.1,
       status: "active",
       lastUpdated: "2024-01-12",
@@ -265,7 +289,8 @@ const DUMMY_KPIS = {
     {
       id: "kpi-4",
       title: "Faculty Research Publications",
-      description: "Track research publications and citations by faculty members",
+      description:
+        "Track research publications and citations by faculty members",
       value: 23,
       status: "active",
       lastUpdated: "2024-01-08",
@@ -345,7 +370,8 @@ const DUMMY_KPIS = {
     {
       id: "kpi-5",
       title: "Infrastructure Utilization",
-      description: "Monitor utilization rates of campus facilities and resources",
+      description:
+        "Monitor utilization rates of campus facilities and resources",
       value: 78,
       status: "active",
       lastUpdated: "2024-01-14",
@@ -422,20 +448,28 @@ const DUMMY_KPIS = {
       ],
     },
   ],
-}
+};
 
 export default function KpiManagementPage() {
-  const [selectedPillar, setSelectedPillar] = useState<string>("")
+  const [selectedPillar, setSelectedPillar] = useState<string>("");
 
-  const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
-  const kpisForPillar = selectedPillar ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || [] : []
+  //const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
+  const kpisForPillar = selectedPillar
+    ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
+    : [];
+
+  const kpisForPillar = selectedPillar
+    ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
+    : [];
 
   return (
     <main className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">KPI Management</h1>
-          <p className="text-gray-600 mt-2">Select a pillar to view and manage your KPIs</p>
+          <p className="text-gray-600 mt-2">
+            Select a pillar to view and manage your KPIs
+          </p>
         </div>
       </div>
 
@@ -452,7 +486,7 @@ export default function KpiManagementPage() {
               </SelectTrigger>
               <SelectContent>
                 {PILLARS.map((pillar) => {
-                  const Icon = pillar.icon
+                  const Icon = pillar.icon;
                   return (
                     <SelectItem key={pillar.id} value={pillar.id}>
                       <div className="flex items-center space-x-2">
@@ -460,7 +494,7 @@ export default function KpiManagementPage() {
                         <span>{pillar.name}</span>
                       </div>
                     </SelectItem>
-                  )
+                  );
                 })}
               </SelectContent>
             </Select>
@@ -472,14 +506,22 @@ export default function KpiManagementPage() {
       {!selectedPillar ? (
         <div className="text-center py-12">
           <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">Select a Pillar to Get Started</h3>
-          <p className="text-gray-500">Choose a pillar from the dropdown above to view and manage your KPIs</p>
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">
+            Select a Pillar to Get Started
+          </h3>
+          <p className="text-gray-500">
+            Choose a pillar from the dropdown above to view and manage your KPIs
+          </p>
         </div>
       ) : kpisForPillar.length === 0 ? (
         <div className="text-center py-12">
           <TrendingUp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">No KPIs Found</h3>
-          <p className="text-gray-500">No KPIs are available for the selected pillar</p>
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">
+            No KPIs Found
+          </h3>
+          <p className="text-gray-500">
+            No KPIs are available for the selected pillar
+          </p>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -489,9 +531,14 @@ export default function KpiManagementPage() {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <CardTitle className="text-lg">{kpi.title}</CardTitle>
-                    <CardDescription className="mt-1">{kpi.description}</CardDescription>
+                    <CardDescription className="mt-1">
+                      {kpi.description}
+                    </CardDescription>
                   </div>
-                  <Badge variant={kpi.status === "active" ? "default" : "secondary"} className="ml-2">
+                  <Badge
+                    variant={kpi.status === "active" ? "default" : "secondary"}
+                    className="ml-2"
+                  >
                     {kpi.status}
                   </Badge>
                 </div>
@@ -512,11 +559,14 @@ export default function KpiManagementPage() {
 
                 <div className="flex items-center space-x-2 text-sm text-gray-500">
                   <Calendar className="h-3 w-3" />
-                  <span>Updated: {new Date(kpi.lastUpdated).toLocaleDateString()}</span>
+                  <span>
+                    Updated: {new Date(kpi.lastUpdated).toLocaleDateString()}
+                  </span>
                 </div>
 
                 <div className="mt-2 text-sm text-gray-600">
-                  {kpi.elements.length} data field{kpi.elements.length !== 1 ? "s" : ""}
+                  {kpi.elements.length} data field
+                  {kpi.elements.length !== 1 ? "s" : ""}
                 </div>
               </CardContent>
 
@@ -530,5 +580,5 @@ export default function KpiManagementPage() {
         </div>
       )}
     </main>
-  )
+  );
 }
