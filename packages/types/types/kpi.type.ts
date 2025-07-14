@@ -1,5 +1,10 @@
 import { KpiStatus } from "../enums/enums";
-import { KpiTemplateBaseSchema, KpiFormDataSchema, CreateKpiTemplateSchema, UpdateKpiTemplateSchema } from "../schema/kpi.schema";
+import {
+  KpiTemplateBaseSchema,
+  KpiFormDataSchema,
+  CreateKpiTemplateSchema,
+  UpdateKpiTemplateSchema,
+} from "../schema/kpi.schema";
 import { z } from "zod";
 
 export interface KpiTemplate extends z.infer<typeof KpiTemplateBaseSchema> {
@@ -19,7 +24,15 @@ export type FormData = z.infer<typeof KpiFormDataSchema>;
 
 export interface FormField {
   id: string;
-  type: 'text' | 'number' | 'email' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'date';
+  type:
+    | "text"
+    | "number"
+    | "email"
+    | "textarea"
+    | "select"
+    | "checkbox"
+    | "radio"
+    | "date";
   label: string;
   required: boolean;
   placeholder?: string;

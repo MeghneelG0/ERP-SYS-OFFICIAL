@@ -8,4 +8,3 @@ export const PillarTemplateBaseSchema = z.object({
 
 export const CreatePillarTemplateSchema = PillarTemplateBaseSchema;
 export const UpdatePillarTemplateSchema = PillarTemplateBaseSchema.partial();
-

@@ -1,19 +1,32 @@
 import { z } from "zod";
 
 export const KpiFormDataSchema = z.object({
-  fields: z.array(z.object({
-    id: z.string(),
-    type: z.enum(['text', 'number', 'email', 'textarea', 'select', 'checkbox', 'radio', 'date']),
-    label: z.string(),
-    required: z.boolean(),
-    placeholder: z.string().optional(),
-    options: z.array(z.string()).optional(),
-    validation: z.object({
-      min: z.number().optional(),
-      max: z.number().optional(),
-      pattern: z.string().optional(),
-    }).optional(),
-  })),
+  fields: z.array(
+    z.object({
+      id: z.string(),
+      type: z.enum([
+        "text",
+        "number",
+        "email",
+        "textarea",
+        "select",
+        "checkbox",
+        "radio",
+        "date",
+      ]),
+      label: z.string(),
+      required: z.boolean(),
+      placeholder: z.string().optional(),
+      options: z.array(z.string()).optional(),
+      validation: z
+        .object({
+          min: z.number().optional(),
+          max: z.number().optional(),
+          pattern: z.string().optional(),
+        })
+        .optional(),
+    }),
+  ),
   layout: z.object({
     columns: z.number().min(1).max(4),
     spacing: z.number().min(0),
