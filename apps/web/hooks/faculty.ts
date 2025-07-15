@@ -4,10 +4,9 @@ import {
   useQueryClient,
   type UseMutationResult,
 } from "@tanstack/react-query";
-import axios from "axios";
 import type { AssignedKPI } from "@/lib/types";
 import { toast } from "sonner";
-import { ProcessError } from "@/lib/types";
+import type { ProcessError } from "@/lib/types";
 import type { KpiFormData } from "@/lib/types";
 
 // Add this dummy data at the top of the file after imports
@@ -486,16 +485,216 @@ const DUMMY_KPI_DATA = {
   },
 };
 
+// Add dummy data for QOC review submissions
+const DUMMY_QOC_REVIEW_DATA = {
+  "7": {
+    assignedKpis: [
+      {
+        assigned_kpi_id: 1,
+        kpi_name: "Student Pass Rate",
+        kpi_description:
+          "Track student pass rates across different courses and semesters",
+        kpi_status: "pending",
+        form_input: [
+          {
+            course_code: "CS101",
+            semester: "Fall 2024",
+            total_students: 45,
+            passed_students: 38,
+            pass_rate: 84.4,
+            instructor_name: "Dr. Smith",
+            comments:
+              "Good performance overall, need to focus on advanced topics",
+          },
+          {
+            course_code: "CS201",
+            semester: "Fall 2024",
+            total_students: 32,
+            passed_students: 29,
+            pass_rate: 90.6,
+            instructor_name: "Prof. Johnson",
+            comments: "Excellent results, students well prepared",
+          },
+        ],
+        qoc_remark: null,
+      },
+      {
+        assigned_kpi_id: 2,
+        kpi_name: "Faculty Performance Evaluation",
+        kpi_description:
+          "Comprehensive evaluation of faculty teaching effectiveness and research contributions",
+        kpi_status: "approved",
+        form_input: [
+          {
+            faculty_name: "Dr. Smith",
+            department: "Computer Science",
+            student_rating: 4.2,
+            peer_review_score: 4.5,
+            research_active: "Yes",
+            publications_count: 3,
+            teaching_load: "12 hours/week",
+          },
+          {
+            faculty_name: "Prof. Johnson",
+            department: "Mathematics",
+            student_rating: 4.8,
+            peer_review_score: 4.6,
+            research_active: "Yes",
+            publications_count: 5,
+            teaching_load: "10 hours/week",
+          },
+        ],
+        qoc_remark:
+          "Excellent faculty performance across all metrics. Recommend for promotion consideration.",
+      },
+      {
+        assigned_kpi_id: 3,
+        kpi_name: "Student Satisfaction Survey",
+        kpi_description:
+          "Comprehensive student satisfaction analysis across academic and non-academic services",
+        kpi_status: "redo",
+        form_input: [
+          {
+            student_id: "STU001",
+            program: "Bachelor of Science",
+            overall_satisfaction: "Satisfied",
+            academic_support_rating: 4,
+            campus_facilities_rating: 3,
+            feedback: "Good academic support, facilities could be improved",
+          },
+          {
+            student_id: "STU002",
+            program: "Master of Science",
+            overall_satisfaction: "Very Satisfied",
+            academic_support_rating: 5,
+            campus_facilities_rating: 4,
+            feedback: "Excellent program structure and support",
+          },
+        ],
+        qoc_remark:
+          "Data collection methodology needs improvement. Please provide more detailed demographic breakdown and increase sample size to at least 200 responses.",
+      },
+      {
+        assigned_kpi_id: 4,
+        kpi_name: "Research Publications & Citations",
+        kpi_description:
+          "Track faculty research output, publication quality, and citation impact",
+        kpi_status: "pending",
+        form_input: [
+          {
+            faculty_name: "Dr. Smith",
+            publication_title:
+              "Advanced Machine Learning Techniques in Educational Data Mining",
+            journal_name: "IEEE Transactions on Learning Technologies",
+            publication_date: "2024-01-15",
+            impact_factor: 3.2,
+            citation_count: 15,
+            research_area: "Artificial Intelligence",
+          },
+          {
+            faculty_name: "Prof. Johnson",
+            publication_title: "Statistical Methods for Educational Assessment",
+            journal_name: "Journal of Educational Measurement",
+            publication_date: "2023-12-10",
+            impact_factor: 2.8,
+            citation_count: 8,
+            research_area: "Educational Statistics",
+          },
+        ],
+        qoc_remark: null,
+      },
+      {
+        assigned_kpi_id: 5,
+        kpi_name: "Infrastructure Utilization Analysis",
+        kpi_description:
+          "Monitor and optimize campus facility usage and resource allocation",
+        kpi_status: "approved",
+        form_input: [
+          {
+            facility_name: "Computer Lab A",
+            facility_type: "Laboratory",
+            capacity: 40,
+            average_utilization: 85,
+            peak_hours: "9:00 AM - 12:00 PM",
+            maintenance_required: "No",
+            notes:
+              "High utilization during morning hours, consider extending hours",
+          },
+          {
+            facility_name: "Main Auditorium",
+            facility_type: "Auditorium",
+            capacity: 200,
+            average_utilization: 65,
+            peak_hours: "2:00 PM - 5:00 PM",
+            maintenance_required: "Yes",
+            notes:
+              "Audio system needs upgrade, booking system requires optimization",
+          },
+        ],
+        qoc_remark:
+          "Comprehensive infrastructure analysis with actionable insights. Maintenance recommendations are well-documented.",
+      },
+      {
+        assigned_kpi_id: 6,
+        kpi_name: "Course Completion Rates",
+        kpi_description:
+          "Track student course completion and dropout analysis across programs",
+        kpi_status: "pending",
+        form_input: [
+          {
+            course_code: "MATH201",
+            course_name: "Advanced Calculus",
+            enrolled_students: 78,
+            completed_students: 72,
+            completion_rate: 92.3,
+            dropout_reasons: "Difficulty level, prerequisite gaps",
+            semester: "Fall 2024",
+          },
+          {
+            course_code: "PHYS301",
+            course_name: "Quantum Physics",
+            enrolled_students: 45,
+            completed_students: 38,
+            completion_rate: 84.4,
+            dropout_reasons: "Mathematical complexity, time management",
+            semester: "Fall 2024",
+          },
+        ],
+        qoc_remark: null,
+      },
+    ],
+  },
+};
+
+// Replace fetchAssignedKPIs function
 const fetchAssignedKPIs = async (): Promise<AssignedKPI[]> => {
-  const response = await axios.get("/api/assigned-kpi");
-  return response.data.assignedKpis.map((kpi: any) => ({
-    assigned_kpi_id: kpi.assigned_kpi_id,
-    kpi_name: kpi.kpi_name,
-    kpi_status: kpi.kpi_status,
-    comments: kpi.comments,
-    kpi_id: kpi.original_kpi_id,
-    elements: kpi.elements,
-  }));
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  // Return dummy data instead of API call
+  return [
+    {
+      assigned_kpi_id: 1,
+      kpi_name: "Student Pass Rate",
+      kpi_status: "pending",
+      comments: "Needs review",
+      elements: [],
+    },
+    {
+      assigned_kpi_id: 2,
+      kpi_name: "Faculty Performance",
+      kpi_status: "approved",
+      comments: "Good performance",
+      elements: [],
+    },
+    {
+      assigned_kpi_id: 3,
+      kpi_name: "Student Satisfaction",
+      kpi_status: "redo",
+      comments: "Requires improvement",
+      elements: [],
+    },
+  ];
 };
 export function useFetchAssignedKPI() {
   return useQuery<AssignedKPI[]>({
@@ -506,12 +705,23 @@ export function useFetchAssignedKPI() {
   });
 }
 
+// Replace fetchKPIById function
 const fetchKPIById = async (id: number) => {
-  const { data } = await axios.get(`/api/assigned-kpi/${id}`);
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const kpiName = data.assignedKpi.kpi_name;
-  const elements = data.assignedKpi.elements;
-  return { kpiName, elements };
+  // Return dummy data instead of API call
+  const dummyKpiData = {
+    1: { kpiName: "Student Pass Rate", elements: [] },
+    2: { kpiName: "Faculty Performance", elements: [] },
+    3: { kpiName: "Student Satisfaction", elements: [] },
+  };
+
+  const data = dummyKpiData[id as keyof typeof dummyKpiData] || {
+    kpiName: "Unknown KPI",
+    elements: [],
+  };
+  return data;
 };
 
 export const useFetchKPIById = (id: number) => {
@@ -543,21 +753,21 @@ export const useFetchAssignedKPIById = (id: string) => {
   });
 };
 
+// Replace saveDataToBackend function
 export const saveDataToBackend = async (
   formData: KpiFormData,
 ): Promise<any> => {
-  try {
-    const response = await axios.put(`/api/assigned-kpi/${formData.id}`, {
-      form_input: formData.formData.entries,
-    });
-    return response.data;
-  } catch (error: any) {
-    throw new ProcessError({
-      name: "PROCESSING_ERROR",
-      message: error.response?.data?.error || "Failed to save data",
-      cause: error,
-    });
-  }
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  // Simulate successful save without actual API call
+  console.log("Saving KPI data (dummy):", formData);
+
+  return {
+    success: true,
+    message: "Data saved successfully",
+    data: formData,
+  };
 };
 
 export function useSaveKpiData(): UseMutationResult<
@@ -593,10 +803,17 @@ type KpiData = {
   form_input: Record<string, string | number>[] | null;
 };
 
+// Update the fetchAssignedKPIByDepartmentId function to use dummy data for QOC review
 const fetchAssignedKPIByDepartmentId = async (departmentId: string) => {
-  const { data } = await axios.get(`/api/assigned-kpi`, {
-    params: { department_id: departmentId },
-  });
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  const data =
+    DUMMY_QOC_REVIEW_DATA[departmentId as keyof typeof DUMMY_QOC_REVIEW_DATA];
+  if (!data) {
+    throw new Error(`No KPI submissions found for department ${departmentId}`);
+  }
+
   return data;
 };
 
