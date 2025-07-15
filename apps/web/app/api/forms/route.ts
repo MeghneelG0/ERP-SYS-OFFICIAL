@@ -1,3 +1,5 @@
+// ROUTE DISABLED: This API route is commented out due to backend revamp. Restore or update after backend changes.
+/*
 import { NextResponse } from "next/server";
 import { prisma } from "@repo/db"; // Import Prisma client from the shared package
 
@@ -14,13 +16,12 @@ export async function POST(request: Request): Promise<NextResponse> {
     const { id, title, elements, createdAt, value, description } = body;
 
     // Save the data to the `kpi` table
-    const newKpi = await prisma.kpi.create({
+    const newKpi = await prisma.kpiTemplate.create({
       data: {
         kpi_name: title || "Untitled KPI", // Use title as the KPI name
         form_data: elements, // Save the `elements` field as JSON in `form_data`
         kpi_description: description || "No description provided", // Use description or default
-        kpi_value: value || 0, // Use value or default to 0
-
+        current_value: value || 0, // Use value or default to 0
         kpi_created_at: createdAt ? new Date(createdAt) : new Date(), // Use `createdAt` or default to now
       },
     });
@@ -39,19 +40,17 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 }
 
-/**
- * GET function to fetch all KPIs with limited fields: id, name, created_at, updated_at, and elements.
- */
+// GET function to fetch all KPIs with limited fields: id, name, created_at, updated_at, and elements.
 export async function GET(): Promise<NextResponse> {
   try {
     // Fetch all KPIs from the database with selected fields
-    const kpis = await prisma.kpi.findMany({
+    const kpis = await prisma.kpiTemplate.findMany({
       select: {
         kpi_id: true,
         kpi_name: true,
         kpi_created_at: true,
         kpi_description: true,
-        kpi_value: true,
+        current_value: true,
         kpi_updated_at: true,
         form_data: true, // Include the form_data field
       },
@@ -62,7 +61,7 @@ export async function GET(): Promise<NextResponse> {
       id: `form-${kpi.kpi_id}`,
       kpi_id: kpi.kpi_id, // Include the raw numeric kpi_id
       title: kpi.kpi_name,
-      value: kpi.kpi_value,
+      value: kpi.current_value,
       description: kpi.kpi_description,
       elements: kpi.form_data, // Map form_data to elements
       createdAt: kpi.kpi_created_at?.toISOString(),
@@ -84,9 +83,7 @@ export async function GET(): Promise<NextResponse> {
   }
 }
 
-/**
- * GET_BY_ID function to fetch a particular KPI by ID.
- */
+// GET_BY_ID function to fetch a particular KPI by ID.
 export async function GET_BY_ID(request: Request): Promise<NextResponse> {
   try {
     // Extract the `kpi_id` from the query parameters
@@ -101,7 +98,7 @@ export async function GET_BY_ID(request: Request): Promise<NextResponse> {
     }
 
     // Fetch the KPI from the database
-    const kpi = await prisma.kpi.findUnique({
+    const kpi = await prisma.kpiTemplate.findUnique({
       where: { kpi_id: parseInt(kpiId, 10) },
       select: {
         kpi_id: true,
@@ -132,3 +129,4 @@ export async function GET_BY_ID(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Failed to fetch KPI" }, { status: 500 });
   }
 }
+*/

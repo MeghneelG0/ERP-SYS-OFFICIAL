@@ -1,3 +1,5 @@
+// ROUTE DISABLED: This API route is commented out due to backend revamp. Restore or update after backend changes.
+/*
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
@@ -110,3 +112,4 @@ function processContent(content) {
     })
     .filter(Boolean);
 }
+*/

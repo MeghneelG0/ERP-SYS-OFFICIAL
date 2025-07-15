@@ -203,7 +203,7 @@ function OptionsEditor({ element, updateElement }: OptionsEditorProps) {
   };
 
   const removeOption = (index: number) => {
-    const updatedOptions = options.filter((_, i) => i !== index);
+    const updatedOptions = options.filter((_: any, i: number) => i !== index);
     updateElement(element.id, { options: updatedOptions });
   };
 
@@ -222,7 +222,7 @@ function OptionsEditor({ element, updateElement }: OptionsEditorProps) {
       <Label>Options</Label>
 
       <div className="space-y-2">
-        {options.map((option, index) => (
+        {options.map((option: any, index: number) => (
           <div key={index} className="flex items-center gap-2">
             <Input
               placeholder="Label"

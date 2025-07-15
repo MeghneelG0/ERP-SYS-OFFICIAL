@@ -34,16 +34,17 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { DialogClose } from "@workspace/ui/components/dialog";
 import { Check, Eye, X, AlertCircle } from "lucide-react";
 import { Badge } from "@workspace/ui/components/badge";
+import type { AssignedKPI } from "@/lib/types";
 
 type KpiData = {
   assigned_kpi_id: number;
   kpi_name: string;
   kpi_description: string;
   kpi_status: string;
-  form_input: Record<string, string | number>[] | null;
+  form_responses: Record<string, string | number>[] | null;
 };
 
-const getStatusBadge = (status) => {
+const getStatusBadge = (status: string) => {
   switch (status) {
     case "approved":
       return (
@@ -81,15 +82,16 @@ const getStatusBadge = (status) => {
 export default function QOCSubmissionReview() {
   const id_i = 7;
   const { data, isLoading, error } = useFetchKPISubmisson(id_i.toString());
-  const [selectedKpi, setSelectedKpi] = useState<KpiData | null>(null);
+  const [selectedKpi, setSelectedKpi] = useState<AssignedKPI | null>(null);
   console.log("data", data);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [qocRemark, setQocRemark] = useState("");
+  const [dataState, setDataState] = useState(data); // if setData is needed
 
-  const handleReviewSubmit = (action) => {
+  const handleReviewSubmit = (action: string) => {
     // Update the KPI status in the data
-    const updatedKpis = data.assignedKpis.map((kpi) => {
-      if (kpi.assigned_kpi_id === selectedKpi.assigned_kpi_id) {
+    const updatedKpis = data.assignedKpis.map((kpi: AssignedKPI) => {
+      if (selectedKpi && kpi.assigned_kpi_id === selectedKpi.assigned_kpi_id) {
         return {
           ...kpi,
           kpi_status: action,
@@ -99,7 +101,7 @@ export default function QOCSubmissionReview() {
       return kpi;
     });
 
-    setData({ ...data, assignedKpis: updatedKpis });
+    setDataState({ ...data, assignedKpis: updatedKpis });
     setQocRemark("");
     setDialogOpen(false);
   };
@@ -113,7 +115,7 @@ export default function QOCSubmissionReview() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data.assignedKpis && data.assignedKpis.length > 0 ? (
-          data.assignedKpis.map((kpi) => (
+          data.assignedKpis.map((kpi: AssignedKPI) => (
             <Card key={kpi.assigned_kpi_id}>
               <CardHeader>
                 <div className="flex justify-between items-center">
@@ -180,10 +182,10 @@ export default function QOCSubmissionReview() {
                     Submitted Information
                   </h3>
                   {selectedKpi &&
-                  selectedKpi.form_input &&
-                  selectedKpi.form_input.length > 0 ? (
+                  selectedKpi.form_responses &&
+                  selectedKpi.form_responses.length > 0 ? (
                     <div className="grid gap-4">
-                      {selectedKpi.form_input.map((entry, idx) => (
+                      {selectedKpi.form_responses.map((entry, idx) => (
                         <Card key={idx}>
                           <CardContent className="pt-6">
                             {Object.entries(entry).map(([key, value]) => (

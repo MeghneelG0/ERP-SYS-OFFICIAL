@@ -8,7 +8,7 @@ interface EditFormPageProps {
 }
 
 export default async function EditFormPage({ params }: EditFormPageProps) {
-  const form = useFormById(params.id);
+  const { data: form } = useFormById(params.id);
 
   if (!form) {
     return <p>Error</p>;

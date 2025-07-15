@@ -9,6 +9,16 @@ import type { AssignedKPI } from "@/lib/types";
 import { toast } from "sonner";
 import { ProcessError } from "@/lib/types";
 import type { KpiFormData } from "@/lib/types";
+import type { FormElementType } from "@/lib/types";
+
+// Helper to ensure type is FormElementType
+const asFormElementType = (type: string): FormElementType => {
+  const allowed: FormElementType[] = [
+    "text", "textarea", "number", "select", "checkbox", "radio", "date", "email", "file"
+  ];
+  if (allowed.includes(type as FormElementType)) return type as FormElementType;
+  return "text";
+};
 
 // Add this dummy data at the top of the file after imports
 const DUMMY_KPI_DATA = {
@@ -20,7 +30,7 @@ const DUMMY_KPI_DATA = {
       elements: [
         {
           id: "course_code",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Course Code",
             placeholder: "e.g., CS101",
@@ -29,7 +39,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "semester",
-          type: "select",
+          type: asFormElementType("select"),
           attributes: {
             label: "Semester",
             required: true,
@@ -42,7 +52,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "total_students",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Total Students",
             placeholder: "Enter total number of students",
@@ -52,7 +62,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "passed_students",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Passed Students",
             placeholder: "Enter number of passed students",
@@ -62,7 +72,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "pass_rate",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Pass Rate (%)",
             placeholder: "Calculated pass rate",
@@ -73,7 +83,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "instructor_name",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Instructor Name",
             placeholder: "Enter instructor name",
@@ -82,7 +92,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "comments",
-          type: "textarea",
+          type: asFormElementType("textarea"),
           attributes: {
             label: "Comments",
             placeholder: "Additional notes or observations",
@@ -129,7 +139,7 @@ const DUMMY_KPI_DATA = {
       elements: [
         {
           id: "faculty_name",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Faculty Name",
             placeholder: "Enter faculty name",
@@ -138,7 +148,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "department",
-          type: "select",
+          type: asFormElementType("select"),
           attributes: {
             label: "Department",
             required: true,
@@ -152,7 +162,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "student_rating",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Student Rating (1-5)",
             required: true,
@@ -162,7 +172,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "peer_review_score",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Peer Review Score (1-5)",
             required: true,
@@ -172,7 +182,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "research_active",
-          type: "checkbox",
+          type: asFormElementType("checkbox"),
           attributes: {
             label: "Research Active",
           },
@@ -204,7 +214,7 @@ const DUMMY_KPI_DATA = {
       elements: [
         {
           id: "student_id",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Student ID",
             placeholder: "Enter student ID",
@@ -213,7 +223,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "program",
-          type: "select",
+          type: asFormElementType("select"),
           attributes: {
             label: "Program",
             required: true,
@@ -226,7 +236,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "overall_satisfaction",
-          type: "radio",
+          type: asFormElementType("radio"),
           attributes: {
             label: "Overall Satisfaction",
             required: true,
@@ -241,7 +251,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "academic_support_rating",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Academic Support Rating (1-5)",
             required: true,
@@ -251,7 +261,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "campus_facilities_rating",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Campus Facilities Rating (1-5)",
             required: true,
@@ -261,7 +271,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "feedback",
-          type: "textarea",
+          type: asFormElementType("textarea"),
           attributes: {
             label: "Additional Feedback",
             placeholder: "Please provide any additional comments",
@@ -297,7 +307,7 @@ const DUMMY_KPI_DATA = {
       elements: [
         {
           id: "faculty_name",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Faculty Name",
             placeholder: "Enter faculty name",
@@ -306,7 +316,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "publication_title",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Publication Title",
             placeholder: "Enter publication title",
@@ -315,7 +325,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "journal_name",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Journal/Conference Name",
             placeholder: "Enter journal or conference name",
@@ -324,7 +334,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "publication_date",
-          type: "date",
+          type: asFormElementType("date"),
           attributes: {
             label: "Publication Date",
             required: true,
@@ -332,7 +342,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "impact_factor",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Impact Factor",
             placeholder: "Enter impact factor",
@@ -341,7 +351,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "citation_count",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Citation Count",
             placeholder: "Enter citation count",
@@ -350,7 +360,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "research_area",
-          type: "select",
+          type: asFormElementType("select"),
           attributes: {
             label: "Research Area",
             required: true,
@@ -394,7 +404,7 @@ const DUMMY_KPI_DATA = {
       elements: [
         {
           id: "facility_name",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Facility Name",
             placeholder: "Enter facility name",
@@ -403,7 +413,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "facility_type",
-          type: "select",
+          type: asFormElementType("select"),
           attributes: {
             label: "Facility Type",
             required: true,
@@ -418,7 +428,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "capacity",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Total Capacity",
             placeholder: "Enter total capacity",
@@ -428,7 +438,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "average_utilization",
-          type: "number",
+          type: asFormElementType("number"),
           attributes: {
             label: "Average Utilization (%)",
             placeholder: "Enter utilization percentage",
@@ -439,7 +449,7 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "peak_hours",
-          type: "text",
+          type: asFormElementType("text"),
           attributes: {
             label: "Peak Usage Hours",
             placeholder: "e.g., 9:00 AM - 12:00 PM",
@@ -447,14 +457,14 @@ const DUMMY_KPI_DATA = {
         },
         {
           id: "maintenance_required",
-          type: "checkbox",
+          type: asFormElementType("checkbox"),
           attributes: {
             label: "Maintenance Required",
           },
         },
         {
           id: "notes",
-          type: "textarea",
+          type: asFormElementType("textarea"),
           attributes: {
             label: "Additional Notes",
             placeholder: "Any additional observations or notes",
@@ -548,7 +558,7 @@ export const saveDataToBackend = async (
 ): Promise<any> => {
   try {
     const response = await axios.put(`/api/assigned-kpi/${formData.id}`, {
-      form_input: formData.formData.entries,
+      form_responses: formData.formData.entries,
     });
     return response.data;
   } catch (error: any) {
@@ -590,12 +600,12 @@ type KpiData = {
   kpi_name: string;
   kpi_description: string;
   kpi_status: string;
-  form_input: Record<string, string | number>[] | null;
+  form_responses: Record<string, string | number>[] | null;
 };
 
 const fetchAssignedKPIByDepartmentId = async (departmentId: string) => {
   const { data } = await axios.get(`/api/assigned-kpi`, {
-    params: { department_id: departmentId },
+    params: { dept_id: departmentId },
   });
   return data;
 };

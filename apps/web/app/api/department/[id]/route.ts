@@ -1,3 +1,4 @@
+/*
 import { NextResponse } from "next/server";
 import { prisma } from "@repo/db";
 
@@ -15,10 +16,10 @@ export async function GET(
       );
     }
 
-    const department = await prisma.departments.findUnique({
+    const department = await prisma.department.findUnique({
       where: { dept_id: Number(dept_id) },
       include: {
-        pillars: {
+        department_pillar: {
           include: {
             assigned_kpi: true,
           },
@@ -50,3 +51,4 @@ export async function GET(
     );
   }
 }
+*/

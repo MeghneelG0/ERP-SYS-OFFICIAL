@@ -96,6 +96,9 @@ export interface AssignedKPI {
   kpi_status: string;
   comments: string;
   elements: FormElementInstance[];
+  kpi_description?: string;
+  form_responses?: Record<string, string | number>[] | null;
+  qoc_remark?: string;
 }
 
 export interface DeptConfig {
@@ -105,5 +108,5 @@ export interface DeptConfig {
   hodName: string;
   createdAt: string;
   membersCount: number;
-  pillars: PillarInstance[];
+ department_pillar: PillarInstance[];
 }

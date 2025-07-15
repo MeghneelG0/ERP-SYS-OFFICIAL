@@ -31,12 +31,12 @@ Future portals include (TBD):
   - KPI Builder (Currently build kpi rename it please) (We are creating templates here)
     **Note**: This page will interact with the `kpi`, `pillars` table in the database. And it will interact with the api's defined under `apps/server/src/routes/kpi.ts`, `apps/server/src/routes/kpi.ts`.
     - It will have the following components:
-      - KPI Builder (Kpi will be assigned to pillars in this stage):
+      - KPI Builder (Kpi will be assigned todepartment_pillar in this stage):
         1. Create or select pillar component
         2. On creation or selection of pillar component, it will show the following:
            - Existing KPI Metadata (with button to view/edit/delete)
            - Create KPI button
-  - Assign KPI (Rename Title of page to Asssign KPI and pillars to departments):
+  - Assign KPI (Rename Title of page to Asssign KPI anddepartment_pillar to departments):
     **Note**: This page will interact with the `kpi`, `department`, `pillars` and `assigned_kpi` tables in the database. And it will interact with the api's defined under `apps/server/src/routes/kpi.ts` and `apps/server/src/routes/department.ts`.
     - Department Selector only at load
     - On selection of department, it will show the following:
@@ -225,7 +225,7 @@ The ERP-SYS database is built around a **template-based KPI management system** 
 3. **Users** - Department members with role-based access (HOD, KPI Coordinator, Faculty)
 4. **Pillar Templates** - Organizational framework templates created by QOC
 5. **KPI Templates** - Performance indicator templates with form structures
-6. **Department Pillars** - Department-specific instances of pillar templates
+6. **Departmentdepartment_pillar** - Department-specific instances of pillar templates
 7. **Department KPIs** - Operational KPI tracking with performance data
 
 #### Key Features

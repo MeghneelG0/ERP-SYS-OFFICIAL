@@ -73,7 +73,7 @@ export function QOCReview() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
-  useOutsideClick(dropdownRef, () => setDropdownOpen(false));
+  useOutsideClick(dropdownRef as React.RefObject<HTMLDivElement>, () => setDropdownOpen(false));
 
   const filteredSubmissions =
     filter === "all"

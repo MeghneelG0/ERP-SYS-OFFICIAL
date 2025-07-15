@@ -10,14 +10,21 @@ interface KpiViewPageProps {
   };
 }
 
+async function fetchKpiById(id: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/kpi/${id}`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.kpi;
+}
+
 export default async function KpiViewPage({ params }: KpiViewPageProps) {
-  const kpi = await getKpiById(params.id);
+  const kpi = await fetchKpiById(params.id);
 
   if (!kpi) {
     notFound();
   }
 
-  if (!kpi.hasForm || !kpi.form) {
+  if (!kpi.elements) {
     return (
       <main className="container mx-auto py-8 px-4">
         <div className="mb-6">
@@ -27,7 +34,7 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
               Back to KPI Dashboard
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold">KPI: {kpi.name}</h1>
+          <h1 className="text-3xl font-bold">KPI: {kpi.kpi_name}</h1>
         </div>
 
         <div className="text-center py-12 border rounded-lg bg-gray-50">
@@ -63,7 +70,7 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
             </Button>
           </Link>
         </div>
-        <h1 className="text-3xl font-bold mt-4">KPI: {kpi.name}</h1>
+        <h1 className="text-3xl font-bold mt-4">KPI: {kpi.kpi_name}</h1>
         <p className="text-gray-600 mt-2">
           View and submit the form for this KPI
         </p>
@@ -71,9 +78,8 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
 
       <div className="max-w-3xl mx-auto">
         <FormPreview
-          formTitle={kpi.name}
-          elements={kpi.form.elements}
-          kpiId={kpi.id}
+          formTitle={kpi.kpi_name}
+          elements={kpi.elements}
         />
       </div>
     </main>

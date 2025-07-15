@@ -6,27 +6,17 @@ import { prisma } from "@repo/db";
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: number } },
+  { params }: { params: { id: string } },
 ): Promise<NextResponse> {
   try {
     const { id } = params;
-    const assigned_kpi_id = id;
+    const kpiId = String(id);
 
-    if (isNaN(assigned_kpi_id)) {
-      return NextResponse.json(
-        { success: false, error: "Invalid assigned KPI ID" },
-        { status: 400 },
-      );
-    }
-
-    const assignedKpi = await prisma.assigned_kpi.findUnique({
-      where: { assigned_kpi_id },
+    const assignedKpi = await prisma.departmentKpi.findUnique({
+      where: { id: kpiId },
       include: {
-        pillar: {
-          include: {
-            department: true,
-          },
-        },
+        department_pillar: true,
+        department: true,
       },
     });
 
@@ -39,20 +29,19 @@ export async function GET(
 
     // Return with transformed structure and department context
     const responseKpi = {
-      assigned_kpi_id: assignedKpi.assigned_kpi_id,
-      pillar_id: assignedKpi.pillar_id,
-      department_id: assignedKpi.pillar.department_id,
+      id: assignedKpi.id,
+      dept_pillar_id: assignedKpi.dept_pillar_id,
+      dept_id: assignedKpi.dept_id,
       kpi_name: assignedKpi.kpi_name,
       kpi_status: assignedKpi.kpi_status,
-      added_date: assignedKpi.added_date,
-      resolved_date: assignedKpi.resolved_date,
+      assigned_date: assignedKpi.assigned_date,
+      completed_date: assignedKpi.completed_date,
       comments: assignedKpi.comments,
-      kpi_value: assignedKpi.kpi_value,
+      current_value: assignedKpi.current_value,
       kpi_description: assignedKpi.kpi_description,
-      form_input: assignedKpi.form_input,
-      pillar: assignedKpi.pillar,
-      department: assignedKpi.pillar.department,
-      id: `assigned-${assignedKpi.assigned_kpi_id}`,
+      form_responses: assignedKpi.form_responses,
+      department_pillar: assignedKpi.department_pillar,
+      department: assignedKpi.department,
       elements: assignedKpi.form_data,
     };
 
@@ -75,35 +64,27 @@ export async function PUT(
 ): Promise<NextResponse> {
   try {
     const { id } = params;
-    const assigned_kpi_id = Number(id);
-
-    if (isNaN(assigned_kpi_id)) {
-      return NextResponse.json(
-        { success: false, error: "Invalid assigned KPI ID" },
-        { status: 400 },
-      );
-    }
+    const kpiId = String(id);
 
     const body = await request.json();
     const {
       kpi_status,
       comments,
       elements,
-      resolved_date,
-      kpi_value,
+      completed_date,
+      current_value,
       kpi_description,
-      form_input,
+      form_responses,
+      dept_pillar_id,
+      dept_id,
     } = body;
 
     // Check if assigned KPI exists and get its related data
-    const existingKpi = await prisma.assigned_kpi.findUnique({
-      where: { assigned_kpi_id },
+    const existingKpi = await prisma.departmentKpi.findUnique({
+      where: { id: kpiId },
       include: {
-        pillar: {
-          include: {
-            department: true,
-          },
-        },
+        department_pillar: true,
+        department: true,
       },
     });
 
@@ -114,10 +95,10 @@ export async function PUT(
       );
     }
 
-    // Optional: Validate department_id if provided
+    // Optional: Validate dept_id if provided
     if (
-      body.department_id &&
-      existingKpi.pillar.department_id !== Number(body.department_id)
+      dept_id &&
+      existingKpi.dept_id !== dept_id
     ) {
       return NextResponse.json(
         {
@@ -128,12 +109,12 @@ export async function PUT(
       );
     }
 
-    // Optional: If pillar_id is being changed, ensure it belongs to the same department
-    if (body.pillar_id && body.pillar_id !== existingKpi.pillar_id) {
-      const newPillar = await prisma.pillars.findFirst({
+    // Optional: If dept_pillar_id is being changed, ensure it belongs to the same department
+    if (dept_pillar_id && dept_pillar_id !== existingKpi.dept_pillar_id) {
+      const newPillar = await prisma.departmentPillar.findFirst({
         where: {
-          pillar_id: Number(body.pillar_id),
-          department_id: existingKpi.pillar.department_id,
+          id: dept_pillar_id,
+          dept_id: existingKpi.dept_id,
         },
       });
 
@@ -151,26 +132,23 @@ export async function PUT(
     // Update data preparation
     const updateData: any = {};
 
-    if (body.pillar_id) updateData.pillar_id = Number(body.pillar_id);
+    if (dept_pillar_id) updateData.dept_pillar_id = dept_pillar_id;
     if (kpi_status !== undefined) updateData.kpi_status = kpi_status;
     if (comments !== undefined) updateData.comments = comments;
     if (elements) updateData.form_data = elements;
-    if (resolved_date) updateData.resolved_date = new Date(resolved_date);
-    if (kpi_value !== undefined) updateData.kpi_value = kpi_value;
+    if (completed_date) updateData.completed_date = new Date(completed_date);
+    if (current_value !== undefined) updateData.current_value = current_value;
     if (kpi_description !== undefined)
       updateData.kpi_description = kpi_description;
-    if (form_input !== undefined) updateData.form_input = form_input;
+    if (form_responses !== undefined) updateData.form_responses = form_responses;
 
     // Update the assigned KPI
-    const updatedKpi = await prisma.assigned_kpi.update({
-      where: { assigned_kpi_id },
+    const updatedKpi = await prisma.departmentKpi.update({
+      where: { id: kpiId },
       data: updateData,
       include: {
-        pillar: {
-          include: {
-            department: true,
-          },
-        },
+        department_pillar: true,
+        department: true,
       },
     });
 
@@ -179,20 +157,19 @@ export async function PUT(
       success: true,
       message: "Assigned KPI updated successfully",
       assignedKpi: {
-        assigned_kpi_id: updatedKpi.assigned_kpi_id,
-        pillar_id: updatedKpi.pillar_id,
-        department_id: updatedKpi.pillar.department_id,
+        id: updatedKpi.id,
+        dept_pillar_id: updatedKpi.dept_pillar_id,
+        dept_id: updatedKpi.dept_id,
         kpi_name: updatedKpi.kpi_name,
         kpi_status: updatedKpi.kpi_status,
-        added_date: updatedKpi.added_date,
-        resolved_date: updatedKpi.resolved_date,
+        assigned_date: updatedKpi.assigned_date,
+        completed_date: updatedKpi.completed_date,
         comments: updatedKpi.comments,
-        kpi_value: updatedKpi.kpi_value,
+        current_value: updatedKpi.current_value,
         kpi_description: updatedKpi.kpi_description,
-        form_input: updatedKpi.form_input,
-        department: updatedKpi.pillar.department,
-        pillar: updatedKpi.pillar,
-        id: `assigned-${updatedKpi.assigned_kpi_id}`,
+        form_responses: updatedKpi.form_responses,
+        department: updatedKpi.department,
+        department_pillar: updatedKpi.department_pillar,
         elements: updatedKpi.form_data,
       },
     });
@@ -214,20 +191,14 @@ export async function DELETE(
 ): Promise<NextResponse> {
   try {
     const { id } = params;
-    const assigned_kpi_id = Number(id);
-
-    if (isNaN(assigned_kpi_id)) {
-      return NextResponse.json(
-        { success: false, error: "Invalid assigned KPI ID" },
-        { status: 400 },
-      );
-    }
+    const kpiId = String(id);
 
     // Check if assigned KPI exists
-    const existingKpi = await prisma.assigned_kpi.findUnique({
-      where: { assigned_kpi_id },
+    const existingKpi = await prisma.departmentKpi.findUnique({
+      where: { id: kpiId },
       include: {
-        pillar: true,
+        department_pillar: true,
+        department: true,
       },
     });
 
@@ -240,21 +211,21 @@ export async function DELETE(
 
     // Keep track of the department and pillar info for the response
     const deletedInfo = {
-      pillar_id: existingKpi.pillar_id,
-      department_id: existingKpi.pillar.department_id,
+      dept_pillar_id: existingKpi.dept_pillar_id,
+      dept_id: existingKpi.dept_id,
       kpi_name: existingKpi.kpi_name,
     };
 
     // Delete the assigned KPI
-    await prisma.assigned_kpi.delete({
-      where: { assigned_kpi_id },
+    await prisma.departmentKpi.delete({
+      where: { id: kpiId },
     });
 
     return NextResponse.json({
       success: true,
       message: "Assigned KPI deleted successfully",
       deleted: {
-        assigned_kpi_id,
+        id: kpiId,
         ...deletedInfo,
       },
     });
