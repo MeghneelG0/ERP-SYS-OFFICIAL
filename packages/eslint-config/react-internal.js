@@ -26,13 +26,22 @@ export const config = [
       },
     },
   },
+  // TypeScript-specific config
   {
+    files: ["**/*.ts", "**/*.tsx"],
     plugins: {
       "react-hooks": pluginReactHooks,
     },
     settings: { react: { version: "detect" } },
-    parserOptions: {
-      project: "./tsconfig.lint.json",
+    languageOptions: {
+      ...pluginReact.configs.flat.recommended.languageOptions,
+      globals: {
+        ...globals.serviceworker,
+        ...globals.browser,
+      },
+      parserOptions: {
+        project: "./tsconfig.lint.json",
+      },
     },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
