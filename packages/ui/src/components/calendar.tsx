@@ -2,11 +2,10 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
+import { DayPicker, DayPickerProps, CaptionProps } from "react-day-picker";
 
 import { cn } from "@workspace/ui/lib/utils";
 import { buttonVariants } from "@workspace/ui/components/button";
-import { CaptionProps } from "react-day-picker";
 
 function CustomCaption(props: CaptionProps) {
   const { displayMonth, goToMonth, nextMonth, previousMonth, locale } = props;
@@ -90,7 +89,7 @@ function Calendar({
       components={
         {
           Caption: CustomCaption,
-        } as any
+        } as DayPickerProps["components"]
       }
       {...props}
     />

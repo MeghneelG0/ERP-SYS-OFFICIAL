@@ -31,6 +31,9 @@ export const config = [
       "react-hooks": pluginReactHooks,
     },
     settings: { react: { version: "detect" } },
+    parserOptions: {
+      project: "./tsconfig.lint.json",
+    },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
       // React scope no longer necessary with new JSX transform.
