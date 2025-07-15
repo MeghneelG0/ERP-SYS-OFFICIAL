@@ -15,18 +15,27 @@ function CustomCaption(props: CaptionProps) {
         type="button"
         onClick={() => previousMonth && goToMonth(previousMonth)}
         disabled={!previousMonth}
-        className={cn(buttonVariants({ variant: "outline" }), "size-7 bg-transparent p-0 opacity-50 hover:opacity-100")}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        )}
       >
         <ChevronLeft className="size-4" />
       </button>
       <span>
-        {displayMonth.toLocaleString(locale, { month: "long", year: "numeric" })}
+        {displayMonth.toLocaleString(locale, {
+          month: "long",
+          year: "numeric",
+        })}
       </span>
       <button
         type="button"
         onClick={() => nextMonth && goToMonth(nextMonth)}
         disabled={!nextMonth}
-        className={cn(buttonVariants({ variant: "outline" }), "size-7 bg-transparent p-0 opacity-50 hover:opacity-100")}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        )}
       >
         <ChevronRight className="size-4" />
       </button>
