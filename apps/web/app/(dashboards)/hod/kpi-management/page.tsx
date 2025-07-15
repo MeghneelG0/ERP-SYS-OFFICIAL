@@ -458,10 +458,6 @@ export default function KpiManagementPage() {
     ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
     : [];
 
-  const kpisForPillar = selectedPillar
-    ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
-    : [];
-
   return (
     <main className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-8">
