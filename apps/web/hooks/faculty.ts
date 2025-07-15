@@ -14,7 +14,15 @@ import type { FormElementType } from "@/lib/types";
 // Helper to ensure type is FormElementType
 const asFormElementType = (type: string): FormElementType => {
   const allowed: FormElementType[] = [
-    "text", "textarea", "number", "select", "checkbox", "radio", "date", "email", "file"
+    "text",
+    "textarea",
+    "number",
+    "select",
+    "checkbox",
+    "radio",
+    "date",
+    "email",
+    "file",
   ];
   if (allowed.includes(type as FormElementType)) return type as FormElementType;
   return "text";

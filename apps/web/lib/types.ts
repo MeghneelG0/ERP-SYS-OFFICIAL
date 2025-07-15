@@ -108,5 +108,5 @@ export interface DeptConfig {
   hodName: string;
   createdAt: string;
   membersCount: number;
- department_pillar: PillarInstance[];
+  department_pillar: PillarInstance[];
 }

@@ -96,10 +96,7 @@ export async function PUT(
     }
 
     // Optional: Validate dept_id if provided
-    if (
-      dept_id &&
-      existingKpi.dept_id !== dept_id
-    ) {
+    if (dept_id && existingKpi.dept_id !== dept_id) {
       return NextResponse.json(
         {
           success: false,
@@ -140,7 +137,8 @@ export async function PUT(
     if (current_value !== undefined) updateData.current_value = current_value;
     if (kpi_description !== undefined)
       updateData.kpi_description = kpi_description;
-    if (form_responses !== undefined) updateData.form_responses = form_responses;
+    if (form_responses !== undefined)
+      updateData.form_responses = form_responses;
 
     // Update the assigned KPI
     const updatedKpi = await prisma.departmentKpi.update({

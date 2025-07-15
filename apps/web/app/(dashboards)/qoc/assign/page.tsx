@@ -156,7 +156,9 @@ export default function AssignKpiToDepartmentPage() {
       {/* Assigneddepartment_pillar Section */}
       {false && selectedDepartmentId && (
         <>
-          <h2 className="text-xl font-semibold mb-2">Assigneddepartment_pillar</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Assigneddepartment_pillar
+          </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
             {assignedPillars.length === 0 ? (
               <p>Nodepartment_pillar assigned to this department.</p>

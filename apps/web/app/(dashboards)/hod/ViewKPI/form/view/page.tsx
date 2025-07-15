@@ -11,7 +11,9 @@ interface KpiViewPageProps {
 }
 
 async function fetchKpiById(id: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/kpi/${id}`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL || ""}/api/kpi/${id}`,
+  );
   if (!res.ok) return null;
   const data = await res.json();
   return data.kpi;
@@ -77,10 +79,7 @@ export default async function KpiViewPage({ params }: KpiViewPageProps) {
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <FormPreview
-          formTitle={kpi.kpi_name}
-          elements={kpi.elements}
-        />
+        <FormPreview formTitle={kpi.kpi_name} elements={kpi.elements} />
       </div>
     </main>
   );

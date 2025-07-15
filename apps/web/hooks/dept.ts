@@ -9,7 +9,7 @@ const fetchDepts = async (): Promise<DeptConfig[]> => {
   return response.data.departments.map((dept: any) => ({
     id: dept.dept_id,
     name: dept.dept_name,
-   department_pillar: (dept.pillars || []).map((pillar: any) => ({
+    department_pillar: (dept.pillars || []).map((pillar: any) => ({
       id: pillar.dept_pillar_id,
       name: pillar.pillar_name,
     })),

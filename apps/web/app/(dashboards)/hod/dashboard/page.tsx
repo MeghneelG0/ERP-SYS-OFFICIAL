@@ -630,7 +630,9 @@ export function DashboardContent() {
                     <Button
                       key={pillar.id}
                       variant={
-                        selectedPillar && selectedPillar.id === pillar.id ? "default" : "outline"
+                        selectedPillar && selectedPillar.id === pillar.id
+                          ? "default"
+                          : "outline"
                       }
                       className="w-full justify-between h-auto p-4"
                       onClick={() => setSelectedPillar(pillar)}
@@ -735,40 +737,42 @@ export function DashboardContent() {
                       Recent Activity
                     </h4>
                     <div className="space-y-2">
-                      {selectedPillar?.recentActivity?.map((activity, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-2 bg-muted/50 rounded-lg"
-                        >
-                          <div>
-                            <div className="text-sm font-medium">
-                              {activity.kpi}
+                      {selectedPillar?.recentActivity?.map(
+                        (activity, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-2 bg-muted/50 rounded-lg"
+                          >
+                            <div>
+                              <div className="text-sm font-medium">
+                                {activity.kpi}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {activity.department}
+                              </div>
                             </div>
-                            <div className="text-xs text-muted-foreground">
-                              {activity.department}
+                            <div className="text-right">
+                              <Badge
+                                variant={
+                                  activity.status === "completed"
+                                    ? "default"
+                                    : "secondary"
+                                }
+                                className={
+                                  activity.status === "completed"
+                                    ? "bg-green-500"
+                                    : ""
+                                }
+                              >
+                                {activity.status}
+                              </Badge>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {activity.date}
+                              </div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <Badge
-                              variant={
-                                activity.status === "completed"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                              className={
-                                activity.status === "completed"
-                                  ? "bg-green-500"
-                                  : ""
-                              }
-                            >
-                              {activity.status}
-                            </Badge>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {activity.date}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -784,7 +788,8 @@ export function DashboardContent() {
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-bold text-orange-600">
-                        {(selectedPillar?.total ?? 0) - (selectedPillar?.completed ?? 0)}
+                        {(selectedPillar?.total ?? 0) -
+                          (selectedPillar?.completed ?? 0)}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Pending

@@ -437,7 +437,9 @@ export function QOCDashboard() {
                           </span>
                         </div>
                         <Progress
-                          value={selectedDepartment?.qualityMetrics.dataAccuracy}
+                          value={
+                            selectedDepartment?.qualityMetrics.dataAccuracy
+                          }
                         />
                       </div>
                       <div className="space-y-1">
@@ -450,7 +452,9 @@ export function QOCDashboard() {
                           </span>
                         </div>
                         <Progress
-                          value={selectedDepartment?.qualityMetrics.completeness}
+                          value={
+                            selectedDepartment?.qualityMetrics.completeness
+                          }
                         />
                       </div>
                       <div className="space-y-1">
