@@ -40,7 +40,6 @@ export default function RootLayout({
               color: "#666",
             }}
           >
-            @ 2025 and made with love in India 🇮🇳
           </footer>
           <Toaster richColors />
         </body>
