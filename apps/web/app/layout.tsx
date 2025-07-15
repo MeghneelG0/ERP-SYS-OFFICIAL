@@ -39,8 +39,7 @@ export default function RootLayout({
               fontSize: "1rem",
               color: "#666",
             }}
-          >
-          </footer>
+          ></footer>
           <Toaster richColors />
         </body>
       </html>
