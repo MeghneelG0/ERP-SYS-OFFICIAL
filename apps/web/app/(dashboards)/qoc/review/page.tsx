@@ -51,8 +51,17 @@ import { Badge } from "@workspace/ui/components/badge";
 import { toast } from "sonner";
 import Link from "next/link";
 import KpiReviewTable from "@/components/qoc/kpi-review-table";
-import { PillarKpiTable, PerformanceSheetTable, dummyPerformanceData } from "@/components/qoc/performance-sheet-table";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@workspace/ui/components/accordion";
+import {
+  PillarKpiTable,
+  PerformanceSheetTable,
+  dummyPerformanceData,
+} from "@/components/qoc/performance-sheet-table";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@workspace/ui/components/accordion";
 
 type KpiData = {
   assigned_kpi_id: number;
@@ -334,7 +343,8 @@ export default function QOCSubmissionReview() {
     };
 
     localData.assignedKpis.forEach((kpi: KpiData) => {
-      counts.byDepartment[kpi.department] = (counts.byDepartment[kpi.department] || 0) + 1;
+      counts.byDepartment[kpi.department] =
+        (counts.byDepartment[kpi.department] || 0) + 1;
     });
 
     return counts;
@@ -401,20 +411,32 @@ export default function QOCSubmissionReview() {
   };
 
   // Group KPIs by pillar
-  const kpisByPillar: Record<string, import("@/components/qoc/performance-sheet-table").PillarKpi[]> = filteredKpis.reduce((acc: Record<string, import("@/components/qoc/performance-sheet-table").PillarKpi[]>, kpi: KpiData) => {
-    if (!acc[kpi.pillar]) acc[kpi.pillar] = [];
-    (acc[kpi.pillar] ??= []).push({
-      kpi_no: kpi.assigned_kpi_id,
-      metric: kpi.kpi_name,
-      dataProvidedBy: "HoD",
-      target: "25%", // dummy value
-      actual: "20%", // dummy value
-      percentAchieved: "80%", // dummy value
-      status: kpi.kpi_status,
-      kpiId: kpi.assigned_kpi_id,
-    });
-    return acc;
-  }, {});
+  const kpisByPillar: Record<
+    string,
+    import("@/components/qoc/performance-sheet-table").PillarKpi[]
+  > = filteredKpis.reduce(
+    (
+      acc: Record<
+        string,
+        import("@/components/qoc/performance-sheet-table").PillarKpi[]
+      >,
+      kpi: KpiData,
+    ) => {
+      if (!acc[kpi.pillar]) acc[kpi.pillar] = [];
+      (acc[kpi.pillar] ??= []).push({
+        kpi_no: kpi.assigned_kpi_id,
+        metric: kpi.kpi_name,
+        dataProvidedBy: "HoD",
+        target: "25%", // dummy value
+        actual: "20%", // dummy value
+        percentAchieved: "80%", // dummy value
+        status: kpi.kpi_status,
+        kpiId: kpi.assigned_kpi_id,
+      });
+      return acc;
+    },
+    {},
+  );
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -471,8 +493,13 @@ export default function QOCSubmissionReview() {
                     All Departments ({filterCounts.total})
                   </SelectItem>
                   {DEPARTMENTS.map((dept) => (
-                    <SelectItem key={dept.value} value={dept.value} className="text-xs">
-                      {dept.label} ({filterCounts.byDepartment[dept.value] || 0})
+                    <SelectItem
+                      key={dept.value}
+                      value={dept.value}
+                      className="text-xs"
+                    >
+                      {dept.label} ({filterCounts.byDepartment[dept.value] || 0}
+                      )
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -527,21 +554,28 @@ export default function QOCSubmissionReview() {
           {/* KPI Cards */}
           <Card className="shadow-md border rounded-lg mb-8 p-4">
             <Accordion type="multiple" defaultValue={Object.keys(kpisByPillar)}>
-              {Object.entries(kpisByPillar).map(([pillar, kpis]: [string, import("@/components/qoc/performance-sheet-table").PillarKpi[]]) => (
-                <AccordionItem key={pillar} value={pillar}>
-                  <AccordionTrigger>{pillar}</AccordionTrigger>
-                  <AccordionContent>
-                    <PillarKpiTable
-                      pillar={pillar}
-                      kpis={Array.isArray(kpis) ? kpis : []}
-                      onReviewKpi={(kpiId) => {
-                        const kpi = filteredKpis.find((k: KpiData) => k.assigned_kpi_id === kpiId);
-                        if (kpi) handleOpenDialog(kpi);
-                      }}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
+              {Object.entries(kpisByPillar).map(
+                ([pillar, kpis]: [
+                  string,
+                  import("@/components/qoc/performance-sheet-table").PillarKpi[],
+                ]) => (
+                  <AccordionItem key={pillar} value={pillar}>
+                    <AccordionTrigger>{pillar}</AccordionTrigger>
+                    <AccordionContent>
+                      <PillarKpiTable
+                        pillar={pillar}
+                        kpis={Array.isArray(kpis) ? kpis : []}
+                        onReviewKpi={(kpiId) => {
+                          const kpi = filteredKpis.find(
+                            (k: KpiData) => k.assigned_kpi_id === kpiId,
+                          );
+                          if (kpi) handleOpenDialog(kpi);
+                        }}
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                ),
+              )}
             </Accordion>
           </Card>
 
@@ -635,7 +669,9 @@ export default function QOCSubmissionReview() {
                           </h3>
                           <div className="flex gap-4">
                             <Button
-                              onClick={() => handleOverallReviewSubmit("approved")}
+                              onClick={() =>
+                                handleOverallReviewSubmit("approved")
+                              }
                               className="flex-1 bg-green-600 hover:bg-green-700"
                               disabled={!qocRemark.trim()}
                             >
@@ -688,7 +724,8 @@ export default function QOCSubmissionReview() {
       ) : (
         <div className="text-center py-12">
           <p className="text-lg text-muted-foreground font-semibold">
-            Please select a department to view KPI submissions and performance data.
+            Please select a department to view KPI submissions and performance
+            data.
           </p>
         </div>
       )}
