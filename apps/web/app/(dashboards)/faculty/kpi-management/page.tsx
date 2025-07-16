@@ -1,5 +1,11 @@
 "use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { PlusCircle, TrendingUp, Calendar, BarChart3 } from "lucide-react";
+
 import { Button } from "@workspace/ui/components/button";
+import { Badge } from "@workspace/ui/components/badge";
 import {
   Card,
   CardContent,
@@ -15,49 +21,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import Link from "next/link";
-import { useState } from "react";
-import { Badge } from "@workspace/ui/components/badge";
 import {
-  GraduationCap,
-  Users,
-  FlaskConical,
-  Building,
-  BarChart3,
-  Calendar,
-  TrendingUp,
-} from "lucide-react";
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@workspace/ui/components/alert-dialog";
 
-// Dummy data structure
+// KPI data and pillars
 const PILLARS = [
-  {
-    id: "academic",
-    name: "Academic Excellence",
-    icon: GraduationCap,
-    color: "bg-blue-500",
-    description: "Academic performance and educational quality metrics",
-  },
-  {
-    id: "student",
-    name: "Student Development",
-    icon: Users,
-    color: "bg-green-500",
-    description: "Student engagement and development indicators",
-  },
-  {
-    id: "research",
-    name: "Research & Innovation",
-    icon: FlaskConical,
-    color: "bg-purple-500",
-    description: "Research output and innovation metrics",
-  },
-  {
-    id: "infrastructure",
-    name: "Infrastructure",
-    icon: Building,
-    color: "bg-orange-500",
-    description: "Infrastructure utilization and development",
-  },
+  { id: "academic", name: "Academic Excellence", icon: BarChart3 },
+  { id: "student", name: "Student Experience", icon: TrendingUp },
+  { id: "research", name: "Research & Innovation", icon: BarChart3 },
+  { id: "infrastructure", name: "Infrastructure", icon: BarChart3 },
 ];
 
 const DUMMY_KPIS = {
@@ -453,7 +431,6 @@ const DUMMY_KPIS = {
 export default function KpiManagementPage() {
   const [selectedPillar, setSelectedPillar] = useState<string>("");
 
-  //const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
   const kpisForPillar = selectedPillar
     ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
     : [];
@@ -566,8 +543,11 @@ export default function KpiManagementPage() {
                 </div>
               </CardContent>
 
-              <CardFooter>
-                <Link href={`/faculty/kpi-management/${kpi.id}`} className="w-full">
+              <CardFooter className="flex justify-between">
+                <Link
+                  href={`/faculty/kpi-management/${kpi.id}`}
+                  className="w-full"
+                >
                   <Button className="w-full">Open KPI</Button>
                 </Link>
               </CardFooter>

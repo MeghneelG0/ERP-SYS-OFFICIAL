@@ -92,7 +92,7 @@ export function FileUpload({
     setIsDragging(false);
 
     const droppedFile = e.dataTransfer.files[0];
-    validateAndSetFile(droppedFile);
+    validateAndSetFile(droppedFile ?? null);
   };
 
   const clearFile = () => {

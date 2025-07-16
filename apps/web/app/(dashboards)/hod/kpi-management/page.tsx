@@ -28,37 +28,17 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-// Dummy data structure
-const PILLARS = [
-  {
-    id: "academic",
-    name: "Academic Excellence",
-    icon: GraduationCap,
-    color: "bg-blue-500",
-    description: "Academic performance and educational quality metrics",
-  },
-  {
-    id: "student",
-    name: "Student Development",
-    icon: Users,
-    color: "bg-green-500",
-    description: "Student engagement and development indicators",
-  },
-  {
-    id: "research",
-    name: "Research & Innovation",
-    icon: FlaskConical,
-    color: "bg-purple-500",
-    description: "Research output and innovation metrics",
-  },
-  {
-    id: "infrastructure",
-    name: "Infrastructure",
-    icon: Building,
-    color: "bg-orange-500",
-    description: "Infrastructure utilization and development",
-  },
-];
+// Dummy data structure (define as empty if not used)
+const DEPARTMENT_PILLAR: PillarType[] = [];
+const PILLARS: PillarType[] = [];
+
+// Define PillarType if not already defined
+// Replace with actual fields as needed
+type PillarType = {
+  id: string;
+  icon?: React.ComponentType<any>;
+  [key: string]: any;
+};
 
 const DUMMY_KPIS = {
   academic: [
@@ -453,7 +433,7 @@ const DUMMY_KPIS = {
 export default function KpiManagementPage() {
   const [selectedPillar, setSelectedPillar] = useState<string>("");
 
-  //const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
+  //const selectedPillarData = PILLAR.find((p) => p.id === selectedPillar)
   const kpisForPillar = selectedPillar
     ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
     : [];
@@ -481,12 +461,12 @@ export default function KpiManagementPage() {
                 <SelectValue placeholder="Choose a pillar to view KPIs" />
               </SelectTrigger>
               <SelectContent>
-                {PILLARS.map((pillar) => {
+                {PILLARS.map((pillar: PillarType) => {
                   const Icon = pillar.icon;
                   return (
                     <SelectItem key={pillar.id} value={pillar.id}>
                       <div className="flex items-center space-x-2">
-                        <Icon className="h-4 w-4" />
+                        {Icon ? <Icon className="h-4 w-4" /> : null}
                         <span>{pillar.name}</span>
                       </div>
                     </SelectItem>

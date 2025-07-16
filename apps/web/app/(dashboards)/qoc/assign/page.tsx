@@ -55,12 +55,12 @@ export default function AssignKpiToDepartmentPage() {
   const [unassignedKpis, setUnassignedKpis] = useState<any[]>([]); // TODO: Filter all KPI templates - assignedKpis
   const kpiSectionRef = useRef<HTMLDivElement>(null);
 
-  // Simulate fetching pillars when department changes
+  // Simulate fetchingdepartment_pillar when department changes
   const handleDepartmentChange = (deptId: string) => {
     setSelectedDepartmentId(deptId);
     setSelectedPillarId(null);
-    // TODO: Fetch assigned pillars for department (GET /api/department-pillars?dept_id=...)
-    // Dummy: Assign first two pillars to department
+    // TODO: Fetch assigneddepartment_pillar for department (GET /api/department-pillars?dept_id=...)
+    // Dummy: Assign first twodepartment_pillar to department
     setAssignedPillars(allPillars.slice(0, 2));
     setUnassignedPillars(allPillars.slice(2));
     setAssignedKpis([]);
@@ -153,13 +153,15 @@ export default function AssignKpiToDepartmentPage() {
         </div>
       </div>
 
-      {/* Assigned Pillars Section */}
+      {/* Assigneddepartment_pillar Section */}
       {false && selectedDepartmentId && (
         <>
-          <h2 className="text-xl font-semibold mb-2">Assigned Pillars</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Assigneddepartment_pillar
+          </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
             {assignedPillars.length === 0 ? (
-              <p>No pillars assigned to this department.</p>
+              <p>Nodepartment_pillar assigned to this department.</p>
             ) : (
               assignedPillars.map((pillar) => (
                 <PillarCard
@@ -181,7 +183,7 @@ export default function AssignKpiToDepartmentPage() {
           <h2 className="text-xl font-semibold mb-2">Assign Pillar</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
             {unassignedPillars.length === 0 ? (
-              <p>All pillars assigned to this department.</p>
+              <p>Alldepartment_pillar assigned to this department.</p>
             ) : (
               unassignedPillars.map((pillar) => (
                 <PillarCard

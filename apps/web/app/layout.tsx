@@ -39,9 +39,7 @@ export default function RootLayout({
               fontSize: "1rem",
               color: "#666",
             }}
-          >
-            @ 2025 and made with love in India 🇮🇳
-          </footer>
+          ></footer>
           <Toaster richColors />
         </body>
       </html>

@@ -2,10 +2,46 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
+import { DayPicker, DayPickerProps, CaptionProps } from "react-day-picker";
 
 import { cn } from "@workspace/ui/lib/utils";
 import { buttonVariants } from "@workspace/ui/components/button";
+
+function CustomCaption(props: CaptionProps) {
+  const { displayMonth, goToMonth, nextMonth, previousMonth, locale } = props;
+  return (
+    <div className="flex items-center justify-between px-2 py-1">
+      <button
+        type="button"
+        onClick={() => previousMonth && goToMonth(previousMonth)}
+        disabled={!previousMonth}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        )}
+      >
+        <ChevronLeft className="size-4" />
+      </button>
+      <span>
+        {displayMonth.toLocaleString(locale, {
+          month: "long",
+          year: "numeric",
+        })}
+      </span>
+      <button
+        type="button"
+        onClick={() => nextMonth && goToMonth(nextMonth)}
+        disabled={!nextMonth}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        )}
+      >
+        <ChevronRight className="size-4" />
+      </button>
+    </div>
+  );
+}
 
 function Calendar({
   className,
@@ -59,14 +95,11 @@ function Calendar({
         day_hidden: "invisible",
         ...classNames,
       }}
-      components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("size-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("size-4", className)} {...props} />
-        ),
-      }}
+      components={
+        {
+          Caption: CustomCaption,
+        } as DayPickerProps["components"]
+      }
       {...props}
     />
   );

@@ -9,8 +9,8 @@ const fetchDepts = async (): Promise<DeptConfig[]> => {
   return response.data.departments.map((dept: any) => ({
     id: dept.dept_id,
     name: dept.dept_name,
-    pillars: (dept.pillars || []).map((pillar: any) => ({
-      id: pillar.pillar_id,
+    department_pillar: (dept.pillars || []).map((pillar: any) => ({
+      id: pillar.dept_pillar_id,
       name: pillar.pillar_name,
     })),
   }));
@@ -58,7 +58,7 @@ export const useFetchAssignedKpis = (
     queryFn: async () => {
       if (!departmentId || !pillarId) return null;
       const response = await fetch(
-        `/api/assigned-kpi?department_id=${departmentId}&pillar_id=${pillarId}`,
+        `/api/assigned-kpi?dept_id=${departmentId}&dept_pillar_id=${pillarId}`,
       );
       if (!response.ok) {
         throw new Error("Failed to fetch assigned KPIs");
@@ -73,14 +73,14 @@ export function useCreatePillar() {
   return useMutation({
     mutationFn: async ({
       pillar_name,
-      department_id,
+      dept_id,
     }: {
       pillar_name: string;
-      department_id: string;
+      dept_id: string;
     }) => {
       const response = await axios.post("/api/pillar", {
         pillar_name,
-        department_id,
+        dept_id,
       });
       return response.data;
     },
@@ -103,7 +103,7 @@ export function useFetchPillars() {
     queryFn: async () => {
       const response = await axios.get("/api/pillar");
       return response.data.pillars.map((pillar: any) => ({
-        id: pillar.pillar_id,
+        id: pillar.dept_pillar_id,
         name: pillar.pillar_name,
         ...pillar,
       }));

@@ -349,7 +349,7 @@ export function QOCDashboard() {
                       <Button
                         key={dept.id}
                         variant={
-                          selectedDepartment.id === dept.id
+                          selectedDepartment?.id === dept.id
                             ? "default"
                             : "outline"
                         }
@@ -400,22 +400,22 @@ export function QOCDashboard() {
                         fill="none"
                         stroke="#3b82f6"
                         strokeWidth="2"
-                        strokeDasharray={`${selectedDepartment.submissionRate}, 100`}
+                        strokeDasharray={`${selectedDepartment?.submissionRate}, 100`}
                         strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="text-xs font-bold">
-                        {selectedDepartment.submissionRate}%
+                        {selectedDepartment?.submissionRate}%
                       </span>
                     </div>
                   </div>
-                  {selectedDepartment.name} Details
+                  {selectedDepartment?.name} Details
                 </CardTitle>
                 <CardDescription>
                   Comprehensive department metrics and quality indicators
                   <Badge variant="outline" className="ml-2">
-                    Score: {selectedDepartment.averageScore}/5
+                    Score: {selectedDepartment?.averageScore}/5
                   </Badge>
                 </CardDescription>
               </CardHeader>
@@ -433,11 +433,13 @@ export function QOCDashboard() {
                             Data Accuracy
                           </span>
                           <span className="text-sm font-bold">
-                            {selectedDepartment.qualityMetrics.dataAccuracy}%
+                            {selectedDepartment?.qualityMetrics.dataAccuracy}%
                           </span>
                         </div>
                         <Progress
-                          value={selectedDepartment.qualityMetrics.dataAccuracy}
+                          value={
+                            selectedDepartment?.qualityMetrics.dataAccuracy
+                          }
                         />
                       </div>
                       <div className="space-y-1">
@@ -446,11 +448,13 @@ export function QOCDashboard() {
                             Completeness
                           </span>
                           <span className="text-sm font-bold">
-                            {selectedDepartment.qualityMetrics.completeness}%
+                            {selectedDepartment?.qualityMetrics.completeness}%
                           </span>
                         </div>
                         <Progress
-                          value={selectedDepartment.qualityMetrics.completeness}
+                          value={
+                            selectedDepartment?.qualityMetrics.completeness
+                          }
                         />
                       </div>
                       <div className="space-y-1">
@@ -459,11 +463,11 @@ export function QOCDashboard() {
                             Timeliness
                           </span>
                           <span className="text-sm font-bold">
-                            {selectedDepartment.qualityMetrics.timeliness}%
+                            {selectedDepartment?.qualityMetrics.timeliness}%
                           </span>
                         </div>
                         <Progress
-                          value={selectedDepartment.qualityMetrics.timeliness}
+                          value={selectedDepartment?.qualityMetrics.timeliness}
                         />
                       </div>
                     </div>
@@ -475,7 +479,7 @@ export function QOCDashboard() {
                       Recent Submissions
                     </h4>
                     <div className="space-y-2">
-                      {selectedDepartment.recentActivity.map(
+                      {selectedDepartment?.recentActivity.map(
                         (activity, index) => (
                           <div
                             key={index}
@@ -522,7 +526,7 @@ export function QOCDashboard() {
                   <div className="grid grid-cols-3 gap-4 pt-4 border-t">
                     <div className="text-center">
                       <div className="text-lg font-bold text-green-600">
-                        {selectedDepartment.approved}
+                        {selectedDepartment?.approved}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Approved
@@ -530,7 +534,7 @@ export function QOCDashboard() {
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-bold text-orange-600">
-                        {selectedDepartment.pending}
+                        {selectedDepartment?.pending}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Pending
@@ -538,7 +542,7 @@ export function QOCDashboard() {
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-bold text-red-600">
-                        {selectedDepartment.rejected}
+                        {selectedDepartment?.rejected}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Rejected

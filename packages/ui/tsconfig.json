@@ -4,8 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@workspace/ui/*": ["./src/*"]
-    }
+    },
+    "jsx": "react-jsx"
   },
   "include": ["."],
-  "exclude": ["node_modules", "dist", "src/components/calendar.tsx"]
+  "exclude": ["node_modules", "dist"]
 }
