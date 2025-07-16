@@ -48,8 +48,8 @@ const QOC_ANALYTICS_DATA = {
   },
   departmentPerformance: [
     {
-      id: "cardiology",
-      name: "Cardiology",
+      id: "Dept. of CCE",
+      name: "Dept. of CCE",
       submissionRate: 92.5,
       totalSubmissions: 24,
       approved: 22,
@@ -60,13 +60,13 @@ const QOC_ANALYTICS_DATA = {
       lastSubmission: "2024-01-15",
       recentActivity: [
         {
-          kpi: "Patient Satisfaction",
+          kpi: "Student Satisfaction",
           status: "approved",
           date: "2024-01-15",
           score: 4.8,
         },
         {
-          kpi: "Treatment Outcomes",
+          kpi: "Course Outcomes",
           status: "approved",
           date: "2024-01-14",
           score: 4.5,
@@ -85,8 +85,8 @@ const QOC_ANALYTICS_DATA = {
       },
     },
     {
-      id: "oncology",
-      name: "Oncology",
+      id: "Dept. of CSE",
+      name: "Dept. of CSE",
       submissionRate: 87.3,
       totalSubmissions: 18,
       approved: 15,
@@ -97,7 +97,7 @@ const QOC_ANALYTICS_DATA = {
       lastSubmission: "2024-01-12",
       recentActivity: [
         {
-          kpi: "Cancer Care Quality",
+          kpi: "Resource Quality",
           status: "approved",
           date: "2024-01-12",
           score: 4.3,
@@ -109,7 +109,7 @@ const QOC_ANALYTICS_DATA = {
           score: 2.8,
         },
         {
-          kpi: "Patient Recovery",
+          kpi: "Student Satisfaction",
           status: "approved",
           date: "2024-01-09",
           score: 4.7,
@@ -122,8 +122,8 @@ const QOC_ANALYTICS_DATA = {
       },
     },
     {
-      id: "pediatrics",
-      name: "Pediatrics",
+      id: "Dept. of Civil Engineering",
+      name: "Dept. of Civil Engineering",
       submissionRate: 79.2,
       totalSubmissions: 15,
       approved: 11,
@@ -134,19 +134,19 @@ const QOC_ANALYTICS_DATA = {
       lastSubmission: "2024-01-10",
       recentActivity: [
         {
-          kpi: "Child Care Standards",
+          kpi: "Quality Standards",
           status: "approved",
           date: "2024-01-10",
           score: 4.1,
         },
         {
-          kpi: "Vaccination Programs",
+          kpi: "Outreach Programs",
           status: "rejected",
           date: "2024-01-08",
           score: 3.2,
         },
         {
-          kpi: "Family Satisfaction",
+          kpi: "Student Satisfaction",
           status: "approved",
           date: "2024-01-07",
           score: 4.4,
@@ -159,8 +159,8 @@ const QOC_ANALYTICS_DATA = {
       },
     },
     {
-      id: "neurology",
-      name: "Neurology",
+      id: "Dept. of IT",
+      name: "Dept. of IT",
       submissionRate: 94.1,
       totalSubmissions: 21,
       approved: 19,
@@ -171,19 +171,19 @@ const QOC_ANALYTICS_DATA = {
       lastSubmission: "2024-01-14",
       recentActivity: [
         {
-          kpi: "Neurological Assessments",
+          kpi: "Quaterly Assessments",
           status: "approved",
           date: "2024-01-14",
           score: 4.6,
         },
         {
-          kpi: "Treatment Protocols",
+          kpi: "Student Satisfaction",
           status: "approved",
           date: "2024-01-13",
           score: 4.3,
         },
         {
-          kpi: "Patient Outcomes",
+          kpi: "Course Outcomes",
           status: "pending",
           date: "2024-01-12",
           score: null,
@@ -200,9 +200,9 @@ const QOC_ANALYTICS_DATA = {
     averageReviewTime: 2.3,
     reviewBacklog: 23,
     reviewerWorkload: [
-      { reviewer: "Dr. Anderson", pending: 8, completed: 45 },
-      { reviewer: "Dr. Martinez", pending: 6, completed: 38 },
-      { reviewer: "Dr. Thompson", pending: 9, completed: 42 },
+      { reviewer: "Dr. Arjun Singh", pending: 1, completed: 45 },
+      { reviewer: "Dr. Arpit Singh", pending: 6, completed: 38 },
+      { reviewer: "Dr. Somya Goyal", pending: 9, completed: 42 },
     ],
   },
   qualityTrends: {
