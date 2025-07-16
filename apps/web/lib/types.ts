@@ -69,6 +69,13 @@ export interface FormConfig {
   elements: FormElementInstance[];
   createdAt: string;
   updatedAt: string;
+  // New KPI fields
+  kpiNo?: string;
+  metric?: string;
+  dataProvidedBy?: string;
+  target2025?: string;
+  actuals2025?: string;
+  percentAchieved?: string;
 }
 
 export interface FormSubmission {

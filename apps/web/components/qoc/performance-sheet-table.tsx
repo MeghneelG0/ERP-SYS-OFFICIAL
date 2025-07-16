@@ -32,12 +32,14 @@ export interface PillarTableProps {
   pillar: string;
   kpis: PillarKpi[];
   onReviewKpi?: (kpiId: number) => void;
+  showStatusColumn?: boolean;
 }
 
 export const PillarKpiTable: React.FC<PillarTableProps> = ({
   pillar,
   kpis,
   onReviewKpi,
+  showStatusColumn = true,
 }) => {
   const getStatusBadge = (status?: string) => {
     if (!status) return null;
@@ -118,9 +120,11 @@ export const PillarKpiTable: React.FC<PillarTableProps> = ({
                 <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
                   % Target Achieved
                 </TableHead>
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
-                  Status
-                </TableHead>
+                {showStatusColumn && (
+                  <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                    Status
+                  </TableHead>
+                )}
                 <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
                   Review
                 </TableHead>
@@ -150,9 +154,11 @@ export const PillarKpiTable: React.FC<PillarTableProps> = ({
                   <TableCell className="text-center px-2 py-1 whitespace-nowrap">
                     {row.percentAchieved}
                   </TableCell>
-                  <TableCell className="text-center px-2 py-1 whitespace-nowrap">
-                    {getStatusBadge(row.status)}
-                  </TableCell>
+                  {showStatusColumn && (
+                    <TableCell className="text-center px-2 py-1 whitespace-nowrap">
+                      {getStatusBadge(row.status)}
+                    </TableCell>
+                  )}
                   <TableCell className="text-center px-2 py-1 whitespace-nowrap">
                     {onReviewKpi && row.kpiId && (
                       <button
