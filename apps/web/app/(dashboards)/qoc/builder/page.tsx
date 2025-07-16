@@ -186,7 +186,7 @@ export default function KpiBuilderPage() {
                     kpiName={kpi.kpi_name}
                     description={kpi.kpi_description}
                     onView={() => router.push(`/qoc/builder/form/${kpi.id}`)}
-                    onEdit={() => router.push(`/qoc/builder/form/${kpi.id}`)}
+                    onEdit={() => router.push(`/qoc/builder/form/${kpi.id}?mode=edit`)}
                     onDelete={() => {
                       /* TODO: Delete KPI template API */
                     }}
