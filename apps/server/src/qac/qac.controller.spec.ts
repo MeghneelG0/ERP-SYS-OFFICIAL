@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { QocController } from './qoc.controller';
+import { QacController } from './qac.controller';
 
-describe('QocController', () => {
-  let controller: QocController;
+describe('QacController', () => {
+  let controller: QacController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [QocController],
+      controllers: [QacController],
     }).compile();
 
-    controller = module.get<QocController>(QocController);
+    controller = module.get<QacController>(QacController);
   });
 
   it('should be defined', () => {

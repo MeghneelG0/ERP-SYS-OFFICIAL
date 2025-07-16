@@ -2,7 +2,7 @@ export enum UserRole {
   HOD = "HOD",
   KPI_COORDINATOR = "KPI_COORDINATOR",
   FACULTY = "FACULTY",
-  QOC = "QOC",
+  QAC = "QAC",
 }
 
 export enum KpiStatus {

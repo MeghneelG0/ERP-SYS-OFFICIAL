@@ -100,7 +100,7 @@ export default function FormsPage() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Link
-                  href={`/qoc/builder/form/view/${form.id.replace("form-", "")}`}
+                  href={`/qac/builder/form/view/${form.id.replace("form-", "")}`}
                 >
                   <Button>View</Button>
                 </Link>

@@ -65,7 +65,7 @@ const mockSubmissions = [
   },
 ];
 
-export function QOCReview() {
+export function QACReview() {
   const [filter, setFilter] = useState<
     "all" | "approved" | "rejected" | "pending"
   >("all");
@@ -204,7 +204,7 @@ export function QOCReview() {
               </div>
               <div className="mt-4 flex justify-end">
                 <Button asChild>
-                  <Link href={`/qoc/review/${submission.id}`}>
+                  <Link href={`/qac/review/${submission.id}`}>
                     <Eye className="mr-2 h-4 w-4" />
                     View Submission
                   </Link>

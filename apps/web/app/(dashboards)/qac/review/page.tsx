@@ -50,12 +50,12 @@ import {
 import { Badge } from "@workspace/ui/components/badge";
 import { toast } from "sonner";
 import Link from "next/link";
-import KpiReviewTable from "@/components/qoc/kpi-review-table";
+import KpiReviewTable from "@/components/qac/kpi-review-table";
 import {
   PillarKpiTable,
   PerformanceSheetTable,
   dummyPerformanceData,
-} from "@/components/qoc/performance-sheet-table";
+} from "@/components/qac/performance-sheet-table";
 import {
   Accordion,
   AccordionItem,
@@ -71,7 +71,7 @@ type KpiData = {
   pillar: string;
   department: string;
   form_input: Record<string, string | number>[] | null;
-  qoc_remark?: string;
+  qac_remark?: string;
 };
 
 // Updated dummy data with pillar and department information
@@ -106,7 +106,7 @@ const ENHANCED_DUMMY_DATA = {
           comments: "Excellent results, students well prepared",
         },
       ],
-      qoc_remark: null,
+      qac_remark: null,
     },
     {
       assigned_kpi_id: 2,
@@ -136,7 +136,7 @@ const ENHANCED_DUMMY_DATA = {
           teaching_load: "10 hours/week",
         },
       ],
-      qoc_remark:
+      qac_remark:
         "Excellent faculty performance across all metrics. Recommend for promotion consideration.",
     },
     {
@@ -167,7 +167,7 @@ const ENHANCED_DUMMY_DATA = {
           completion_status: "Completed",
         },
       ],
-      qoc_remark: null,
+      qac_remark: null,
     },
     {
       assigned_kpi_id: 4,
@@ -198,7 +198,7 @@ const ENHANCED_DUMMY_DATA = {
           research_area: "Educational Statistics",
         },
       ],
-      qoc_remark:
+      qac_remark:
         "Data collection methodology needs improvement. Please provide more detailed research impact analysis.",
     },
     {
@@ -229,7 +229,7 @@ const ENHANCED_DUMMY_DATA = {
           offer_received: "Yes",
         },
       ],
-      qoc_remark:
+      qac_remark:
         "Excellent internship placement record with high-quality companies.",
     },
     {
@@ -260,7 +260,7 @@ const ENHANCED_DUMMY_DATA = {
           co_investigators: 3,
         },
       ],
-      qoc_remark: null,
+      qac_remark: null,
     },
   ],
 };
@@ -318,11 +318,11 @@ const getStatusBadge = (status: string) => {
   }
 };
 
-export default function QOCSubmissionReview() {
+export default function QACSubmissionReview() {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedKpi, setSelectedKpi] = useState<KpiData | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [qocRemark, setQocRemark] = useState("");
+  const [qacRemark, setQacRemark] = useState("");
   const [localData, setLocalData] = useState<any>(ENHANCED_DUMMY_DATA);
   const [rowComments, setRowComments] = useState<
     Record<number, Record<number, { status: string; comment: string }>>
@@ -353,7 +353,7 @@ export default function QOCSubmissionReview() {
   const filterCounts = getFilterCounts();
 
   const handleOverallReviewSubmit = (action: "approved" | "redo") => {
-    if (!selectedKpi || !qocRemark.trim()) {
+    if (!selectedKpi || !qacRemark.trim()) {
       toast.error("Please provide feedback before submitting your review");
       return;
     }
@@ -364,7 +364,7 @@ export default function QOCSubmissionReview() {
         return {
           ...kpi,
           kpi_status: action,
-          qoc_remark: qocRemark,
+          qac_remark: qacRemark,
         };
       }
       return kpi;
@@ -380,7 +380,7 @@ export default function QOCSubmissionReview() {
       },
     );
 
-    setQocRemark("");
+    setQacRemark("");
     setDialogOpen(false);
     setSelectedKpi(null);
   };
@@ -402,7 +402,7 @@ export default function QOCSubmissionReview() {
 
   const handleOpenDialog = (kpi: KpiData) => {
     setSelectedKpi(kpi);
-    setQocRemark(kpi.qoc_remark || "");
+    setQacRemark(kpi.qac_remark || "");
     setDialogOpen(true);
   };
 
@@ -413,12 +413,12 @@ export default function QOCSubmissionReview() {
   // Group KPIs by pillar
   const kpisByPillar: Record<
     string,
-    import("@/components/qoc/performance-sheet-table").PillarKpi[]
+    import("@/components/qac/performance-sheet-table").PillarKpi[]
   > = filteredKpis.reduce(
     (
       acc: Record<
         string,
-        import("@/components/qoc/performance-sheet-table").PillarKpi[]
+        import("@/components/qac/performance-sheet-table").PillarKpi[]
       >,
       kpi: KpiData,
     ) => {
@@ -443,7 +443,7 @@ export default function QOCSubmissionReview() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Link href="/qoc">
+            <Link href="/qac">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Back to Dashboard
@@ -557,7 +557,7 @@ export default function QOCSubmissionReview() {
               {Object.entries(kpisByPillar).map(
                 ([pillar, kpis]: [
                   string,
-                  import("@/components/qoc/performance-sheet-table").PillarKpi[],
+                  import("@/components/qac/performance-sheet-table").PillarKpi[],
                 ]) => (
                   <AccordionItem key={pillar} value={pillar}>
                     <AccordionTrigger>{pillar}</AccordionTrigger>
@@ -651,8 +651,8 @@ export default function QOCSubmissionReview() {
                         </h3>
                         <Textarea
                           placeholder="Enter your overall feedback about this KPI submission. Include summary observations, recommendations, and any areas that need improvement..."
-                          value={qocRemark}
-                          onChange={(e) => setQocRemark(e.target.value)}
+                          value={qacRemark}
+                          onChange={(e) => setQacRemark(e.target.value)}
                           rows={6}
                           className="w-full"
                         />
@@ -673,7 +673,7 @@ export default function QOCSubmissionReview() {
                                 handleOverallReviewSubmit("approved")
                               }
                               className="flex-1 bg-green-600 hover:bg-green-700"
-                              disabled={!qocRemark.trim()}
+                              disabled={!qacRemark.trim()}
                             >
                               <Check className="w-4 h-4 mr-2" />
                               Approve KPI
@@ -682,13 +682,13 @@ export default function QOCSubmissionReview() {
                               onClick={() => handleOverallReviewSubmit("redo")}
                               variant="destructive"
                               className="flex-1"
-                              disabled={!qocRemark.trim()}
+                              disabled={!qacRemark.trim()}
                             >
                               <X className="w-4 h-4 mr-2" />
                               Request Revision
                             </Button>
                           </div>
-                          {!qocRemark.trim() && (
+                          {!qacRemark.trim() && (
                             <p className="text-xs text-red-500 mt-2 text-center">
                               Please provide feedback before making a decision
                             </p>

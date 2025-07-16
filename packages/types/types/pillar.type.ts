@@ -10,7 +10,7 @@ export interface PillarTemplate
   extends z.infer<typeof PillarTemplateBaseSchema> {
   id: string;
   status: PillarStatus;
-  created_by_qoc: string;
+  created_by_qac: string;
   created_at: Date;
   updated_at: Date;
 }

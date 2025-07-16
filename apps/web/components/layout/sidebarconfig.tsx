@@ -36,39 +36,39 @@ export function useSidebarConfig(): SidebarConfig {
   })) || [];*/
 
   return {
-    qoc: {
-      title: "QOC Dashboard",
+    qac: {
+      title: "QAC Dashboard",
       items: [
-        { icon: Home, label: "Dashboard", id: "qoc-dashboard", path: "/qoc/" },
+        { icon: Home, label: "Dashboard", id: "qac-dashboard", path: "/qac/" },
         {
           icon: Hammer,
           label: "KPI Builder",
           id: "form-builder",
-          path: "/qoc/builder",
+          path: "/qac/builder",
         },
         {
           icon: User2,
           label: "Assign KPI to Department",
           id: "assign-kpi",
-          path: "/qoc/assign",
+          path: "/qac/assign",
         },
         {
           icon: Check,
           label: "Review Submissions",
           id: "review-submissions",
-          path: "/qoc/review",
+          path: "/qac/review",
         },
         {
           icon: DownloadCloudIcon,
           label: "Generate Report",
           id: "generate-report",
-          path: "/qoc/report",
+          path: "/qac/report",
         },
         {
           icon: Settings,
           label: "Settings",
-          id: "qoc-settings",
-          path: "/qoc/settings",
+          id: "qac-settings",
+          path: "/qac/settings",
         },
       ],
     },
