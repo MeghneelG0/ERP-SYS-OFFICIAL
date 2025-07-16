@@ -260,7 +260,8 @@ export default function KpiBuilderPage() {
                 },
               ]}
               onReviewKpi={(kpiId) => {
-                alert(`View/Edit KPI ${kpiId}`);
+                router.push(`/qoc/builder/form/${kpiId}`);
+                // alert(`View/Edit KPI ${kpiId}`);
               }}
               showStatusColumn={false}
             />
@@ -298,18 +299,21 @@ export default function KpiBuilderPage() {
             ) : (
               kpiTemplates
                 .filter((k) => k.pillarId === selectedPillarTemplate.id)
-                .map((kpi) => (
-                  <KpiCard
-                    key={kpi.id}
-                    kpiName={kpi.kpi_name}
-                    description={kpi.kpi_description}
-                    onView={() => router.push(`/qoc/builder/form/${kpi.id}`)}
-                    onEdit={() => router.push(`/qoc/builder/form/${kpi.id}?mode=edit`)}
-                    onDelete={() => {
-                      /* TODO: Delete KPI template API */
-                    }}
-                  />
-                ))
+                .map((kpi) => {
+                  console.log('KPI for card:', kpi);
+                  return (
+                    <KpiCard
+                      key={kpi.id}
+                      kpiName={kpi.kpi_name}
+                      description={kpi.kpi_description}
+                      onView={() => router.push(`/qoc/builder/form/${kpi.id}`)}
+                      onEdit={() => router.push(`/qoc/builder/form/${kpi.id}?mode=edit`)}
+                      onDelete={() => {
+                        /* TODO: Delete KPI template API */
+                      }}
+                    />
+                  );
+                })
             )}
           </div>
         </div>
