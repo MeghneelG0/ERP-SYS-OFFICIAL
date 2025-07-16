@@ -1,5 +1,11 @@
 "use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { PlusCircle } from "lucide-react";
+
 import { Button } from "@workspace/ui/components/button";
+import { Badge } from "@workspace/ui/components/badge";
 import {
   Card,
   CardContent,
@@ -16,11 +22,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
-import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+
 import { useFetchForms, useDeleteKpi } from "@/hooks/forms";
-import { useState } from "react";
-import { Badge } from "@workspace/ui/components/badge";
 
 export default function FormsPage() {
   const { data: forms, isLoading, error } = useFetchForms();
@@ -28,7 +31,6 @@ export default function FormsPage() {
   const [deletingFormId, setDeletingFormId] = useState<string | null>(null);
   const [formToDelete, setFormToDelete] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
-  console.log("Forms:", forms);
 
   const handleDelete = (formId: string) => {
     const numericId = formId.startsWith("form-")
@@ -100,7 +102,10 @@ export default function FormsPage() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Link
-                  href={`/faculty/kpi-management/${form.id.replace("form-", "")}`}
+                  href={`/faculty/kpi-management/${form.id.replace(
+                    "form-",
+                    "",
+                  )}`}
                 >
                   <Button>View</Button>
                 </Link>
