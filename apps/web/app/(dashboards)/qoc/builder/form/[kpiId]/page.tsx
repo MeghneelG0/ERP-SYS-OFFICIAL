@@ -33,7 +33,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
       kpi_id: params.kpiId,
       kpi_name: `KPI ${params.kpiId}`,
       kpi_description: "This is a mock KPI for testing purposes. The backend will provide real data later.",
-      kpi_value: 85,
+      kpi_value: 95,
       elements: [
         {
           id: "element-1",
