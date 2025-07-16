@@ -8,9 +8,6 @@ function CreateFormContent() {
   const searchParams = useSearchParams();
   const pillarTemplateId = searchParams.get("kpiPillarTemplateId");
 
-  // TODO: When saving the KPI template, call the API to create a KPI template
-  // POST /api/kpi-templates with { pillar_template_id: pillarTemplateId, ... }
-
   return (
     <main className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-6">Create KPI Template</h1>
