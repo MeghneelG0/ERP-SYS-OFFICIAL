@@ -1,14 +1,12 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import FormBuilder from "@/components/formbuilder/form-builder";
+import React, { Suspense } from "react";
 
-export default function CreateFormPage() {
+function CreateFormContent() {
   // Get the pillar template ID from the query params
   const searchParams = useSearchParams();
   const pillarTemplateId = searchParams.get("kpiPillarTemplateId");
-
-  // TODO: When saving the KPI template, call the API to create a KPI template
-  // POST /api/kpi-templates with { pillar_template_id: pillarTemplateId, ... }
 
   return (
     <main className="container mx-auto py-8 px-4">
@@ -21,5 +19,13 @@ export default function CreateFormPage() {
       <FormBuilder /* pillarTemplateId={pillarTemplateId} */ />
       {/* TODO: On save, call the API to create the KPI template and link it to the pillar template */}
     </main>
+  );
+}
+
+export default function CreateFormPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreateFormContent />
+    </Suspense>
   );
 }

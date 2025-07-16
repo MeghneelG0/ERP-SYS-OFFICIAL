@@ -51,6 +51,17 @@ import { Badge } from "@workspace/ui/components/badge";
 import { toast } from "sonner";
 import Link from "next/link";
 import KpiReviewTable from "@/components/qoc/kpi-review-table";
+import {
+  PillarKpiTable,
+  PerformanceSheetTable,
+  dummyPerformanceData,
+} from "@/components/qoc/performance-sheet-table";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@workspace/ui/components/accordion";
 
 type KpiData = {
   assigned_kpi_id: number;
@@ -308,7 +319,6 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function QOCSubmissionReview() {
-  const [selectedPillar, setSelectedPillar] = useState<string>("all");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedKpi, setSelectedKpi] = useState<KpiData | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -318,25 +328,21 @@ export default function QOCSubmissionReview() {
     Record<number, Record<number, { status: string; comment: string }>>
   >({});
 
-  // Filter KPIs based on selected pillar and department
+  // Filter KPIs based on selected department
   const filteredKpis = localData.assignedKpis.filter((kpi: KpiData) => {
-    const pillarMatch =
-      selectedPillar === "all" || kpi.pillar === selectedPillar;
     const departmentMatch =
       selectedDepartment === "all" || kpi.department === selectedDepartment;
-    return pillarMatch && departmentMatch;
+    return departmentMatch;
   });
 
   // Get counts for each filter combination
   const getFilterCounts = () => {
     const counts = {
       total: localData.assignedKpis.length,
-      byPillar: {} as Record<string, number>,
       byDepartment: {} as Record<string, number>,
     };
 
     localData.assignedKpis.forEach((kpi: KpiData) => {
-      counts.byPillar[kpi.pillar] = (counts.byPillar[kpi.pillar] || 0) + 1;
       counts.byDepartment[kpi.department] =
         (counts.byDepartment[kpi.department] || 0) + 1;
     });
@@ -401,9 +407,36 @@ export default function QOCSubmissionReview() {
   };
 
   const clearFilters = () => {
-    setSelectedPillar("all");
     setSelectedDepartment("all");
   };
+
+  // Group KPIs by pillar
+  const kpisByPillar: Record<
+    string,
+    import("@/components/qoc/performance-sheet-table").PillarKpi[]
+  > = filteredKpis.reduce(
+    (
+      acc: Record<
+        string,
+        import("@/components/qoc/performance-sheet-table").PillarKpi[]
+      >,
+      kpi: KpiData,
+    ) => {
+      if (!acc[kpi.pillar]) acc[kpi.pillar] = [];
+      (acc[kpi.pillar] ??= []).push({
+        kpi_no: kpi.assigned_kpi_id,
+        metric: kpi.kpi_name,
+        dataProvidedBy: "HoD",
+        target: "25%", // dummy value
+        actual: "20%", // dummy value
+        percentAchieved: "80%", // dummy value
+        status: kpi.kpi_status,
+        kpiId: kpi.assigned_kpi_id,
+      });
+      return acc;
+    },
+    {},
+  );
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -439,61 +472,32 @@ export default function QOCSubmissionReview() {
       </div>
 
       {/* Filters Section */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filter KPI Submissions
-          </CardTitle>
-          <CardDescription>
-            Filter submissions by pillar and department to focus your review
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Pillar Filter */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <GraduationCap className="h-4 w-4" />
-                Pillar
-              </label>
-              <Select value={selectedPillar} onValueChange={setSelectedPillar}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select pillar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    All Pillars ({filterCounts.total})
-                  </SelectItem>
-                  {PILLARS.map((pillar) => (
-                    <SelectItem key={pillar.value} value={pillar.value}>
-                      {pillar.label} ({filterCounts.byPillar[pillar.value] || 0}
-                      )
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Department Filter */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Building className="h-4 w-4" />
+      <Card className="mb-4 p-2 shadow-none border border-muted-foreground/20">
+        <CardContent className="py-2 px-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            {/* Department Filter ONLY */}
+            <div className="space-y-1">
+              <label className="text-xs font-medium flex items-center gap-2">
+                <Building className="h-3 w-3" />
                 Department
               </label>
               <Select
                 value={selectedDepartment}
                 onValueChange={setSelectedDepartment}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-8 text-xs">
                   <SelectValue placeholder="Select department" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">
+                  <SelectItem value="all" className="text-xs">
                     All Departments ({filterCounts.total})
                   </SelectItem>
                   {DEPARTMENTS.map((dept) => (
-                    <SelectItem key={dept.value} value={dept.value}>
+                    <SelectItem
+                      key={dept.value}
+                      value={dept.value}
+                      className="text-xs"
+                    >
                       {dept.label} ({filterCounts.byDepartment[dept.value] || 0}
                       )
                     </SelectItem>
@@ -501,334 +505,230 @@ export default function QOCSubmissionReview() {
                 </SelectContent>
               </Select>
             </div>
-
             {/* Clear Filters */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium opacity-0">Actions</label>
+            <div className="flex items-end justify-end">
               <Button
                 variant="outline"
                 onClick={clearFilters}
-                disabled={
-                  selectedPillar === "all" && selectedDepartment === "all"
-                }
-                className="w-full bg-transparent"
+                disabled={selectedDepartment === "all"}
+                className="h-8 text-xs rounded-full border-muted-foreground/40 hover:bg-muted/30 transition-colors flex items-center gap-1 px-3"
               >
+                <X className="h-3 w-3 mr-1 text-muted-foreground" />
                 Clear Filters
               </Button>
             </div>
           </div>
-
           {/* Active Filters Display */}
-          {(selectedPillar !== "all" || selectedDepartment !== "all") && (
-            <div className="mt-4 pt-4 border-t">
-              <div className="flex items-center gap-2 text-sm">
+          {selectedDepartment !== "all" && (
+            <div className="mt-2 pt-2 border-t">
+              <div className="flex items-center gap-2 text-xs">
                 <span className="text-gray-500 dark:text-gray-400">
                   Active filters:
                 </span>
-                {selectedPillar !== "all" && (
-                  <Badge
-                    variant="secondary"
-                    className="flex items-center gap-1"
+                <Badge
+                  variant="secondary"
+                  className="flex items-center gap-1 text-xs"
+                >
+                  <Building className="h-3 w-3" />
+                  {selectedDepartment}
+                  <button
+                    onClick={() => setSelectedDepartment("all")}
+                    className="ml-1 hover:bg-gray-200 rounded-full p-0.5"
                   >
-                    <GraduationCap className="h-3 w-3" />
-                    {selectedPillar}
-                    <button
-                      onClick={() => setSelectedPillar("all")}
-                      className="ml-1 hover:bg-gray-200 rounded-full p-0.5"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
-                {selectedDepartment !== "all" && (
-                  <Badge
-                    variant="secondary"
-                    className="flex items-center gap-1"
-                  >
-                    <Building className="h-3 w-3" />
-                    {selectedDepartment}
-                    <button
-                      onClick={() => setSelectedDepartment("all")}
-                      className="ml-1 hover:bg-gray-200 rounded-full p-0.5"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
               </div>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredKpis.length > 0 ? (
-          filteredKpis.map((kpi: KpiData) => (
-            <Card
-              key={kpi.assigned_kpi_id}
-              className="hover:shadow-lg transition-shadow flex flex-col"
-            >
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg leading-tight">
-                    {kpi.kpi_name}
-                  </CardTitle>
-                  {getStatusBadge(kpi.kpi_status)}
-                </div>
-                <CardDescription className="text-sm">
-                  {kpi.kpi_description}
-                </CardDescription>
-
-                {/* Pillar and Department Tags */}
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <Badge variant="outline" className="text-xs">
-                    <GraduationCap className="h-3 w-3 mr-1" />
-                    {kpi.pillar}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    <Building className="h-3 w-3 mr-1" />
-                    {kpi.department}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 dark:text-gray-400">
-                      Submissions:
-                    </span>
-                    <span className="font-medium">
-                      {kpi.form_input ? kpi.form_input.length : 0} entries
-                    </span>
-                  </div>
-
-                  {/* Row-wise review progress */}
-                  {kpi.form_input && kpi.form_input.length > 0 && (
-                    <div className="text-xs space-y-1">
-                      <div className="flex justify-between">
-                        <span className="text-gray-500 dark:text-gray-400">
-                          Row Reviews:
-                        </span>
-                        <span className="font-medium">
-                          {
-                            Object.keys(rowComments[kpi.assigned_kpi_id] || {})
-                              .length
-                          }{" "}
-                          / {kpi.form_input.length}
-                        </span>
-                      </div>
-                      <div className="flex gap-2 text-xs">
-                        <span className="text-green-600">
-                          ✓{" "}
-                          {
-                            Object.values(
-                              rowComments[kpi.assigned_kpi_id] || {},
-                            ).filter((r) => r.status === "approved").length
-                          }
-                        </span>
-                        <span className="text-red-600">
-                          ✗{" "}
-                          {
-                            Object.values(
-                              rowComments[kpi.assigned_kpi_id] || {},
-                            ).filter((r) => r.status === "rejected").length
-                          }
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {kpi.qoc_remark && (
-                    <Alert className="mt-3">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertTitle className="text-sm">
-                        Review Feedback
-                      </AlertTitle>
-                      <AlertDescription className="text-xs mt-1">
-                        {kpi.qoc_remark.length > 100
-                          ? `${kpi.qoc_remark.substring(0, 100)}...`
-                          : kpi.qoc_remark}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-              </CardContent>
-              <CardFooter className="mt-auto">
-                <Button
-                  onClick={() => handleOpenDialog(kpi)}
-                  className="w-full"
-                  variant={kpi.kpi_status === "pending" ? "default" : "outline"}
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  {kpi.kpi_status === "pending"
-                    ? "Review Submission"
-                    : "View Details"}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        ) : (
-          <div className="col-span-full">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">
-                    No KPI Submissions Found
-                  </h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    No KPI submissions match your current filter criteria.
-                  </p>
-                  <Button onClick={clearFilters} variant="outline">
-                    Clear Filters
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+      {/* Only render the rest if department is selected */}
+      {selectedDepartment !== "all" ? (
+        <>
+          {/* Performance Sheet Table (new) */}
+          <div className="mb-8">
+            <PerformanceSheetTable data={dummyPerformanceData} />
           </div>
-        )}
-      </div>
+          {/* KPI Cards */}
+          <Card className="shadow-md border rounded-lg mb-8 p-4">
+            <Accordion type="multiple" defaultValue={Object.keys(kpisByPillar)}>
+              {Object.entries(kpisByPillar).map(
+                ([pillar, kpis]: [
+                  string,
+                  import("@/components/qoc/performance-sheet-table").PillarKpi[],
+                ]) => (
+                  <AccordionItem key={pillar} value={pillar}>
+                    <AccordionTrigger>{pillar}</AccordionTrigger>
+                    <AccordionContent>
+                      <PillarKpiTable
+                        pillar={pillar}
+                        kpis={Array.isArray(kpis) ? kpis : []}
+                        onReviewKpi={(kpiId) => {
+                          const kpi = filteredKpis.find(
+                            (k: KpiData) => k.assigned_kpi_id === kpiId,
+                          );
+                          if (kpi) handleOpenDialog(kpi);
+                        }}
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                ),
+              )}
+            </Accordion>
+          </Card>
 
-      {/* KPI Review Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-[90vw] max-h-[90vh] overflow-hidden [&>button]:hidden">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <span>{selectedKpi?.kpi_name}</span>
-              {selectedKpi && getStatusBadge(selectedKpi.kpi_status)}
-            </DialogTitle>
-            <DialogDescription>
-              {selectedKpi?.kpi_description}
-            </DialogDescription>
-            {selectedKpi && (
-              <div className="flex gap-2 mt-2">
-                <Badge variant="outline" className="text-xs">
-                  <GraduationCap className="h-3 w-3 mr-1" />
-                  {selectedKpi.pillar}
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  <Building className="h-3 w-3 mr-1" />
-                  {selectedKpi.department}
-                </Badge>
-              </div>
-            )}
-          </DialogHeader>
-
-          <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
-            <Tabs defaultValue="data" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="data">Review Data</TabsTrigger>
-                <TabsTrigger value="overall">Overall Review</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="data" className="space-y-4">
-                <div className="mt-4">
-                  {selectedKpi &&
-                  selectedKpi.form_input &&
-                  selectedKpi.form_input.length > 0 ? (
-                    <KpiReviewTable
-                      kpiName={selectedKpi.kpi_name}
-                      kpiDescription={selectedKpi.kpi_description}
-                      formData={selectedKpi.form_input}
-                      onRowReview={(rowIndex, status, comment) =>
-                        handleRowReview(
-                          selectedKpi.assigned_kpi_id,
-                          rowIndex,
-                          status,
-                          comment,
-                        )
-                      }
-                      existingComments={
-                        rowComments[selectedKpi.assigned_kpi_id] || {}
-                      }
-                    />
-                  ) : (
-                    <div className="text-center py-8">
-                      <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500 dark:text-gray-400">
-                        No data has been submitted for this KPI yet.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="overall">
-                <div className="mt-4 space-y-6">
-                  <div>
-                    <h3 className="font-medium text-lg mb-3">
-                      Overall KPI Review Comments
-                    </h3>
-                    <Textarea
-                      placeholder="Enter your overall feedback about this KPI submission. Include summary observations, recommendations, and any areas that need improvement..."
-                      value={qocRemark}
-                      onChange={(e) => setQocRemark(e.target.value)}
-                      rows={6}
-                      className="w-full"
-                    />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Provide constructive feedback to help improve future
-                      submissions
-                    </p>
+          {/* KPI Review Dialog */}
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogContent className="max-w-[90vw] max-h-[90vh] overflow-hidden [&>button]:hidden">
+              <DialogHeader>
+                <DialogTitle className="flex items-center justify-between">
+                  <span>{selectedKpi?.kpi_name}</span>
+                  {selectedKpi && getStatusBadge(selectedKpi.kpi_status)}
+                </DialogTitle>
+                <DialogDescription>
+                  {selectedKpi?.kpi_description}
+                </DialogDescription>
+                {selectedKpi && (
+                  <div className="flex gap-2 mt-2">
+                    <Badge variant="outline" className="text-xs">
+                      <GraduationCap className="h-3 w-3 mr-1" />
+                      {selectedKpi.pillar}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      <Building className="h-3 w-3 mr-1" />
+                      {selectedKpi.department}
+                    </Badge>
                   </div>
+                )}
+              </DialogHeader>
 
-                  {selectedKpi?.kpi_status === "pending" && (
-                    <div className="pt-4 border-t">
-                      <h3 className="font-medium text-lg mb-4">
-                        Overall Review Decision
-                      </h3>
-                      <div className="flex gap-4">
-                        <Button
-                          onClick={() => handleOverallReviewSubmit("approved")}
-                          className="flex-1 bg-green-600 hover:bg-green-700"
-                          disabled={!qocRemark.trim()}
-                        >
-                          <Check className="w-4 h-4 mr-2" />
-                          Approve KPI
-                        </Button>
-                        <Button
-                          onClick={() => handleOverallReviewSubmit("redo")}
-                          variant="destructive"
-                          className="flex-1"
-                          disabled={!qocRemark.trim()}
-                        >
-                          <X className="w-4 h-4 mr-2" />
-                          Request Revision
-                        </Button>
-                      </div>
-                      {!qocRemark.trim() && (
-                        <p className="text-xs text-red-500 mt-2 text-center">
-                          Please provide feedback before making a decision
-                        </p>
+              <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
+                <Tabs defaultValue="data" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="data">Review Data</TabsTrigger>
+                    <TabsTrigger value="overall">Overall Review</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="data" className="space-y-4">
+                    <div className="mt-4">
+                      {selectedKpi &&
+                      selectedKpi.form_input &&
+                      selectedKpi.form_input.length > 0 ? (
+                        <KpiReviewTable
+                          kpiName={selectedKpi.kpi_name}
+                          kpiDescription={selectedKpi.kpi_description}
+                          formData={selectedKpi.form_input}
+                          onRowReview={(rowIndex, status, comment) =>
+                            handleRowReview(
+                              selectedKpi.assigned_kpi_id,
+                              rowIndex,
+                              status,
+                              comment,
+                            )
+                          }
+                          existingComments={
+                            rowComments[selectedKpi.assigned_kpi_id] || {}
+                          }
+                        />
+                      ) : (
+                        <div className="text-center py-8">
+                          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-500 dark:text-gray-400">
+                            No data has been submitted for this KPI yet.
+                          </p>
+                        </div>
                       )}
                     </div>
-                  )}
+                  </TabsContent>
 
-                  {selectedKpi?.kpi_status !== "pending" && (
-                    <div className="pt-4 border-t">
-                      <Alert>
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Review Completed</AlertTitle>
-                        <AlertDescription>
-                          This KPI has already been reviewed and marked as{" "}
-                          <strong>{selectedKpi?.kpi_status}</strong>.
-                        </AlertDescription>
-                      </Alert>
+                  <TabsContent value="overall">
+                    <div className="mt-4 space-y-6">
+                      <div>
+                        <h3 className="font-medium text-lg mb-3">
+                          Overall KPI Review Comments
+                        </h3>
+                        <Textarea
+                          placeholder="Enter your overall feedback about this KPI submission. Include summary observations, recommendations, and any areas that need improvement..."
+                          value={qocRemark}
+                          onChange={(e) => setQocRemark(e.target.value)}
+                          rows={6}
+                          className="w-full"
+                        />
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                          Provide constructive feedback to help improve future
+                          submissions
+                        </p>
+                      </div>
+
+                      {selectedKpi?.kpi_status === "pending" && (
+                        <div className="pt-4 border-t">
+                          <h3 className="font-medium text-lg mb-4">
+                            Overall Review Decision
+                          </h3>
+                          <div className="flex gap-4">
+                            <Button
+                              onClick={() =>
+                                handleOverallReviewSubmit("approved")
+                              }
+                              className="flex-1 bg-green-600 hover:bg-green-700"
+                              disabled={!qocRemark.trim()}
+                            >
+                              <Check className="w-4 h-4 mr-2" />
+                              Approve KPI
+                            </Button>
+                            <Button
+                              onClick={() => handleOverallReviewSubmit("redo")}
+                              variant="destructive"
+                              className="flex-1"
+                              disabled={!qocRemark.trim()}
+                            >
+                              <X className="w-4 h-4 mr-2" />
+                              Request Revision
+                            </Button>
+                          </div>
+                          {!qocRemark.trim() && (
+                            <p className="text-xs text-red-500 mt-2 text-center">
+                              Please provide feedback before making a decision
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {selectedKpi?.kpi_status !== "pending" && (
+                        <div className="pt-4 border-t">
+                          <Alert>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Review Completed</AlertTitle>
+                            <AlertDescription>
+                              This KPI has already been reviewed and marked as{" "}
+                              <strong>{selectedKpi?.kpi_status}</strong>.
+                            </AlertDescription>
+                          </Alert>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-lg text-muted-foreground font-semibold">
+            Please select a department to view KPI submissions and performance
+            data.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

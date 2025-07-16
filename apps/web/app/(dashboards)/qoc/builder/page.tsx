@@ -39,8 +39,17 @@ import {
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import type { FormConfig } from "@/lib/types";
-import { PillarCard } from "@/components/qoc/pillar-card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@workspace/ui/components/table";
 import { KpiCard } from "@/components/qoc/kpi-card";
+import { PillarCard } from "@/components/qoc/pillar-card";
+import { PillarKpiTable } from "@/components/qoc/performance-sheet-table";
 
 // TODO: Implement these hooks and APIs
 // import { useFetchPillarTemplates, useCreatePillarTemplate } from "@/hooks/pillarTemplates";
@@ -48,24 +57,18 @@ import { KpiCard } from "@/components/qoc/kpi-card";
 
 export default function KpiBuilderPage() {
   const router = useRouter();
-  // TODO: Remove dummy data when API is implemented.
+  // Dummy data for pillar templates
   const [pillarTemplates, setPillarTemplates] = useState<any[]>([
-    {
-      id: "pillar-1",
-      pillar_name: "Academic Excellence",
-      description: "Focus on academic achievements",
-    },
-    {
-      id: "pillar-2",
-      pillar_name: "Research & Innovation",
-      description: "Promote research culture",
-    },
+    { id: 1, name: "Academic Excellence", number: 1, weight: 0.3 },
+    { id: 2, name: "Research Progression", number: 2, weight: 0.2 },
   ]);
+  const [creatingPillar, setCreatingPillar] = useState(false);
+  const [pillarName, setPillarName] = useState("");
+  const [pillarNumber, setPillarNumber] = useState("");
+  const [pillarWeight, setPillarWeight] = useState("");
   const [selectedPillarTemplate, setSelectedPillarTemplate] = useState<
     any | null
   >(null);
-  const [creatingPillar, setCreatingPillar] = useState(false);
-  const [newPillarName, setNewPillarName] = useState("");
   // TODO: Remove dummy data when API is implemented.
   const [kpiTemplates, setKpiTemplates] = useState<any[]>([
     {
@@ -82,23 +85,29 @@ export default function KpiBuilderPage() {
     },
   ]);
 
-  // TODO: Remove dummy handler when API is implemented.
-  const handleCreatePillar = () => {
-    if (!newPillarName.trim()) {
-      toast.error("Pillar name cannot be empty");
-      return;
-    }
+  // Handlers for view/edit/delete (dummy)
+  const handleViewEdit = (id: number) =>
+    alert(`View/Edit Pillar Template ${id}`);
+  const handleDelete = (id: number) =>
+    setPillarTemplates((prev) => prev.filter((p) => p.id !== id));
+
+  // Handler for form submit (dummy)
+  const handleAddPillar = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pillarName || !pillarNumber || !pillarWeight) return;
     setPillarTemplates((prev) => [
       ...prev,
       {
-        id: `pillar-${Date.now()}`,
-        pillar_name: newPillarName,
-        description: "Newly created pillar (dummy)",
+        id: Math.max(0, ...prev.map((p: any) => p.id)) + 1,
+        name: pillarName,
+        number: Number(pillarNumber),
+        weight: Number(pillarWeight),
       },
     ]);
-    toast.success("Pillar template created (dummy)");
+    setPillarName("");
+    setPillarNumber("");
+    setPillarWeight("");
     setCreatingPillar(false);
-    setNewPillarName("");
   };
 
   return (
@@ -113,26 +122,66 @@ export default function KpiBuilderPage() {
           </Button>
         </div>
         {creatingPillar && (
-          <div className="flex items-center gap-2 mb-4">
-            <input
-              className="border rounded px-2 py-1"
-              placeholder="New pillar name"
-              value={newPillarName}
-              onChange={(e) => setNewPillarName(e.target.value)}
-            />
-            <Button size="sm" onClick={handleCreatePillar}>
-              Save
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setCreatingPillar(false)}
-            >
-              Cancel
-            </Button>
-          </div>
+          <Card className="mb-4 max-w-xl">
+            <CardHeader>
+              <CardTitle className="text-lg">
+                Create New Pillar Template
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleAddPillar} className="flex flex-col gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={pillarName}
+                    onChange={(e) => setPillarName(e.target.value)}
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Pillar Number
+                  </label>
+                  <input
+                    type="number"
+                    value={pillarNumber}
+                    onChange={(e) => setPillarNumber(e.target.value)}
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Weight
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={pillarWeight}
+                    onChange={(e) => setPillarWeight(e.target.value)}
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    required
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setCreatingPillar(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" className="w-fit">
+                    Add Pillar
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         )}
-        {/* List of pillar templates (replace with real data) */}
+        {/* Pillar Template Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {pillarTemplates.length === 0 ? (
             <p>No pillar templates found. Create one to get started.</p>
@@ -140,14 +189,83 @@ export default function KpiBuilderPage() {
             pillarTemplates.map((pillar) => (
               <PillarCard
                 key={pillar.id}
-                pillarName={pillar.pillar_name}
-                description={pillar.description}
+                pillarName={pillar.name}
+                description={`Number: ${pillar.number}, Weight: ${pillar.weight}`}
                 selected={selectedPillarTemplate?.id === pillar.id}
                 onView={() => setSelectedPillarTemplate(pillar)}
               />
             ))
           )}
         </div>
+        {/* Show KPIs for selected pillar below cards */}
+        {selectedPillarTemplate && (
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-bold tracking-tight">
+                {selectedPillarTemplate.name} KPIs
+              </h3>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    alert(`View/Edit Pillar ${selectedPillarTemplate.id}`)
+                  }
+                >
+                  View/Edit Pillar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() =>
+                    alert(`Delete Pillar ${selectedPillarTemplate.id}`)
+                  }
+                >
+                  Delete Pillar
+                </Button>
+              </div>
+            </div>
+            <PillarKpiTable
+              pillar={selectedPillarTemplate.name}
+              kpis={[
+                {
+                  kpi_no: 1,
+                  metric: "Student Awards",
+                  dataProvidedBy: "HoD",
+                  target: "25%",
+                  actual: "20%",
+                  percentAchieved: "80%",
+                  status: "pending review",
+                  kpiId: 1,
+                },
+                {
+                  kpi_no: 2,
+                  metric: "Research Papers",
+                  dataProvidedBy: "HoD",
+                  target: "10",
+                  actual: "8",
+                  percentAchieved: "80%",
+                  status: "approved",
+                  kpiId: 2,
+                },
+                {
+                  kpi_no: 3,
+                  metric: "Industry Projects",
+                  dataProvidedBy: "HoD",
+                  target: "5",
+                  actual: "2",
+                  percentAchieved: "40%",
+                  status: "needs revision",
+                  kpiId: 3,
+                },
+              ]}
+              onReviewKpi={(kpiId) => {
+                alert(`View/Edit KPI ${kpiId}`);
+              }}
+              showStatusColumn={false}
+            />
+          </div>
+        )}
       </div>
 
       {/* KPI Templates for Selected Pillar */}

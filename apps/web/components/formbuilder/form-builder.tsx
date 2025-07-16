@@ -45,11 +45,18 @@ export default function FormBuilder({
 }: {
   initialForm?: FormConfig;
 }) {
-  const [formTitle, setFormTitle] = useState(initialForm?.title || "");
-  const [formDescription, setFormDescription] = useState(
-    initialForm?.description || "",
+  const [kpiNo, setKpiNo] = useState(initialForm?.kpiNo || "");
+  const [metric, setMetric] = useState(initialForm?.metric || "");
+  const [dataProvidedBy, setDataProvidedBy] = useState(
+    initialForm?.dataProvidedBy || "",
   );
-  const [formValue, setFormValue] = useState(initialForm?.value || 0);
+  const [target2025, setTarget2025] = useState(initialForm?.target2025 || "");
+  const [actuals2025, setActuals2025] = useState(
+    initialForm?.actuals2025 || "",
+  );
+  const [percentAchieved, setPercentAchieved] = useState(
+    initialForm?.percentAchieved || "",
+  );
   const [elements, setElements] = useState<FormElementInstance[]>(
     initialForm?.elements || [],
   );
@@ -193,7 +200,7 @@ export default function FormBuilder({
   }
 
   const handleSaveForm = () => {
-    if (!formTitle.trim() || formTitle.trim() === "KPI") {
+    if (!kpiNo.trim() || kpiNo.trim() === "KPI") {
       toast.error("Empty KPI Number", {
         description: "Form title must include a KPI number.",
       });
@@ -209,12 +216,18 @@ export default function FormBuilder({
     try {
       const formData: FormConfig = {
         id: `form-${Date.now()}`,
-        title: formTitle,
+        title: kpiNo,
         elements,
-        description: formDescription,
-        value: formValue,
+        description: metric,
+        value: 0, // Value is not directly mapped from new fields, keep as 0 or calculate
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        kpiNo: kpiNo,
+        metric: metric,
+        dataProvidedBy: dataProvidedBy,
+        target2025: target2025,
+        actuals2025: actuals2025,
+        percentAchieved: percentAchieved,
       };
 
       saveForm(formData);
@@ -237,56 +250,99 @@ export default function FormBuilder({
     >
       <div className="mb-6">
         <div className="space-y-6">
+          {/* KPI No */}
           <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">KPI</Label>
+            <Label className="text-lg font-medium mb-2">KPI No</Label>
             <p className="text-sm text-gray-500 mb-2">
               KPI identification number, usually between 1 to 78.
             </p>
             <Input
-              id="form-title"
-              value={formTitle.replace("KPI", "")}
-              onChange={(e) => {
-                const numberValue = e.target.value.replace(/\D/g, ""); // Allow only numbers
-                setFormTitle(`KPI ${numberValue}`);
-              }}
+              id="kpi-no"
+              type="number"
+              min={1}
+              max={78}
+              value={kpiNo}
+              onChange={(e) => setKpiNo(e.target.value.replace(/\D/g, ""))}
               className="text-lg font-medium"
               placeholder="Enter KPI Number"
+              required
             />
           </div>
-
-          {/* KPI Description Input */}
+          {/* Metric */}
           <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">Description</Label>
+            <Label className="text-lg font-medium mb-2">Metric</Label>
             <p className="text-sm text-gray-500 mb-2">
               A short description of what this KPI is and what faculty is
               expected to fill.
             </p>
             <Input
-              id="form-description"
-              value={formDescription}
-              required
-              onChange={(e) => setFormDescription(e.target.value)}
+              id="metric"
+              value={metric}
+              onChange={(e) => setMetric(e.target.value)}
               className="text-lg font-medium"
               placeholder="Enter KPI Description"
+              required
             />
           </div>
-
-          {/* KPI Value Input */}
+          {/* Data Provided by */}
           <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">Value</Label>
+            <Label className="text-lg font-medium mb-2">Data Provided by</Label>
+            <p className="text-sm text-gray-500 mb-2">E.g., HoD, DoR, CoE</p>
+            <Input
+              id="data-provided-by"
+              value={dataProvidedBy}
+              onChange={(e) => setDataProvidedBy(e.target.value)}
+              className="text-lg font-medium"
+              placeholder="Enter Data Provider"
+              required
+            />
+          </div>
+          {/* Target 2025 */}
+          <div className="flex flex-col">
+            <Label className="text-lg font-medium mb-2">Target 2025</Label>
             <p className="text-sm text-gray-500 mb-2">
-              Value of each KPI in a specific metric.
+              E.g., 25%, 2/dept per year, etc.
             </p>
             <Input
-              id="form-value"
-              type="number" // Ensure only numeric input
-              required
-              value={formValue}
-              onChange={(e) => setFormValue(Number(e.target.value))}
+              id="target-2025"
+              value={target2025}
+              onChange={(e) => setTarget2025(e.target.value)}
               className="text-lg font-medium"
-              placeholder="Enter KPI Value"
+              placeholder="Enter Target 2025"
+              required
             />
           </div>
+          {/* Actuals 2025 */}
+          <div className="flex flex-col">
+            <Label className="text-lg font-medium mb-2">Actuals 2025</Label>
+            <p className="text-sm text-gray-500 mb-2">E.g., 0, 0.00, etc.</p>
+            <Input
+              id="actuals-2025"
+              value={actuals2025}
+              onChange={(e) => setActuals2025(e.target.value)}
+              className="text-lg font-medium"
+              placeholder="Enter Actuals 2025"
+              required
+            />
+          </div>
+          {/* % Target achieved */}
+          <div className="flex flex-col">
+            <Label className="text-lg font-medium mb-2">
+              % Target achieved
+            </Label>
+            <p className="text-sm text-gray-500 mb-2">
+              E.g., 0.00%, #DIV/0!, etc.
+            </p>
+            <Input
+              id="percent-achieved"
+              value={percentAchieved}
+              onChange={(e) => setPercentAchieved(e.target.value)}
+              className="text-lg font-medium"
+              placeholder="Enter % Target achieved"
+              required
+            />
+          </div>
+          {/* Upload KPI Template (unchanged) */}
           <div>
             <div className="flex flex-col">
               <Label className="text-lg font-medium mb-2">
@@ -356,7 +412,7 @@ export default function FormBuilder({
             </TabsContent>
 
             <TabsContent value="preview" className="mt-0">
-              <FormPreview formTitle={formTitle} elements={elements} />
+              <FormPreview formTitle={kpiNo} elements={elements} />
             </TabsContent>
           </Tabs>
         </div>
