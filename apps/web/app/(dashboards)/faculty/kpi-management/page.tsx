@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, TrendingUp, Calendar, BarChart3 } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
@@ -15,6 +15,13 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
+import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogFooter,
@@ -23,14 +30,13 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
 
-import { useFetchForms, useDeleteKpi } from "@/hooks/forms";
-
-export default function FormsPage() {
-  const { data: forms, isLoading, error } = useFetchForms();
-  const deleteKpiMutation = useDeleteKpi();
-  const [deletingFormId, setDeletingFormId] = useState<string | null>(null);
-  const [formToDelete, setFormToDelete] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+// KPI data and pillars
+const PILLARS = [
+  { id: "academic", name: "Academic Excellence", icon: BarChart3 },
+  { id: "student", name: "Student Experience", icon: TrendingUp },
+  { id: "research", name: "Research & Innovation", icon: BarChart3 },
+  { id: "infrastructure", name: "Infrastructure", icon: BarChart3 },
+];
 
 const DUMMY_KPIS = {
   academic: [
@@ -425,7 +431,6 @@ const DUMMY_KPIS = {
 export default function KpiManagementPage() {
   const [selectedPillar, setSelectedPillar] = useState<string>("");
 
-  //const selectedPillarData = PILLARS.find((p) => p.id === selectedPillar)
   const kpisForPillar = selectedPillar
     ? DUMMY_KPIS[selectedPillar as keyof typeof DUMMY_KPIS] || []
     : [];
@@ -537,14 +542,13 @@ export default function KpiManagementPage() {
                   {kpi.elements.length !== 1 ? "s" : ""}
                 </div>
               </CardContent>
+
               <CardFooter className="flex justify-between">
                 <Link
-                  href={`/faculty/kpi-management/${form.id.replace(
-                    "form-",
-                    "",
-                  )}`}
+                  href={`/faculty/kpi-management/${kpi.id}`}
+                  className="w-full"
                 >
-                  <Button>View</Button>
+                  <Button className="w-full">Open KPI</Button>
                 </Link>
               </CardFooter>
             </Card>
