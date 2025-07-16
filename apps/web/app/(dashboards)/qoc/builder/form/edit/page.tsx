@@ -9,7 +9,7 @@ interface EditFormPageProps {
 async function fetchFormById(id: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL || ""}/api/kpi/${id}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
   if (!res.ok) return null;
   const data = await res.json();

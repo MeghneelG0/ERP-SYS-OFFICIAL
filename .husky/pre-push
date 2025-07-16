@@ -1,4 +1,14 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm build 
+# Run linting, formatting, and building before push
+echo "🔍 Running linting..."
+pnpm lint
+
+echo "🎨 Running formatting..."
+pnpm format
+
+echo "🏗️  Building project..."
+pnpm build
+
+echo "✅ Pre-push checks completed successfully!"
