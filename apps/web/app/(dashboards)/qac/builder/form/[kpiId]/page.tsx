@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 // This interface defines the props our component will receive
 interface KpiDetailPageProps {
   params: {
-    kpiId: string; // This comes from the URL [kpiId] 
+    kpiId: string; // This comes from the URL [kpiId]
   };
 }
 
@@ -23,16 +23,17 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
   const [isEditMode, setIsEditMode] = useState(mode === "edit");
-  
+
   // Get the router for navigation
   const router = useRouter();
-  
+
   // Mock data for testing (remove when backend is ready)
   const mockData = {
     kpi: {
       kpi_id: params.kpiId,
       kpi_name: `KPI ${params.kpiId}`,
-      kpi_description: "This is a mock KPI for testing purposes. The backend will provide real data later.",
+      kpi_description:
+        "This is a mock KPI for testing purposes. The backend will provide real data later.",
       kpi_value: 95,
       elements: [
         {
@@ -41,19 +42,19 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
           attributes: {
             label: "Student Name",
             placeholder: "Enter student name",
-            required: true
-          }
+            required: true,
+          },
         },
         {
-          id: "element-2", 
+          id: "element-2",
           type: "number" as const,
           attributes: {
             label: "Score",
             placeholder: "Enter score",
             min: 0,
             max: 100,
-            required: true
-          }
+            required: true,
+          },
         },
         {
           id: "element-3",
@@ -62,16 +63,16 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
             label: "Comments",
             placeholder: "Enter additional comments",
             rows: 3,
-            required: false
-          }
-        }
-      ] as FormElementInstance[]
-    }
+            required: false,
+          },
+        },
+      ] as FormElementInstance[],
+    },
   };
 
   // Use mock data for now (replace with real API call when backend is ready)
   const { data, isLoading, error } = useFormById(params.kpiId);
-  
+
   // For testing: use mock data instead of API response
   const testData = mockData;
   const testIsLoading = false;
@@ -100,7 +101,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
     setIsEditMode(false);
     // Show success feedback
     toast.success("KPI updated successfully", {
-      description: "Your changes have been saved."
+      description: "Your changes have been saved.",
     });
   };
 
@@ -111,7 +112,9 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-lg text-muted-foreground">Loading KPI details...</p>
+            <p className="text-lg text-muted-foreground">
+              Loading KPI details...
+            </p>
           </div>
         </div>
       </div>
@@ -177,7 +180,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
-          
+
           {/* Edit/Save/Cancel Buttons */}
           <div className="flex gap-2">
             {!isEditMode ? (
@@ -215,7 +218,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
         <h2 className="text-xl font-semibold mb-4">
           {isEditMode ? "Edit KPI Template" : "KPI Template"}
         </h2>
-        
+
         {/* Form Content */}
         {!isEditMode ? (
           // View Mode - Show Form Preview
@@ -230,7 +233,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
         ) : (
           // Edit Mode - Show Form Builder
           <div>
-            <FormBuilder 
+            <FormBuilder
               initialForm={{
                 id: params.kpiId,
                 title: kpiName,
@@ -246,4 +249,4 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
       </div>
     </div>
   );
-} 
+}

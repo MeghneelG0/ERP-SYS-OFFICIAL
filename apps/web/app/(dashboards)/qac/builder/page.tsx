@@ -300,14 +300,16 @@ export default function KpiBuilderPage() {
               kpiTemplates
                 .filter((k) => k.pillarId === selectedPillarTemplate.id)
                 .map((kpi) => {
-                  console.log('KPI for card:', kpi);
+                  console.log("KPI for card:", kpi);
                   return (
                     <KpiCard
                       key={kpi.id}
                       kpiName={kpi.kpi_name}
                       description={kpi.kpi_description}
                       onView={() => router.push(`/qac/builder/form/${kpi.id}`)}
-                      onEdit={() => router.push(`/qac/builder/form/${kpi.id}?mode=edit`)}
+                      onEdit={() =>
+                        router.push(`/qac/builder/form/${kpi.id}?mode=edit`)
+                      }
                       onDelete={() => {
                         /* TODO: Delete KPI template API */
                       }}

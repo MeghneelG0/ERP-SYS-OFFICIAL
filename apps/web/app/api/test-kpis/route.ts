@@ -11,20 +11,20 @@ export async function GET(): Promise<NextResponse> {
         kpi_description: true,
       },
       orderBy: {
-        id: 'asc'
-      }
+        id: "asc",
+      },
     });
 
     return NextResponse.json({
       message: "Available KPIs for testing",
       kpis: kpis,
-      total: kpis.length
+      total: kpis.length,
     });
   } catch (error) {
     console.error("Error fetching KPIs:", error);
     return NextResponse.json(
       { error: "Failed to fetch KPIs" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
