@@ -54,8 +54,12 @@ export default function KpiReviewTable({
     "approved" | "rejected" | null
   >(null);
 
+  // Fix: Safely access formData and ensure it exists before using Object.keys
   // Get all unique keys from the form data to create table headers
-  const tableHeaders = formData.length > 0 ? Object.keys(formData[0]) : [];
+  const tableHeaders =
+    formData && formData.length > 0 && formData[0]
+      ? Object.keys(formData[0])
+      : [];
 
   const handleOpenReviewDialog = (rowIndex: number) => {
     setSelectedRow(rowIndex);
