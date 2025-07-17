@@ -9,6 +9,7 @@ import {
   User2,
   Eye,
   DownloadCloudIcon,
+  Table,
 } from "lucide-react"; // Icons
 import { SidebarItem } from "@/lib/types";
 import { useFetchAssignedKPI } from "@/hooks/faculty";
@@ -104,12 +105,12 @@ export function useSidebarConfig(): SidebarConfig {
           id: "dashboard",
           path: "/hod/",
         },
-        /*{ 
-          icon: Eye, 
-          label: "View KPI's", 
-          id: "view-submissions", 
-          path: "/hod/ViewKPI" 
-        },*/
+        {
+          icon: Table,
+          label: "Department Profile",
+          id: "department-profile",
+          path: "/hod/department-profile",
+        },
         {
           icon: LineChart,
           label: "KPI Management",

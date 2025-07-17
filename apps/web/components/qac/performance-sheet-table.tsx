@@ -299,6 +299,25 @@ export const PerformanceSheetTable: React.FC<{
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell className="font-bold text-left" colSpan={2}>
+                Overall Performance = Average of all parameter’s performance in %
+              </TableCell>
+              <TableCell className="font-bold text-center">
+                {/* Total of weight */}
+                {data.reduce((sum, row) => sum + Number(row.weight), 0)}
+              </TableCell>
+              <TableCell className="font-bold text-center">
+                {/* Total of % target achieved */}
+                {data.reduce((sum, row) => sum + Number(row.targetAchieved), 0)}
+              </TableCell>
+              <TableCell className="font-bold text-center">
+                {/* Total of performance */}
+                {data.reduce((sum, row) => sum + Number(row.performance), 0)}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
         </Table>
       </div>
     </CardContent>

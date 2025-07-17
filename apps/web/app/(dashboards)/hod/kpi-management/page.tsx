@@ -27,10 +27,14 @@ import {
   Calendar,
   TrendingUp,
 } from "lucide-react";
-
-// Dummy data structure (define as empty if not used)
-const DEPARTMENT_PILLAR: PillarType[] = [];
-const PILLARS: PillarType[] = [];
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@workspace/ui/components/table";
 
 // Define PillarType if not already defined
 // Replace with actual fields as needed
@@ -40,6 +44,13 @@ type PillarType = {
   [key: string]: any;
 };
 
+const PILLARS: PillarType[] = [
+  { id: "academic", name: "Academic Excellence", icon: BarChart3 },
+  { id: "student", name: "Student Experience", icon: TrendingUp },
+  { id: "research", name: "Research & Innovation", icon: BarChart3 },
+  { id: "infrastructure", name: "Infrastructure", icon: BarChart3 },
+];
+
 const DUMMY_KPIS = {
   academic: [
     {
@@ -48,8 +59,12 @@ const DUMMY_KPIS = {
       description:
         "Track student pass rates across different courses and semesters",
       value: 85,
-      status: "active",
+      status: "accepted",
       lastUpdated: "2024-01-15",
+      target: 90,
+      actual: 85,
+      targetAchieved: "94%",
+      dataProvider: "Dr. Sharma",
       elements: [
         {
           id: "course_code",
@@ -130,8 +145,12 @@ const DUMMY_KPIS = {
       description:
         "Evaluate faculty teaching effectiveness and student feedback",
       value: 4.2,
-      status: "active",
+      status: "pending",
       lastUpdated: "2024-01-10",
+      target: 4.5,
+      actual: 4.2,
+      targetAchieved: "93%",
+      dataProvider: "Prof. Mehta",
       elements: [
         {
           id: "faculty_name",
@@ -193,8 +212,12 @@ const DUMMY_KPIS = {
       description:
         "Collect and analyze student satisfaction across various services",
       value: 4.1,
-      status: "active",
+      status: "needs review",
       lastUpdated: "2024-01-12",
+      target: 4.5,
+      actual: 4.1,
+      targetAchieved: "91%",
+      dataProvider: "Ms. Gupta",
       elements: [
         {
           id: "student_id",
@@ -272,8 +295,12 @@ const DUMMY_KPIS = {
       description:
         "Track research publications and citations by faculty members",
       value: 23,
-      status: "active",
+      status: "rejected",
       lastUpdated: "2024-01-08",
+      target: 30,
+      actual: 23,
+      targetAchieved: "77%",
+      dataProvider: "Dr. Rao",
       elements: [
         {
           id: "faculty_name",
@@ -353,8 +380,12 @@ const DUMMY_KPIS = {
       description:
         "Monitor utilization rates of campus facilities and resources",
       value: 78,
-      status: "active",
+      status: "accepted",
       lastUpdated: "2024-01-14",
+      target: 80,
+      actual: 78,
+      targetAchieved: "98%",
+      dataProvider: "Facilities Team",
       elements: [
         {
           id: "facility_name",
@@ -478,7 +509,7 @@ export default function KpiManagementPage() {
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Table */}
       {!selectedPillar ? (
         <div className="text-center py-12">
           <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -500,60 +531,61 @@ export default function KpiManagementPage() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {kpisForPillar.map((kpi) => (
-            <Card key={kpi.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg">{kpi.title}</CardTitle>
-                    <CardDescription className="mt-1">
-                      {kpi.description}
-                    </CardDescription>
-                  </div>
-                  <Badge
-                    variant={kpi.status === "active" ? "default" : "secondary"}
-                    className="ml-2"
-                  >
-                    {kpi.status}
-                  </Badge>
-                </div>
-              </CardHeader>
-
-              <CardContent className="pb-3">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-blue-500" />
-                    <span className="text-sm font-medium">Current Value:</span>
-                  </div>
-                  <span className="text-lg font-bold text-blue-600">
-                    {kpi.value}
-                    {kpi.id === "kpi-1" || kpi.id === "kpi-5" ? "%" : ""}
-                    {kpi.id === "kpi-3" || kpi.id === "kpi-2" ? "/5" : ""}
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <Calendar className="h-3 w-3" />
-                  <span>
-                    Updated: {new Date(kpi.lastUpdated).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className="mt-2 text-sm text-gray-600">
-                  {kpi.elements.length} data field
-                  {kpi.elements.length !== 1 ? "s" : ""}
-                </div>
-              </CardContent>
-
-              <CardFooter>
-                <Link href={`/hod/kpi-management/${kpi.id}`} className="w-full">
-                  <Button className="w-full">Open KPI</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>KPI List</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>KPI No</TableHead>
+                  <TableHead>Metric</TableHead>
+                  <TableHead>Target</TableHead>
+                  <TableHead>Actual</TableHead>
+                  <TableHead>Target Achieved</TableHead>
+                  <TableHead>Data Provided By</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {kpisForPillar.map((kpi, idx) => (
+                  <TableRow key={kpi.id}>
+                    <TableCell>{idx + 1}</TableCell>
+                    <TableCell>{kpi.title}</TableCell>
+                    <TableCell>{kpi.target ?? "-"}</TableCell>
+                    <TableCell>{kpi.actual ?? "-"}</TableCell>
+                    <TableCell>{kpi.targetAchieved ?? "-"}</TableCell>
+                    <TableCell>{kpi.dataProvider ?? "-"}</TableCell>
+                    <TableCell>
+                      <span
+                        className={
+                          kpi.status === "accepted"
+                            ? "px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-800"
+                            : kpi.status === "pending"
+                            ? "px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-800"
+                            : kpi.status === "rejected"
+                            ? "px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800"
+                            : kpi.status === "needs review"
+                            ? "px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800"
+                            : "px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-800"
+                        }
+                      >
+                        {kpi.status}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Link href={`/hod/kpi-management/${kpi.id}`}>
+                        <Button size="sm">Open KPI</Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
     </main>
   );
