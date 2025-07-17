@@ -27,7 +27,7 @@ export function MainAppSidebar({
   const pathname = usePathname();
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const dashboardKey = pathname.startsWith("/qac")
+  const dashboardKey = pathname.startsWith("/qc")
     ? "qac"
     : pathname.startsWith("/hod")
       ? "hod"

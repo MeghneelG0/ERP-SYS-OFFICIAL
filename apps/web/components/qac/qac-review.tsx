@@ -204,7 +204,7 @@ export function QACReview() {
               </div>
               <div className="mt-4 flex justify-end">
                 <Button asChild>
-                  <Link href={`/qac/review/${submission.id}`}>
+                  <Link href={`/qc/review/${submission.id}`}>
                     <Eye className="mr-2 h-4 w-4" />
                     View Submission
                   </Link>

@@ -31,15 +31,18 @@ export default function RootLayout({
           className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
         >
           <Providers>{children}</Providers>
-          <footer
-            style={{
-              textAlign: "center",
-              padding: "1rem 0",
-              marginTop: "2rem",
-              fontSize: "1rem",
-              color: "#666",
-            }}
-          ></footer>
+          {typeof window !== "undefined" &&
+            window.location.pathname !== "/" && (
+              <footer
+                style={{
+                  textAlign: "center",
+                  padding: "1rem 0",
+                  marginTop: "2rem",
+                  fontSize: "1rem",
+                  color: "#666",
+                }}
+              ></footer>
+            )}
           <Toaster richColors />
         </body>
       </html>
