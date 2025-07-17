@@ -114,7 +114,9 @@ export default function AssignKpiToDepartmentPage() {
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Assign Pillar and Kpi to Department</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Assign Pillar and Kpi to Department
+      </h1>
       {/* Department Dropdown */}
       <div className="mb-8 flex gap-4 items-center">
         <Label htmlFor="department-select" className="font-medium mr-2">
@@ -148,7 +150,9 @@ export default function AssignKpiToDepartmentPage() {
               onAssign={handleAssignPillar}
               onUnassign={(pillar) => {
                 setUnassignedPillars((prev) => [...prev, pillar]);
-                setAssignedPillars((prev) => prev.filter((p) => p.id !== pillar.id));
+                setAssignedPillars((prev) =>
+                  prev.filter((p) => p.id !== pillar.id),
+                );
                 toast.success("Pillar unassigned from department (dummy)");
                 // TODO: DELETE /api/department-pillars/:id
               }}
@@ -165,7 +169,8 @@ export default function AssignKpiToDepartmentPage() {
           {selectedPillarId && (
             <div ref={kpiSectionRef}>
               <h2 className="text-xl font-semibold mb-2">
-                {allPillars.find((p) => p.id === selectedPillarId)?.pillar_name || "KPIs for Pillar"}
+                {allPillars.find((p) => p.id === selectedPillarId)
+                  ?.pillar_name || "KPIs for Pillar"}
               </h2>
               <div className="mb-6">
                 <AssignKpiTable
