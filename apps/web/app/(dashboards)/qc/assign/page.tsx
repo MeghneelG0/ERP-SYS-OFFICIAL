@@ -6,26 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import { useAssignKpiToPillar, useFetchDepartments } from "@/hooks/dept";
-import { useFetchForms } from "@/hooks/forms";
-import { Checkbox } from "@workspace/ui/components/checkbox";
+import { Label } from "@workspace/ui/components/label";
 import { useState, useRef } from "react";
-import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
-import type { AssignKpiPayload } from "@/lib/types";
-import { useFetchAssignedKpis } from "@/hooks/dept";
-import { Badge } from "@workspace/ui/components/badge";
-import { Eye } from "lucide-react";
-import { PillarCard } from "@/components/qac/pillar-card";
-import { KpiCard } from "@/components/qac/kpi-card";
+import { AssignPillarTable } from "@/components/qc/assign/AssignPillarTable";
+import { AssignKpiTable } from "@/components/qc/assign/AssignKpiTable";
 
 // TODO: Implement these hooks and APIs
 // import { useFetchDepartments } from "@/hooks/departments";
@@ -36,8 +21,8 @@ import { KpiCard } from "@/components/qac/kpi-card";
 export default function AssignKpiToDepartmentPage() {
   // TODO: Replace with GET /api/departments
   const [departments] = useState<any[]>([
-    { id: "dept-1", dept_name: "Computer Science and Engineering" },
-    { id: "dept-2", dept_name: "Mechanical Engineering" },
+    { id: "dept-1", name: "Computer Science and Engineering" },
+    { id: "dept-2", name: "Mechanical Engineering" },
   ]);
   // TODO: Replace with GET /api/pillar-templates
   const [allPillars] = useState<any[]>([
@@ -129,71 +114,46 @@ export default function AssignKpiToDepartmentPage() {
 
   return (
     <main className="container mx-auto py-8 px-4">
+      <h1 className="text-3xl font-bold mb-6">Assign Pillar and Kpi to Department</h1>
       {/* Department Dropdown */}
       <div className="mb-8 flex gap-4 items-center">
-        <label htmlFor="department-select" className="font-medium mr-2">
+        <Label htmlFor="department-select" className="font-medium mr-2">
           Department:
-        </label>
-        <div className="relative">
-          <select
-            id="department-select"
-            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary min-w-[250px]"
-            value={selectedDepartmentId ?? ""}
-            onChange={(e) => handleDepartmentChange(e.target.value)}
-          >
-            <option value="" disabled>
-              Select Department
-            </option>
+        </Label>
+        <Select
+          value={selectedDepartmentId ?? ""}
+          onValueChange={handleDepartmentChange}
+        >
+          <SelectTrigger className="min-w-[250px]">
+            <SelectValue placeholder="Select Department" />
+          </SelectTrigger>
+          <SelectContent>
             {departments.map((dept) => (
-              <option key={dept.id} value={dept.id}>
-                {dept.dept_name}
-              </option>
+              <SelectItem key={dept.id} value={dept.id}>
+                {dept.name}
+              </SelectItem>
             ))}
-          </select>
-        </div>
+          </SelectContent>
+        </Select>
       </div>
-
-      {/* Assigneddepartment_pillar Section */}
-      {false && selectedDepartmentId && (
-        <>
-          <h2 className="text-xl font-semibold mb-2">
-            Assigneddepartment_pillar
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
-            {assignedPillars.length === 0 ? (
-              <p>Nodepartment_pillar assigned to this department.</p>
-            ) : (
-              assignedPillars.map((pillar) => (
-                <PillarCard
-                  key={pillar.id}
-                  pillarName={pillar.pillar_name}
-                  selected={selectedPillarId === pillar.id}
-                  onView={() => handlePillarSelect(pillar.id)}
-                  assigned
-                />
-              ))
-            )}
-          </div>
-        </>
-      )}
 
       {/* Assign Pillar Section */}
       {selectedDepartmentId && (
         <>
           <h2 className="text-xl font-semibold mb-2">Assign Pillar</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
-            {unassignedPillars.length === 0 ? (
-              <p>Alldepartment_pillar assigned to this department.</p>
-            ) : (
-              unassignedPillars.map((pillar) => (
-                <PillarCard
-                  key={pillar.id}
-                  pillarName={pillar.pillar_name}
-                  onAssign={() => handleAssignPillar(pillar)}
-                  onView={() => handlePillarSelect(pillar.id)}
-                />
-              ))
-            )}
+          <div className="mb-8">
+            <AssignPillarTable
+              assignedPillars={assignedPillars}
+              unassignedPillars={unassignedPillars}
+              onAssign={handleAssignPillar}
+              onUnassign={(pillar) => {
+                setUnassignedPillars((prev) => [...prev, pillar]);
+                setAssignedPillars((prev) => prev.filter((p) => p.id !== pillar.id));
+                toast.success("Pillar unassigned from department (dummy)");
+                // TODO: DELETE /api/department-pillars/:id
+              }}
+              onView={handlePillarSelect}
+            />
           </div>
         </>
       )}
@@ -201,86 +161,19 @@ export default function AssignKpiToDepartmentPage() {
       {/* KPIs for Selected Pillar */}
       {selectedDepartmentId && (
         <>
-          {/* Pillar Dropdown for viewing/assigning KPIs */}
-          {assignedPillars.length > 0 && (
-            <div className="mb-6 flex gap-4 items-center">
-              <label htmlFor="pillar-select" className="font-medium mr-2">
-                Pillar:
-              </label>
-              <div className="relative">
-                <select
-                  id="pillar-select"
-                  className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary min-w-[250px]"
-                  value={selectedPillarId ?? ""}
-                  onChange={(e) => handlePillarSelect(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Select Pillar
-                  </option>
-                  {assignedPillars.map((pillar) => (
-                    <option key={pillar.id} value={pillar.id}>
-                      {pillar.pillar_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
           {/* KPIs for Selected Pillar */}
           {selectedPillarId && (
             <div ref={kpiSectionRef}>
-              <h2 className="text-xl font-semibold mb-2">Assigned KPIs</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
-                {assignedKpis.length === 0 ? (
-                  <p>No KPIs assigned to this pillar.</p>
-                ) : (
-                  assignedKpis.map((kpi) => (
-                    <KpiCard
-                      key={kpi.id}
-                      kpiName={kpi.title}
-                      description={kpi.description}
-                      fieldsCount={kpi.elements.length}
-                      value={kpi.value}
-                      assigned
-                      onView={() => {
-                        /* TODO: View KPI */
-                      }}
-                      onEdit={() => {
-                        /* TODO: Edit KPI */
-                      }}
-                      onDelete={() => {
-                        /* TODO: Delete KPI */
-                      }}
-                      onUnassign={() => handleUnassignKpi(kpi)}
-                    />
-                  ))
-                )}
-              </div>
-              <h2 className="text-xl font-semibold mb-2">Assign KPI</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {unassignedKpis.length === 0 ? (
-                  <p>All KPIs assigned to this pillar.</p>
-                ) : (
-                  unassignedKpis.map((kpi) => (
-                    <KpiCard
-                      key={kpi.id}
-                      kpiName={kpi.title}
-                      description={kpi.description}
-                      fieldsCount={kpi.elements.length}
-                      value={kpi.value}
-                      onView={() => {
-                        /* TODO: View KPI */
-                      }}
-                      onEdit={() => {
-                        /* TODO: Edit KPI */
-                      }}
-                      onDelete={() => {
-                        /* TODO: Delete KPI */
-                      }}
-                      onAssign={() => handleAssignKpi(kpi)}
-                    />
-                  ))
-                )}
+              <h2 className="text-xl font-semibold mb-2">
+                {allPillars.find((p) => p.id === selectedPillarId)?.pillar_name || "KPIs for Pillar"}
+              </h2>
+              <div className="mb-6">
+                <AssignKpiTable
+                  assignedKpis={assignedKpis}
+                  unassignedKpis={unassignedKpis}
+                  onAssign={handleAssignKpi}
+                  onUnassign={handleUnassignKpi}
+                />
               </div>
             </div>
           )}

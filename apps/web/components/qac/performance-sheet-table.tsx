@@ -24,6 +24,7 @@ export type PillarKpi = {
   target: string;
   actual: string | number;
   percentAchieved: string | number;
+  value?: string | number;
   status?: string;
   kpiId?: number;
 };
@@ -102,30 +103,33 @@ export const PillarKpiTable: React.FC<PillarTableProps> = ({
           <Table>
             <TableHeader>
               <TableRow className="leading-tight h-8">
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                   KPI No
                 </TableHead>
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-left">
                   Metric
                 </TableHead>
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                   Data Provided By
                 </TableHead>
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                   Target
                 </TableHead>
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                   Actual
                 </TableHead>
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                   % Target Achieved
                 </TableHead>
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
+                  Value
+                </TableHead>
                 {showStatusColumn && (
-                  <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                  <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                     Status
                   </TableHead>
                 )}
-                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap">
+                <TableHead className="bg-muted/50 text-xs font-semibold uppercase px-2 py-1 whitespace-nowrap text-center">
                   Review
                 </TableHead>
               </TableRow>
@@ -139,7 +143,7 @@ export const PillarKpiTable: React.FC<PillarTableProps> = ({
                   <TableCell className="font-medium text-center px-2 py-1 whitespace-nowrap">
                     {row.kpi_no}
                   </TableCell>
-                  <TableCell className="font-medium px-2 py-1 whitespace-nowrap">
+                  <TableCell className="font-medium text-left px-2 py-1 whitespace-nowrap">
                     {row.metric}
                   </TableCell>
                   <TableCell className="text-center px-2 py-1 whitespace-nowrap">
@@ -153,6 +157,9 @@ export const PillarKpiTable: React.FC<PillarTableProps> = ({
                   </TableCell>
                   <TableCell className="text-center px-2 py-1 whitespace-nowrap">
                     {row.percentAchieved}
+                  </TableCell>
+                  <TableCell className="text-center px-2 py-1 whitespace-nowrap">
+                    {row.value ?? "-"}
                   </TableCell>
                   {showStatusColumn && (
                     <TableCell className="text-center px-2 py-1 whitespace-nowrap">
@@ -243,7 +250,7 @@ export const dummyPerformanceData: PerformanceParameter[] = [
 export const PerformanceSheetTable: React.FC<{
   data: PerformanceParameter[];
 }> = ({ data }) => (
-  <Card className="shadow-md border rounded-lg">
+  <Card className="shadow-md px-2 border rounded-lg">
     <CardHeader className="bg-muted/50 rounded-t-lg">
       <CardTitle className="text-lg font-bold tracking-tight">
         Performance Sheet
