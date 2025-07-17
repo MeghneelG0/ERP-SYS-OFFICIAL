@@ -10,15 +10,17 @@ import FormBuilder from "@/components/formbuilder/form-builder";
 import type { FormElementInstance, FormConfig } from "@/lib/types";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 
 // This interface defines the props our component will receive
 interface KpiDetailPageProps {
-  params: {
+  params: Promise<{
     kpiId: string; // This comes from the URL [kpiId]
-  };
+  }>;
 }
 
 export default function KpiDetailPage({ params }: KpiDetailPageProps) {
+  const { kpiId } = React.use(params);
   // State to track if we're in edit mode or view mode
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
@@ -30,8 +32,8 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
   // Mock data for testing (remove when backend is ready)
   const mockData = {
     kpi: {
-      kpi_id: params.kpiId,
-      kpi_name: `KPI ${params.kpiId}`,
+      kpi_id: kpiId,
+      kpi_name: `KPI ${kpiId}`,
       kpi_description:
         "This is a mock KPI for testing purposes. The backend will provide real data later.",
       kpi_value: 95,
@@ -71,7 +73,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
   };
 
   // Use mock data for now (replace with real API call when backend is ready)
-  const { data, isLoading, error } = useFormById(params.kpiId);
+  const { data, isLoading, error } = useFormById(kpiId);
 
   // For testing: use mock data instead of API response
   const testData = mockData;
@@ -235,7 +237,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
           <div>
             <FormBuilder
               initialForm={{
-                id: params.kpiId,
+                id: kpiId,
                 title: kpiName,
                 description: kpiDescription,
                 value: value || 0,
