@@ -51,6 +51,7 @@ export default function FormBuilder({
     initialForm?.dataProvidedBy || "",
   );
   const [target2025, setTarget2025] = useState(initialForm?.target2025 || "");
+  const [value, setValue] = useState(initialForm?.value || 0);
   const [elements, setElements] = useState<FormElementInstance[]>(
     initialForm?.elements || [],
   );
@@ -288,6 +289,20 @@ export default function FormBuilder({
               onChange={(e) => setDataProvidedBy(e.target.value)}
               className="text-lg font-medium"
               placeholder="Enter Data Provider"
+              required
+            />
+          </div>
+          {/* KPI Value */}
+          <div className="flex flex-col">
+            <Label className="text-lg font-medium mb-2">KPI Value</Label>
+            <p className="text-sm text-gray-500 mb-2">E.g., 100, 75.5, etc.</p>
+            <Input
+              id="kpi-value"
+              type="number"
+              value={value}
+              onChange={(e) => setValue(Number(e.target.value))}
+              className="text-lg font-medium"
+              placeholder="Enter KPI Value"
               required
             />
           </div>

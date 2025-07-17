@@ -442,14 +442,6 @@ export default function QACSubmissionReview() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Link href="/qac">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
           <h1 className="text-3xl font-bold">KPI Submission Review</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Review and evaluate department KPI submissions
@@ -477,7 +469,7 @@ export default function QACSubmissionReview() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             {/* Department Filter ONLY */}
             <div className="space-y-1">
-              <label className="text-xs font-medium flex items-center gap-2">
+              <label className="text-xs my-2 font-medium flex items-center gap-2">
                 <Building className="h-3 w-3" />
                 Department
               </label>
@@ -490,7 +482,7 @@ export default function QACSubmissionReview() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all" className="text-xs">
-                    All Departments ({filterCounts.total})
+                    Select Department ({filterCounts.total})
                   </SelectItem>
                   {DEPARTMENTS.map((dept) => (
                     <SelectItem
@@ -505,18 +497,18 @@ export default function QACSubmissionReview() {
                 </SelectContent>
               </Select>
             </div>
-            {/* Clear Filters */}
-            <div className="flex items-end justify-end">
-              <Button
-                variant="outline"
-                onClick={clearFilters}
-                disabled={selectedDepartment === "all"}
-                className="h-8 text-xs rounded-full border-muted-foreground/40 hover:bg-muted/30 transition-colors flex items-center gap-1 px-3"
-              >
-                <X className="h-3 w-3 mr-1 text-muted-foreground" />
-                Clear Filters
-              </Button>
-            </div>
+            {/*/!* Clear Filters *!/*/}
+            {/*<div className="flex items-end justify-end">*/}
+            {/*  <Button*/}
+            {/*    variant="outline"*/}
+            {/*    onClick={clearFilters}*/}
+            {/*    disabled={selectedDepartment === "all"}*/}
+            {/*    className="h-8 text-xs rounded-full border-muted-foreground/40 hover:bg-muted/30 transition-colors flex items-center gap-1 px-3"*/}
+            {/*  >*/}
+            {/*    <X className="h-3 w-3 mr-1 text-muted-foreground" />*/}
+            {/*    Clear Filters*/}
+            {/*  </Button>*/}
+            {/*</div>*/}
           </div>
           {/* Active Filters Display */}
           {selectedDepartment !== "all" && (
@@ -581,7 +573,7 @@ export default function QACSubmissionReview() {
 
           {/* KPI Review Dialog */}
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogContent className="max-w-[90vw] max-h-[90vh] overflow-hidden [&>button]:hidden">
+            <DialogContent className="min-w-[50vw] max-h-[90vh] overflow-hidden [&>button]:hidden">
               <DialogHeader>
                 <DialogTitle className="flex items-center justify-between">
                   <span>{selectedKpi?.kpi_name}</span>
