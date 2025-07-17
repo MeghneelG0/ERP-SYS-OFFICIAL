@@ -302,7 +302,8 @@ export const PerformanceSheetTable: React.FC<{
           <TableFooter>
             <TableRow>
               <TableCell className="font-bold text-left" colSpan={2}>
-                Overall Performance = Average of all parameter’s performance in %
+                Overall Performance = Average of all parameter’s performance in
+                %
               </TableCell>
               <TableCell className="font-bold text-center">
                 {/* Total of weight */}

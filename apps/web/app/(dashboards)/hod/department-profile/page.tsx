@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Input } from "@workspace/ui/components/input";
@@ -38,8 +38,14 @@ export default function DepartmentProfilePage() {
     setData({ ...data, [e.target.name]: Number(e.target.value) });
   };
 
-  const handleYearChange = (idx: number, field: "intake" | "admitted", value: number) => {
-    setYearData((prev) => prev.map((row, i) => i === idx ? { ...row, [field]: value } : row));
+  const handleYearChange = (
+    idx: number,
+    field: "intake" | "admitted",
+    value: number,
+  ) => {
+    setYearData((prev) =>
+      prev.map((row, i) => (i === idx ? { ...row, [field]: value } : row)),
+    );
   };
 
   const totalAdmitted = yearData.reduce((sum, row) => sum + row.admitted, 0);
@@ -222,18 +228,27 @@ export default function DepartmentProfilePage() {
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell>Number of full time-teachers during the year:</TableCell>
+              <TableCell>
+                Number of full time-teachers during the year:
+              </TableCell>
               <TableCell>
                 <Input
                   type="number"
                   value={data.fullTimeTeachers ?? 0}
-                  onChange={e => setData({ ...data, fullTimeTeachers: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      fullTimeTeachers: Number(e.target.value),
+                    })
+                  }
                 />
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
-        <Button onClick={() => alert("Saved!")} className="mt-4">Save</Button>
+        <Button onClick={() => alert("Saved!")} className="mt-4">
+          Save
+        </Button>
       </div>
     </main>
   );

@@ -564,12 +564,12 @@ export default function KpiManagementPage() {
                           kpi.status === "accepted"
                             ? "px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-800"
                             : kpi.status === "pending"
-                            ? "px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-800"
-                            : kpi.status === "rejected"
-                            ? "px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800"
-                            : kpi.status === "needs review"
-                            ? "px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800"
-                            : "px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-800"
+                              ? "px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-800"
+                              : kpi.status === "rejected"
+                                ? "px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800"
+                                : kpi.status === "needs review"
+                                  ? "px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800"
+                                  : "px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-800"
                         }
                       >
                         {kpi.status}
