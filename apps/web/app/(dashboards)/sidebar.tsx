@@ -28,7 +28,7 @@ export function MainAppSidebar({
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const dashboardKey = pathname.startsWith("/qc")
-    ? "qac"
+    ? "qc"
     : pathname.startsWith("/hod")
       ? "hod"
       : "faculty";
@@ -58,7 +58,7 @@ export function MainAppSidebar({
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex h-14 items-center border-b px-4">
+        <div className="flex h-13 items-center border-b p-4">
           <img
             src={
               mounted && (resolvedTheme === "dark" || theme === "dark")
