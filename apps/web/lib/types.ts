@@ -105,7 +105,7 @@ export interface AssignedKPI {
   elements: FormElementInstance[];
   kpi_description?: string;
   form_responses?: Record<string, string | number>[] | null;
-  qoc_remark?: string;
+  qac_remark?: string;
 }
 
 export interface DeptConfig {

@@ -15,7 +15,7 @@ export interface KpiTemplate extends z.infer<typeof KpiTemplateBaseSchema> {
   completed_date?: Date;
   comments?: string;
   form_responses?: Record<string, any>;
-  created_by_qoc: string;
+  created_by_qac: string;
   created_at: Date;
   updated_at: Date;
 }

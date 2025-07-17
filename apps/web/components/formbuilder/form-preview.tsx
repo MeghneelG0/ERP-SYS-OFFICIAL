@@ -35,6 +35,7 @@ interface FormPreviewProps {
   elements: FormElementInstance[];
   description?: string;
   isPreview?: boolean;
+  readOnly?: boolean;
 }
 
 export default function FormPreview({
@@ -42,6 +43,7 @@ export default function FormPreview({
   elements,
   description,
   isPreview = false,
+  readOnly = false,
 }: FormPreviewProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [files, setFiles] = useState<Record<string, FileList | null>>({});

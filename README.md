@@ -220,17 +220,17 @@ The ERP-SYS database is built around a **template-based KPI management system** 
 
 #### Core Entities
 
-1. **QOC (Quality of Academic and Career)** - System administrators who create and manage templates
+1. **QAC (Quality of Academic and Career)** - System administrators who create and manage templates
 2. **Departments** - Organizational units within the institution
 3. **Users** - Department members with role-based access (HOD, KPI Coordinator, Faculty)
-4. **Pillar Templates** - Organizational framework templates created by QOC
+4. **Pillar Templates** - Organizational framework templates created by QAC
 5. **KPI Templates** - Performance indicator templates with form structures
 6. **Departmentdepartment_pillar** - Department-specific instances of pillar templates
 7. **Department KPIs** - Operational KPI tracking with performance data
 
 #### Key Features
 
-- **Template System**: QOC creates reusable pillar and KPI templates
+- **Template System**: QAC creates reusable pillar and KPI templates
 - **Department Assignment**: Templates are assigned to departments as working copies
 - **Role-Based Access**: Three user roles with different permissions
 - **Performance Tracking**: Comprehensive KPI status management and progress monitoring
@@ -240,12 +240,12 @@ The ERP-SYS database is built around a **template-based KPI management system** 
 #### Data Flow
 
 ```
-QOC Creates Templates → Assigns to Departments → Department Copies Created → Users Fill KPIs
+QAC Creates Templates → Assigns to Departments → Department Copies Created → Users Fill KPIs
 ```
 
 #### User Roles & Permissions
 
-- **QOC**: Full system access, template creation and management
+- **QAC**: Full system access, template creation and management
 - **HOD**: Department management, KPI assignment, user coordination
 - **KPI Coordinator**: KPI fulfillment coordination within department
 - **Faculty**: KPI data entry and completion

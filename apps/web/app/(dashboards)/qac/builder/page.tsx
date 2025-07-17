@@ -47,9 +47,9 @@ import {
   TableRow,
   TableCell,
 } from "@workspace/ui/components/table";
-import { KpiCard } from "@/components/qoc/kpi-card";
-import { PillarCard } from "@/components/qoc/pillar-card";
-import { PillarKpiTable } from "@/components/qoc/performance-sheet-table";
+import { KpiCard } from "@/components/qac/kpi-card";
+import { PillarCard } from "@/components/qac/pillar-card";
+import { PillarKpiTable } from "@/components/qac/performance-sheet-table";
 
 // TODO: Implement these hooks and APIs
 // import { useFetchPillarTemplates, useCreatePillarTemplate } from "@/hooks/pillarTemplates";
@@ -260,7 +260,8 @@ export default function KpiBuilderPage() {
                 },
               ]}
               onReviewKpi={(kpiId) => {
-                alert(`View/Edit KPI ${kpiId}`);
+                router.push(`/qac/builder/form/${kpiId}`);
+                // alert(`View/Edit KPI ${kpiId}`);
               }}
               showStatusColumn={false}
             />
@@ -279,7 +280,7 @@ export default function KpiBuilderPage() {
             <Button
               onClick={() =>
                 router.push(
-                  `/qoc/builder/create?kpiPillarTemplateId=${selectedPillarTemplate.id}`,
+                  `/qac/builder/create?kpiPillarTemplateId=${selectedPillarTemplate.id}`,
                 )
               }
             >
@@ -298,18 +299,23 @@ export default function KpiBuilderPage() {
             ) : (
               kpiTemplates
                 .filter((k) => k.pillarId === selectedPillarTemplate.id)
-                .map((kpi) => (
-                  <KpiCard
-                    key={kpi.id}
-                    kpiName={kpi.kpi_name}
-                    description={kpi.kpi_description}
-                    onView={() => router.push(`/qoc/builder/form/${kpi.id}`)}
-                    onEdit={() => router.push(`/qoc/builder/form/${kpi.id}`)}
-                    onDelete={() => {
-                      /* TODO: Delete KPI template API */
-                    }}
-                  />
-                ))
+                .map((kpi) => {
+                  console.log("KPI for card:", kpi);
+                  return (
+                    <KpiCard
+                      key={kpi.id}
+                      kpiName={kpi.kpi_name}
+                      description={kpi.kpi_description}
+                      onView={() => router.push(`/qac/builder/form/${kpi.id}`)}
+                      onEdit={() =>
+                        router.push(`/qac/builder/form/${kpi.id}?mode=edit`)
+                      }
+                      onDelete={() => {
+                        /* TODO: Delete KPI template API */
+                      }}
+                    />
+                  );
+                })
             )}
           </div>
         </div>

@@ -24,8 +24,8 @@ import type { AssignKpiPayload } from "@/lib/types";
 import { useFetchAssignedKpis } from "@/hooks/dept";
 import { Badge } from "@workspace/ui/components/badge";
 import { Eye } from "lucide-react";
-import { PillarCard } from "@/components/qoc/pillar-card";
-import { KpiCard } from "@/components/qoc/kpi-card";
+import { PillarCard } from "@/components/qac/pillar-card";
+import { KpiCard } from "@/components/qac/kpi-card";
 
 // TODO: Implement these hooks and APIs
 // import { useFetchDepartments } from "@/hooks/departments";

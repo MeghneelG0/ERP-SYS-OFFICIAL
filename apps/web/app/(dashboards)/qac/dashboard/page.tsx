@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { QOCReview } from "@/components/qoc/qoc-review";
+import { QACReview } from "@/components/qac/qac-review";
 import {
   CalendarIcon,
   FileText,
@@ -37,8 +37,8 @@ import {
 } from "@workspace/ui/components/table";
 import { Badge } from "@workspace/ui/components/badge";
 
-// Dummy analytics data for QOC
-const QOC_ANALYTICS_DATA = {
+// Dummy analytics data for QAC
+const QAC_ANALYTICS_DATA = {
   submissionStats: {
     totalSubmissions: 156,
     pendingReview: 23,
@@ -223,16 +223,16 @@ const QOC_ANALYTICS_DATA = {
   },
 };
 
-export function QOCDashboard() {
+export function QACDashboard() {
   const [selectedDepartment, setSelectedDepartment] = useState(
-    QOC_ANALYTICS_DATA.departmentPerformance[0],
+    QAC_ANALYTICS_DATA.departmentPerformance[0],
   );
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">QOC Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">QAC Dashboard</h1>
           <p className="text-muted-foreground mt-2">
             Monitor department submissions and quality metrics across the
             organization
@@ -268,7 +268,7 @@ export function QOCDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {QOC_ANALYTICS_DATA.submissionStats.totalSubmissions}
+                  {QAC_ANALYTICS_DATA.submissionStats.totalSubmissions}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   +12 from last month
@@ -286,7 +286,7 @@ export function QOCDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {QOC_ANALYTICS_DATA.submissionStats.pendingReview}
+                  {QAC_ANALYTICS_DATA.submissionStats.pendingReview}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   -5 from last week
@@ -320,7 +320,7 @@ export function QOCDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {QOC_ANALYTICS_DATA.submissionStats.averageReviewTime}
+                  {QAC_ANALYTICS_DATA.submissionStats.averageReviewTime}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   -0.5 days improvement
@@ -344,7 +344,7 @@ export function QOCDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {QOC_ANALYTICS_DATA.departmentPerformance.map(
+                  {QAC_ANALYTICS_DATA.departmentPerformance.map(
                     (dept, index) => (
                       <Button
                         key={dept.id}
@@ -572,7 +572,7 @@ export function QOCDashboard() {
                     Monthly Approval Rate
                   </h4>
                   <div className="space-y-3">
-                    {QOC_ANALYTICS_DATA.qualityTrends.monthlyApprovalRate.map(
+                    {QAC_ANALYTICS_DATA.qualityTrends.monthlyApprovalRate.map(
                       (month, index) => (
                         <div key={index} className="space-y-1">
                           <div className="flex justify-between items-center">
@@ -600,7 +600,7 @@ export function QOCDashboard() {
                     Average Quality Score
                   </h4>
                   <div className="space-y-3">
-                    {QOC_ANALYTICS_DATA.qualityTrends.qualityScores.map(
+                    {QAC_ANALYTICS_DATA.qualityTrends.qualityScores.map(
                       (month, index) => (
                         <div key={index} className="space-y-1">
                           <div className="flex justify-between items-center">
@@ -649,7 +649,7 @@ export function QOCDashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {QOC_ANALYTICS_DATA.reviewMetrics.reviewerWorkload.map(
+                  {QAC_ANALYTICS_DATA.reviewMetrics.reviewerWorkload.map(
                     (reviewer, index) => (
                       <TableRow key={index}>
                         <TableCell className="font-medium">
@@ -694,7 +694,7 @@ export function QOCDashboard() {
         </TabsContent>
 
         <TabsContent value="submissions" className="space-y-4">
-          <QOCReview />
+          <QACReview />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,4 +1,4 @@
-import { QOCDashboard } from "./dashboard/page";
+import { QACDashboard } from "./dashboard/page";
 
 export default function Home() {
   // const renderContent = (activeSection: string) => {
@@ -18,7 +18,7 @@ export default function Home() {
   // }
   return (
     <>
-      <QOCDashboard />
+      <QACDashboard />
     </>
   );
 }

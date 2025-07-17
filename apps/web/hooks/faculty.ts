@@ -503,8 +503,8 @@ const DUMMY_KPI_DATA = {
   },
 };
 
-// Add dummy data for QOC review submissions
-const DUMMY_QOC_REVIEW_DATA = {
+// Add dummy data for QAC review submissions
+const DUMMY_QAC_REVIEW_DATA = {
   "7": {
     assignedKpis: [
       {
@@ -534,7 +534,7 @@ const DUMMY_QOC_REVIEW_DATA = {
             comments: "Excellent results, students well prepared",
           },
         ],
-        qoc_remark: null,
+        qac_remark: null,
       },
       {
         assigned_kpi_id: 2,
@@ -562,7 +562,7 @@ const DUMMY_QOC_REVIEW_DATA = {
             teaching_load: "10 hours/week",
           },
         ],
-        qoc_remark:
+        qac_remark:
           "Excellent faculty performance across all metrics. Recommend for promotion consideration.",
       },
       {
@@ -589,7 +589,7 @@ const DUMMY_QOC_REVIEW_DATA = {
             feedback: "Excellent program structure and support",
           },
         ],
-        qoc_remark:
+        qac_remark:
           "Data collection methodology needs improvement. Please provide more detailed demographic breakdown and increase sample size to at least 200 responses.",
       },
       {
@@ -619,7 +619,7 @@ const DUMMY_QOC_REVIEW_DATA = {
             research_area: "Educational Statistics",
           },
         ],
-        qoc_remark: null,
+        qac_remark: null,
       },
       {
         assigned_kpi_id: 5,
@@ -649,7 +649,7 @@ const DUMMY_QOC_REVIEW_DATA = {
               "Audio system needs upgrade, booking system requires optimization",
           },
         ],
-        qoc_remark:
+        qac_remark:
           "Comprehensive infrastructure analysis with actionable insights. Maintenance recommendations are well-documented.",
       },
       {
@@ -678,7 +678,7 @@ const DUMMY_QOC_REVIEW_DATA = {
             semester: "Fall 2024",
           },
         ],
-        qoc_remark: null,
+        qac_remark: null,
       },
     ],
   },
@@ -821,13 +821,13 @@ type KpiData = {
   form_responses: Record<string, string | number>[] | null;
 };
 
-// Update the fetchAssignedKPIByDepartmentId function to use dummy data for QOC review
+// Update the fetchAssignedKPIByDepartmentId function to use dummy data for QAC review
 const fetchAssignedKPIByDepartmentId = async (departmentId: string) => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 800));
 
   const data =
-    DUMMY_QOC_REVIEW_DATA[departmentId as keyof typeof DUMMY_QOC_REVIEW_DATA];
+    DUMMY_QAC_REVIEW_DATA[departmentId as keyof typeof DUMMY_QAC_REVIEW_DATA];
   if (!data) {
     throw new Error(`No KPI submissions found for department ${departmentId}`);
   }

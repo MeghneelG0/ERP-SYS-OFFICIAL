@@ -40,7 +40,7 @@ export function Navbar({
   onSearch,
 }: NavbarProps) {
   const pathname = usePathname();
-  const hideNotifications = pathname.startsWith("/qoc");
+  const hideNotifications = pathname.startsWith("/qac");
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px]">
