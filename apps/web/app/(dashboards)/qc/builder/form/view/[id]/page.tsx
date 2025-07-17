@@ -29,7 +29,7 @@ export default function KpiViewPage({
     <main className="container mx-auto py-4 px-4">
       <div className="mb-6">
         <div className="flex justify-between items-center">
-          <Link href="/qac/builder/">
+          <Link href="/(dashboards)/qc/builder/">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to KPI Dashboard

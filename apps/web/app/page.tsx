@@ -22,7 +22,7 @@ import { Button } from "@workspace/ui/components/button";
 import { LockIcon, UserIcon, BookIcon } from "lucide-react";
 
 export default function LoginPage() {
-  const [activeTab, setActiveTab] = useState("qoac");
+  const [activeTab, setActiveTab] = useState("qc");
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
@@ -59,7 +59,7 @@ export default function LoginPage() {
       </div>
 
       {/* Login Section */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl text-center">Login Portal</CardTitle>
@@ -69,48 +69,37 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <Tabs
-              defaultValue="qoac"
+              defaultValue="qc"
               value={activeTab}
               onValueChange={setActiveTab}
               className="w-full"
             >
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="qoac">QOAC</TabsTrigger>
+                <TabsTrigger value="qc">QC</TabsTrigger>
                 <TabsTrigger value="hod">HOD</TabsTrigger>
                 <TabsTrigger value="faculty">Faculty</TabsTrigger>
               </TabsList>
 
               {/* QOAC Login */}
-              <TabsContent value="qoac">
+              <TabsContent value="qc">
                 <form className="space-y-4 mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="qoac-id">QOAC ID</Label>
+                    <Label htmlFor="qc-id">QC ID</Label>
                     <div className="relative">
                       <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        id="qoac-id"
-                        placeholder="Enter your QOAC ID"
+                        id="qc-id"
+                        placeholder="Enter your QC ID"
                         className="pl-10"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="qoac-id">QOAC Name</Label>
-                    <div className="relative">
-                      <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="qoac-name"
-                        placeholder="Enter your QOAC Name"
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="qoac-password">Password</Label>
+                    <Label htmlFor="qc-password">Password</Label>
                     <div className="relative">
                       <LockIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        id="qoac-password"
+                        id="qc-password"
                         type="password"
                         placeholder="Enter your password"
                         className="pl-10"
@@ -118,7 +107,7 @@ export default function LoginPage() {
                     </div>
                   </div>
                   <Button type="submit" className="w-full">
-                    Login as QOAC
+                    Login as QC
                   </Button>
                 </form>
               </TabsContent>
@@ -133,17 +122,6 @@ export default function LoginPage() {
                       <Input
                         id="hod-id"
                         placeholder="Enter your HOD ID"
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="department">Department</Label>
-                    <div className="relative">
-                      <BookIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="department"
-                        placeholder="Enter your department"
                         className="pl-10"
                       />
                     </div>
@@ -176,17 +154,6 @@ export default function LoginPage() {
                       <Input
                         id="faculty-id"
                         placeholder="Enter your Faculty ID"
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="faculty-department">Department</Label>
-                    <div className="relative">
-                      <BookIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="faculty-department"
-                        placeholder="Enter your department"
                         className="pl-10"
                       />
                     </div>

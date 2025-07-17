@@ -39,36 +39,36 @@ export function useSidebarConfig(): SidebarConfig {
     qac: {
       title: "QAC Dashboard",
       items: [
-        { icon: Home, label: "Dashboard", id: "qac-dashboard", path: "/qac/" },
+        { icon: Home, label: "Dashboard", id: "qc-dashboard", path: "/qc/" },
         {
           icon: Hammer,
           label: "KPI Builder",
           id: "form-builder",
-          path: "/qac/builder",
+          path: "/qc/builder",
         },
         {
           icon: User2,
           label: "Assign KPI to Department",
           id: "assign-kpi",
-          path: "/qac/assign",
+          path: "/qc/assign",
         },
         {
           icon: Check,
           label: "Review Submissions",
           id: "review-submissions",
-          path: "/qac/review",
+          path: "/qc/review",
         },
         {
           icon: DownloadCloudIcon,
           label: "Generate Report",
           id: "generate-report",
-          path: "/qac/report",
+          path: "/qc/report",
         },
         {
           icon: Settings,
           label: "Settings",
-          id: "qac-settings",
-          path: "/qac/settings",
+          id: "qc-settings",
+          path: "/qc/settings",
         },
       ],
     },
