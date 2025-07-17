@@ -30,9 +30,9 @@ export default function KpiBuilderPage() {
   const [creatingPillar, setCreatingPillar] = useState(false);
   const [pillarName, setPillarName] = useState("");
   const [pillarWeight, setPillarWeight] = useState("");
-  const [selectedPillarTemplate, setSelectedPillarTemplate] = useState<any | null>(
-    pillarTemplates[0] ?? null,
-  );
+  const [selectedPillarTemplate, setSelectedPillarTemplate] = useState<
+    any | null
+  >(pillarTemplates[0] ?? null);
   const [editingPillar, setEditingPillar] = useState<any | null>(null);
   // TODO: Remove dummy data when API is implemented.
   const [kpiTemplates, setKpiTemplates] = useState<any[]>([
@@ -112,7 +112,9 @@ export default function KpiBuilderPage() {
         {/* Pillar Template Cards */}
         <PillarTabs
           pillars={pillarTemplates}
-          selectedPillarId={selectedPillarTemplate?.id ?? pillarTemplates[0]?.id}
+          selectedPillarId={
+            selectedPillarTemplate?.id ?? pillarTemplates[0]?.id
+          }
           onSelect={setSelectedPillarTemplate}
         />
         {/* Show KPIs for selected pillar below cards */}

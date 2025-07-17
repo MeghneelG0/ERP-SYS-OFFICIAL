@@ -7,7 +7,11 @@ interface PillarTabsProps {
   onSelect: (pillar: any) => void;
 }
 
-export function PillarTabs({ pillars, selectedPillarId, onSelect }: PillarTabsProps) {
+export function PillarTabs({
+  pillars,
+  selectedPillarId,
+  onSelect,
+}: PillarTabsProps) {
   return (
     <Tabs value={String(selectedPillarId)} className="w-full">
       <TabsList className="flex flex-wrap gap-2">
@@ -25,4 +29,3 @@ export function PillarTabs({ pillars, selectedPillarId, onSelect }: PillarTabsPr
     </Tabs>
   );
 }
-

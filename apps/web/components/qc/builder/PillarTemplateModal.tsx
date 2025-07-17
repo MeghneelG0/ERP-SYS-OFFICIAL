@@ -32,7 +32,9 @@ export function PillarTemplateModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle className="text-lg">Create New Pillar Template</DialogTitle>
+          <DialogTitle className="text-lg">
+            Create New Pillar Template
+          </DialogTitle>
         </DialogHeader>
         <CardContent>
           <form onSubmit={handleAddPillar} className="flex flex-col gap-4">
@@ -47,7 +49,9 @@ export function PillarTemplateModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Weight (A)</label>
+              <label className="block text-sm font-medium mb-1">
+                Weight (A)
+              </label>
               <input
                 type="number"
                 step="0.01"

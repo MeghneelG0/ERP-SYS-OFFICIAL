@@ -9,7 +9,12 @@ interface PillarKpiSectionProps {
   router: any;
 }
 
-export function PillarKpiSection({ pillar, onViewEdit, onDelete, router }: PillarKpiSectionProps) {
+export function PillarKpiSection({
+  pillar,
+  onViewEdit,
+  onDelete,
+  router,
+}: PillarKpiSectionProps) {
   const [kpis, setKpis] = useState<any[]>([]);
 
   useEffect(() => {
@@ -57,9 +62,7 @@ export function PillarKpiSection({ pillar, onViewEdit, onDelete, router }: Pilla
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-lg font-bold tracking-tight">
-          {pillar.name} KPIs
-        </h3>
+        <h3 className="text-lg font-bold tracking-tight">{pillar.name} KPIs</h3>
         <div className="flex gap-2">
           <Button
             size="sm"
@@ -91,14 +94,14 @@ export function PillarKpiSection({ pillar, onViewEdit, onDelete, router }: Pilla
           </Button>
         </div>
       </div>
-      <div className=''>
+      <div className="">
         <PillarKpiTable
-            pillar={pillar.name}
-            kpis={kpis}
-            onReviewKpi={(kpiId) => {
-              router.push(`/qac/builder/form/${kpiId}`);
-            }}
-            showStatusColumn={false}
+          pillar={pillar.name}
+          kpis={kpis}
+          onReviewKpi={(kpiId) => {
+            router.push(`/qac/builder/form/${kpiId}`);
+          }}
+          showStatusColumn={false}
         />
       </div>
     </div>
