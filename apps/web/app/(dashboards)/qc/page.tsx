@@ -1,4 +1,4 @@
-import { QACDashboard } from "./dashboard/page";
+import QACDashboard from "./dashboard/page";
 
 export default function Home() {
   return (
