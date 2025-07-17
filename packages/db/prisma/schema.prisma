@@ -65,6 +65,7 @@ model User {
 model PillarTemplate {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   pillar_name   String
+  pillar_value  Float?
   description   String?
   created_by_qac String  @db.ObjectId // Foreign key to QAC
   created_at    DateTime @default(now())
