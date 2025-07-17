@@ -51,12 +51,6 @@ export default function FormBuilder({
     initialForm?.dataProvidedBy || "",
   );
   const [target2025, setTarget2025] = useState(initialForm?.target2025 || "");
-  const [actuals2025, setActuals2025] = useState(
-    initialForm?.actuals2025 || "",
-  );
-  const [percentAchieved, setPercentAchieved] = useState(
-    initialForm?.percentAchieved || "",
-  );
   const [elements, setElements] = useState<FormElementInstance[]>(
     initialForm?.elements || [],
   );
@@ -226,8 +220,8 @@ export default function FormBuilder({
         metric: metric,
         dataProvidedBy: dataProvidedBy,
         target2025: target2025,
-        actuals2025: actuals2025,
-        percentAchieved: percentAchieved,
+        actuals2025: "", // Removed actuals2025 input, set to empty string
+        percentAchieved: "", // Removed percentAchieved input, set to empty string
       };
 
       saveForm(formData);
@@ -312,61 +306,6 @@ export default function FormBuilder({
               required
             />
           </div>
-          {/* Actuals 2025 */}
-          <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">Actuals 2025</Label>
-            <p className="text-sm text-gray-500 mb-2">E.g., 0, 0.00, etc.</p>
-            <Input
-              id="actuals-2025"
-              value={actuals2025}
-              onChange={(e) => setActuals2025(e.target.value)}
-              className="text-lg font-medium"
-              placeholder="Enter Actuals 2025"
-              required
-            />
-          </div>
-          {/* % Target achieved */}
-          <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">
-              % Target achieved
-            </Label>
-            <p className="text-sm text-gray-500 mb-2">
-              E.g., 0.00%, #DIV/0!, etc.
-            </p>
-            <Input
-              id="percent-achieved"
-              value={percentAchieved}
-              onChange={(e) => setPercentAchieved(e.target.value)}
-              className="text-lg font-medium"
-              placeholder="Enter % Target achieved"
-              required
-            />
-          </div>
-          {/* Upload KPI Template (unchanged) */}
-          <div>
-            <div className="flex flex-col">
-              <Label className="text-lg font-medium mb-2">
-                Upload KPI Template
-              </Label>
-              <p className="text-sm text-gray-500 mb-2">
-                Upload an Excel template for this KPI. This will help faculty
-                understand the expected format.
-              </p>
-              <Input
-                id="template-upload"
-                type="file"
-                accept=".xlsx,.xls"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    // Handle file upload logic here
-                    toast.success("Template uploaded successfully");
-                  }
-                }}
-                className="text-lg font-medium"
-              />
-            </div>
-          </div>
         </div>
       </div>
 
@@ -395,6 +334,7 @@ export default function FormBuilder({
                     </>
                   )}
                 </Button>
+                {/* Removed: Upload KPI Template button */}
               </div>
             </div>
 

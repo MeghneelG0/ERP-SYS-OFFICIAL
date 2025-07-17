@@ -91,7 +91,7 @@ export const PillarKpiTable: React.FC<PillarTableProps> = ({
     );
   };
   return (
-    <Card className="shadow-md border rounded-lg">
+    <Card className="shadow-md px-2 border rounded-lg">
       <CardHeader className="bg-muted/50 rounded-t-lg">
         <CardTitle className="text-lg font-bold tracking-tight">
           {pillar}

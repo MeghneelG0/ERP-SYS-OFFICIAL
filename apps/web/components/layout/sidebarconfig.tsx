@@ -36,8 +36,8 @@ export function useSidebarConfig(): SidebarConfig {
   })) || [];*/
 
   return {
-    qac: {
-      title: "QAC Dashboard",
+    qc: {
+      title: "QC Dashboard",
       items: [
         { icon: Home, label: "Dashboard", id: "qc-dashboard", path: "/qc/" },
         {

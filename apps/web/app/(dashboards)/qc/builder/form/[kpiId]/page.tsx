@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft, Edit, Save, X } from "lucide-react";
-import { useFormById } from "@/hooks/forms";
+// import { useFormById } from "@/hooks/forms";
 import FormPreview from "@/components/formbuilder/form-preview";
 import FormBuilder from "@/components/formbuilder/form-builder";
 import type { FormElementInstance, FormConfig } from "@/lib/types";
@@ -73,7 +73,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
   };
 
   // Use mock data for now (replace with real API call when backend is ready)
-  const { data, isLoading, error } = useFormById(kpiId);
+  // const { data, isLoading, error } = useFormById(kpiId);
 
   // For testing: use mock data instead of API response
   const testData = mockData;
