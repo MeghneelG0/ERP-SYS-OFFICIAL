@@ -1,4 +1,10 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@workspace/ui/components/card";
 import { TrendingUp } from "lucide-react";
 
 export function QualityTrends({ trends }: { trends: any }) {
@@ -21,8 +27,12 @@ export function QualityTrends({ trends }: { trends: any }) {
               {trends.monthlyApprovalRate.map((month: any, index: number) => (
                 <div key={index} className="space-y-1">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">{month.month} 2024</span>
-                    <span className="text-sm font-bold text-green-600">{month.rate}%</span>
+                    <span className="text-sm font-medium">
+                      {month.month} 2024
+                    </span>
+                    <span className="text-sm font-bold text-green-600">
+                      {month.rate}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
@@ -40,8 +50,12 @@ export function QualityTrends({ trends }: { trends: any }) {
               {trends.qualityScores.map((month: any, index: number) => (
                 <div key={index} className="space-y-1">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">{month.month} 2024</span>
-                    <span className="text-sm font-bold text-blue-600">{month.score}/5</span>
+                    <span className="text-sm font-medium">
+                      {month.month} 2024
+                    </span>
+                    <span className="text-sm font-bold text-blue-600">
+                      {month.score}/5
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div

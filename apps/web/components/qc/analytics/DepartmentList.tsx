@@ -1,8 +1,18 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@workspace/ui/components/card";
 import { Building } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 
-export function DepartmentList({ departments, selectedId, onSelect }: {
+export function DepartmentList({
+  departments,
+  selectedId,
+  onSelect,
+}: {
   departments: any[];
   selectedId: string;
   onSelect: (dept: any) => void;
@@ -36,7 +46,9 @@ export function DepartmentList({ departments, selectedId, onSelect }: {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold">{dept.submissionRate}%</span>
+                <span className="text-lg font-bold">
+                  {dept.submissionRate}%
+                </span>
               </div>
             </Button>
           ))}

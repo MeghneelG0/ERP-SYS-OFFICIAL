@@ -1,4 +1,9 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@workspace/ui/components/card";
 import { Progress } from "@workspace/ui/components/progress";
 import { FileText, Clock, CheckCircle, RefreshCw } from "lucide-react";
 
@@ -7,7 +12,9 @@ export function SubmissionStatsCard({ stats }: { stats: any }) {
     <>
       <Card className="bg-card text-card-foreground">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">Total Submissions</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Total Submissions
+          </CardTitle>
           <FileText className="h-4 w-4 text-blue-500" />
         </CardHeader>
         <CardContent>
@@ -52,4 +59,3 @@ export function SubmissionStatsCard({ stats }: { stats: any }) {
     </>
   );
 }
-

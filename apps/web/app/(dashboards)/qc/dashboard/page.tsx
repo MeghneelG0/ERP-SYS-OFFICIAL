@@ -28,11 +28,30 @@ const QAC_ANALYTICS_DATA = {
       onTimeRate: 95.8,
       lastSubmission: "2024-01-15",
       recentActivity: [
-        { kpi: "Student Satisfaction", status: "approved", date: "2024-01-15", score: 4.8 },
-        { kpi: "Course Outcomes", status: "approved", date: "2024-01-14", score: 4.5 },
-        { kpi: "Staff Performance", status: "pending", date: "2024-01-13", score: null },
+        {
+          kpi: "Student Satisfaction",
+          status: "approved",
+          date: "2024-01-15",
+          score: 4.8,
+        },
+        {
+          kpi: "Course Outcomes",
+          status: "approved",
+          date: "2024-01-14",
+          score: 4.5,
+        },
+        {
+          kpi: "Staff Performance",
+          status: "pending",
+          date: "2024-01-13",
+          score: null,
+        },
       ],
-      qualityMetrics: { dataAccuracy: 96.2, completeness: 98.5, timeliness: 94.1 },
+      qualityMetrics: {
+        dataAccuracy: 96.2,
+        completeness: 98.5,
+        timeliness: 94.1,
+      },
     },
     {
       id: "Dept. of IT",
@@ -46,11 +65,30 @@ const QAC_ANALYTICS_DATA = {
       onTimeRate: 97.2,
       lastSubmission: "2024-01-10",
       recentActivity: [
-        { kpi: "System Uptime", status: "approved", date: "2024-01-10", score: 99.9 },
-        { kpi: "Incident Response", status: "approved", date: "2024-01-09", score: 4.6 },
-        { kpi: "User Satisfaction", status: "pending", date: "2024-01-08", score: null },
+        {
+          kpi: "System Uptime",
+          status: "approved",
+          date: "2024-01-10",
+          score: 99.9,
+        },
+        {
+          kpi: "Incident Response",
+          status: "approved",
+          date: "2024-01-09",
+          score: 4.6,
+        },
+        {
+          kpi: "User Satisfaction",
+          status: "pending",
+          date: "2024-01-08",
+          score: null,
+        },
       ],
-      qualityMetrics: { dataAccuracy: 95.5, completeness: 97.8, timeliness: 93.2 },
+      qualityMetrics: {
+        dataAccuracy: 95.5,
+        completeness: 97.8,
+        timeliness: 93.2,
+      },
     },
     {
       id: "Dept. of HR",
@@ -64,11 +102,30 @@ const QAC_ANALYTICS_DATA = {
       onTimeRate: 92.5,
       lastSubmission: "2024-01-12",
       recentActivity: [
-        { kpi: "Employee Satisfaction", status: "approved", date: "2024-01-12", score: 4.7 },
-        { kpi: "Attrition Rate", status: "approved", date: "2024-01-11", score: 4.3 },
-        { kpi: "Training Effectiveness", status: "pending", date: "2024-01-10", score: null },
+        {
+          kpi: "Employee Satisfaction",
+          status: "approved",
+          date: "2024-01-12",
+          score: 4.7,
+        },
+        {
+          kpi: "Attrition Rate",
+          status: "approved",
+          date: "2024-01-11",
+          score: 4.3,
+        },
+        {
+          kpi: "Training Effectiveness",
+          status: "pending",
+          date: "2024-01-10",
+          score: null,
+        },
       ],
-      qualityMetrics: { dataAccuracy: 94.1, completeness: 96.2, timeliness: 92.3 },
+      qualityMetrics: {
+        dataAccuracy: 94.1,
+        completeness: 96.2,
+        timeliness: 92.3,
+      },
     },
     {
       id: "Dept. of Fin",
@@ -82,11 +139,30 @@ const QAC_ANALYTICS_DATA = {
       onTimeRate: 90.1,
       lastSubmission: "2024-01-11",
       recentActivity: [
-        { kpi: "Budget Variance", status: "approved", date: "2024-01-11", score: 4.6 },
-        { kpi: "Expense Management", status: "approved", date: "2024-01-10", score: 4.2 },
-        { kpi: "Revenue Growth", status: "pending", date: "2024-01-09", score: null },
+        {
+          kpi: "Budget Variance",
+          status: "approved",
+          date: "2024-01-11",
+          score: 4.6,
+        },
+        {
+          kpi: "Expense Management",
+          status: "approved",
+          date: "2024-01-10",
+          score: 4.2,
+        },
+        {
+          kpi: "Revenue Growth",
+          status: "pending",
+          date: "2024-01-09",
+          score: null,
+        },
       ],
-      qualityMetrics: { dataAccuracy: 93.7, completeness: 95.8, timeliness: 91.4 },
+      qualityMetrics: {
+        dataAccuracy: 93.7,
+        completeness: 95.8,
+        timeliness: 91.4,
+      },
     },
   ],
   reviewMetrics: {
@@ -117,14 +193,17 @@ const QAC_ANALYTICS_DATA = {
 };
 
 export default function QACDashboard() {
-  const [selectedDepartment, setSelectedDepartment] = useState(QAC_ANALYTICS_DATA.departmentPerformance[0]);
+  const [selectedDepartment, setSelectedDepartment] = useState(
+    QAC_ANALYTICS_DATA.departmentPerformance[0],
+  );
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">QC Dashboard</h1>
           <p className="text-muted-foreground mt-2">
-            Monitor department submissions and quality metrics across the organization
+            Monitor department submissions and quality metrics across the
+            organization
           </p>
         </div>
       </div>
