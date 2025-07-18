@@ -3,3 +3,6 @@
 
 pnpm lint
 pnpm format
+
+# Re-add only the files that were originally staged
+git diff --cached --name-only | xargs git add
