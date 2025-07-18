@@ -29,7 +29,7 @@ jobs:
         run: pnpm run format:check
 
       - name: Generate Prisma Client
-        run: cd packages/db && pnpm run db:generate
+        run: cd apps/server && pnpm run db:generate
 
       - name: Build Web project
         run: cd apps/web && pnpm run typecheck
