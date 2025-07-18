@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsString, IsOptional } from 'class-validator';
 
 export class GoogleAuthDto {
   @ApiProperty({ description: 'The ID token from Google' })
@@ -20,4 +20,11 @@ export class VerifyOtpDto {
   @ApiProperty()
   @IsString()
   otp: string;
+  @ApiProperty({
+    required: false,
+    description: 'Expected role for role-based authentication',
+  })
+  @IsOptional()
+  @IsString()
+  expectedRole?: string;
 }

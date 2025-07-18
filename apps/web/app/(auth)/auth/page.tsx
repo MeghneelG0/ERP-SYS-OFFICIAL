@@ -4,7 +4,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, UserIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -29,6 +29,12 @@ import {
   CardContent,
   CardFooter,
 } from "@workspace/ui/components/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -46,6 +52,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [showOTP, setShowOTP] = React.useState(false);
   const [resendTimer, setResendTimer] = React.useState(0);
+  const [activeTab, setActiveTab] = React.useState("qac");
   const router = useRouter();
 
   const form = useForm<z.infer<typeof otpSchema>>({
@@ -97,162 +104,414 @@ export default function LoginPage() {
     const res = await signIn("credentials", {
       email: values.email,
       otp: values.otp,
+      role: activeTab,
       redirect: false,
     });
 
     if (res?.error) {
       toast.error("Invalid OTP");
     } else {
-      router.push("/");
+      // Redirect based on role
+      const roleRoutes = {
+        qac: "/qac",
+        hod: "/hod",
+        faculty: "/faculty",
+      };
+      const redirectPath =
+        roleRoutes[activeTab as keyof typeof roleRoutes] || "/";
+      router.push(redirectPath);
       toast.success("Logged in successfully");
     }
     setIsLoading(false);
   }
 
+  const getRoleEmail = (role: string) => {
+    const roleEmails = {
+      qac: "qac@admin.com",
+      hod: "hod@admin.com",
+      faculty: "faculty@admin.com",
+    };
+    return roleEmails[role as keyof typeof roleEmails] || "";
+  };
+
+  const handleRoleChange = (role: string) => {
+    setActiveTab(role);
+    setShowOTP(false);
+    form.reset();
+  };
+
   return (
-    <div className="from-background/50 to-muted/30 flex min-h-screen w-full items-center justify-center bg-linear-to-br p-4">
-      <motion.div
-        className="mx-auto w-full max-w-md"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-      >
-        <Card className="w-full shadow-none">
-          <CardHeader className="space-y-2 pb-6">
-            <CardTitle className="text-center text-2xl font-semibold">
-              Welcome back
-            </CardTitle>
-            <CardDescription className="text-center text-sm">
-              {showOTP
-                ? "Enter the verification code sent to your email"
-                : "Sign in to your account"}
+    <div className="flex min-h-screen flex-col md:flex-row">
+      {/* Video Section */}
+      <div className="relative w-full md:w-2/3 bg-black">
+        <video
+          className="h-full w-full object-cover opacity-80"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src="./mujvideo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
+          <div className="bg-black/40 p-6 rounded-lg backdrop-blur-sm">
+            <h1 className="text-3xl font-bold text-center mb-2">
+              Manipal University Jaipur
+            </h1>
+            <p className="text-center max-w-md">
+              Welcome to the official portal. Please login with your
+              credentials.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Login Section */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Login Portal</CardTitle>
+            <CardDescription className="text-center">
+              Select your role and enter your credentials
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-center space-y-2">
-                      <FormLabel>Email address</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="name@example.com"
-                          {...field}
-                          disabled={showOTP}
-                          className="placeholder:text-center"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <AnimatePresence mode="wait">
-                  {showOTP && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="space-y-4"
-                    >
-                      <FormField
-                        control={form.control}
-                        name="otp"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col items-center space-y-2">
-                            <FormLabel className="mb-3">
-                              Verification code
-                            </FormLabel>
-                            <FormControl>
-                              <InputOTP
-                                value={field.value}
-                                onChange={field.onChange}
-                                maxLength={6}
-                              >
-                                <InputOTPGroup>
-                                  <InputOTPSlot index={0} />
-                                  <InputOTPSlot index={1} />
-                                  <InputOTPSlot index={2} />
-                                  <InputOTPSlot index={3} />
-                                  <InputOTPSlot index={4} />
-                                  <InputOTPSlot index={5} />
-                                </InputOTPGroup>
-                              </InputOTP>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <div className="text-center">
-                        {resendTimer > 0 ? (
-                          <p className="text-muted-foreground text-sm">
-                            Resend code in {resendTimer}s
-                          </p>
-                        ) : (
-                          <Button
-                            type="button"
-                            variant="link"
-                            className="h-auto p-0 text-sm"
-                            onClick={() =>
-                              handleSendOTP(form.getValues("email"))
-                            }
-                            disabled={isLoading}
-                          >
-                            Resend verification code
-                          </Button>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <Button
-                  type="submit"
-                  className="w-full shadow-xs"
-                  disabled={isLoading}
-                >
-                  {isLoading && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  {showOTP ? "Verify code" : "Continue with email"}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4 pt-6">
-            <div className="relative w-full">
-              <div className="absolute inset-0 flex items-center">
-                <div className="border-muted w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background text-muted-foreground px-2">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-            <motion.div
+            <Tabs
+              defaultValue="qc"
+              value={activeTab}
+              onValueChange={handleRoleChange}
               className="w-full"
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
             >
-              <Button
-                variant="outline"
-                onClick={() => signIn("google", { callbackUrl: "/" })}
-                className="w-full shadow-xs"
-              >
-                Google
-              </Button>
-            </motion.div>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="qac">QAC</TabsTrigger>
+                <TabsTrigger value="hod">HOD</TabsTrigger>
+                <TabsTrigger value="faculty">Faculty</TabsTrigger>
+              </TabsList>
+
+              {/* QAC Login */}
+              <TabsContent value="qac">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 mt-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>QAC Email</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                placeholder="qac@admin.com"
+                                className="pl-10"
+                                {...field}
+                                disabled={showOTP}
+                                defaultValue={getRoleEmail("qc")}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <AnimatePresence mode="wait">
+                      {showOTP && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="space-y-4"
+                        >
+                          <FormField
+                            control={form.control}
+                            name="otp"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Verification Code</FormLabel>
+                                <FormControl>
+                                  <InputOTP
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    maxLength={6}
+                                  >
+                                    <InputOTPGroup>
+                                      <InputOTPSlot index={0} />
+                                      <InputOTPSlot index={1} />
+                                      <InputOTPSlot index={2} />
+                                      <InputOTPSlot index={3} />
+                                      <InputOTPSlot index={4} />
+                                      <InputOTPSlot index={5} />
+                                    </InputOTPGroup>
+                                  </InputOTP>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="text-center">
+                            {resendTimer > 0 ? (
+                              <p className="text-muted-foreground text-sm">
+                                Resend code in {resendTimer}s
+                              </p>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="link"
+                                className="h-auto p-0 text-sm"
+                                onClick={() =>
+                                  handleSendOTP(form.getValues("email"))
+                                }
+                                disabled={isLoading}
+                              >
+                                Resend verification code
+                              </Button>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isLoading}
+                    >
+                      {isLoading && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      {showOTP ? "Verify Code" : "Continue with Email"}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+
+              {/* HOD Login */}
+              <TabsContent value="hod">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 mt-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>HOD Email</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                placeholder="hod@admin.com"
+                                className="pl-10"
+                                {...field}
+                                disabled={showOTP}
+                                defaultValue={getRoleEmail("hod")}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <AnimatePresence mode="wait">
+                      {showOTP && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="space-y-4"
+                        >
+                          <FormField
+                            control={form.control}
+                            name="otp"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Verification Code</FormLabel>
+                                <FormControl>
+                                  <InputOTP
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    maxLength={6}
+                                  >
+                                    <InputOTPGroup>
+                                      <InputOTPSlot index={0} />
+                                      <InputOTPSlot index={1} />
+                                      <InputOTPSlot index={2} />
+                                      <InputOTPSlot index={3} />
+                                      <InputOTPSlot index={4} />
+                                      <InputOTPSlot index={5} />
+                                    </InputOTPGroup>
+                                  </InputOTP>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="text-center">
+                            {resendTimer > 0 ? (
+                              <p className="text-muted-foreground text-sm">
+                                Resend code in {resendTimer}s
+                              </p>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="link"
+                                className="h-auto p-0 text-sm"
+                                onClick={() =>
+                                  handleSendOTP(form.getValues("email"))
+                                }
+                                disabled={isLoading}
+                              >
+                                Resend verification code
+                              </Button>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isLoading}
+                    >
+                      {isLoading && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      {showOTP ? "Verify Code" : "Continue with Email"}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+
+              {/* Faculty Login */}
+              <TabsContent value="faculty">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 mt-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Faculty Email</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                placeholder="faculty@admin.com"
+                                className="pl-10"
+                                {...field}
+                                disabled={showOTP}
+                                defaultValue={getRoleEmail("faculty")}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <AnimatePresence mode="wait">
+                      {showOTP && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="space-y-4"
+                        >
+                          <FormField
+                            control={form.control}
+                            name="otp"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Verification Code</FormLabel>
+                                <FormControl>
+                                  <InputOTP
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    maxLength={6}
+                                  >
+                                    <InputOTPGroup>
+                                      <InputOTPSlot index={0} />
+                                      <InputOTPSlot index={1} />
+                                      <InputOTPSlot index={2} />
+                                      <InputOTPSlot index={3} />
+                                      <InputOTPSlot index={4} />
+                                      <InputOTPSlot index={5} />
+                                    </InputOTPGroup>
+                                  </InputOTP>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="text-center">
+                            {resendTimer > 0 ? (
+                              <p className="text-muted-foreground text-sm">
+                                Resend code in {resendTimer}s
+                              </p>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="link"
+                                className="h-auto p-0 text-sm"
+                                onClick={() =>
+                                  handleSendOTP(form.getValues("email"))
+                                }
+                                disabled={isLoading}
+                              >
+                                Resend verification code
+                              </Button>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isLoading}
+                    >
+                      {isLoading && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      {showOTP ? "Verify Code" : "Continue with Email"}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-2">
+            <div className="text-sm text-center text-muted-foreground">
+              Forgot your password?{" "}
+              <a href="#" className="text-blue-600 hover:underline">
+                Reset it here
+              </a>
+            </div>
+            <div className="text-sm text-center text-muted-foreground">
+              Having trouble?{" "}
+              <a href="#" className="text-blue-600 hover:underline">
+                Contact support
+              </a>
+            </div>
           </CardFooter>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }

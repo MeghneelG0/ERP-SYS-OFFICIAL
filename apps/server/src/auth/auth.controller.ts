@@ -15,13 +15,13 @@ export class AuthController {
 
   @Post('otp')
   @Public()
-  async otpAuth(@Body() body: OtpAuthDto) {
+  otpAuth(@Body() body: OtpAuthDto) {
     return this.authService.handleOtpAuth(body.email);
   }
 
   @Post('otp/verify')
   @Public()
   async verifyOtp(@Body() body: VerifyOtpDto) {
-    return this.authService.verifyOtp(body.email, body.otp);
+    return this.authService.verifyOtp(body.email, body.otp, body.expectedRole);
   }
 }
