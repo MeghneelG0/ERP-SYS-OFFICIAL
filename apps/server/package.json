@@ -24,7 +24,8 @@
     "db:migrate": "prisma db push",
     "db:deploy": "prisma db push",
     "db:studio": "prisma studio",
-    "db:push": "prisma db push"
+    "db:push": "prisma db push",
+    "db:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -105,5 +106,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "seed": "ts-node ./apps/server/prisma/seed.ts"
   }
 }

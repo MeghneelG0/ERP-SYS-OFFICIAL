@@ -12,16 +12,18 @@ const credentialsAuthProvider = CredentialsProvider({
   credentials: {
     email: { label: "Email", type: "email" },
     otp: { label: "OTP", type: "text" },
+    role: { label: "Role", type: "text" },
   },
   async authorize(credentials) {
     try {
       if (!credentials?.email || !credentials?.otp) {
-        throw new Error("Email and password required");
+        throw new Error("Email and OTP required");
       }
 
       const res = await AuthService.verifyOtp(
         credentials.email,
         credentials.otp,
+        credentials.role ? getExpectedRole(credentials.role) : undefined,
       );
 
       if (res.data) {
@@ -40,6 +42,16 @@ const credentialsAuthProvider = CredentialsProvider({
     }
   },
 });
+
+// Helper function to map frontend roles to backend roles
+function getExpectedRole(frontendRole: string): string {
+  const roleMapping = {
+    qac: "QAC",
+    hod: "HOD",
+    faculty: "FACULTY",
+  };
+  return roleMapping[frontendRole as keyof typeof roleMapping] || "FACULTY";
+}
 
 export const authOptions: AuthOptions = {
   providers: [credentialsAuthProvider],
@@ -95,5 +107,8 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
     maxAge: 7 * 24 * 60 * 60,
+  },
+  pages: {
+    signIn: "/auth",
   },
 };
