@@ -1,4 +1,8 @@
-import { PrismaClient, UserRole } from '../prisma/client';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+import { PrismaClient } from './client';
+import { UserRole } from '@workspace/types/enums/enums';
 
 const prisma = new PrismaClient();
 
@@ -17,59 +21,57 @@ async function main() {
 
   console.log('✅ Department created:', department.dept_name);
 
-  // Create admin users with specific roles
+  // Create QAC user (separate table)
+  const qac = await prisma.qac.upsert({
+    where: { qac_email: 'qac@jaipur.manipal.edu' },
+    update: {
+      qac_password: '14jan2004',
+    },
+    create: {
+      qac_name: 'QAC Admin',
+      qac_email: 'qac@jaipur.manipal.edu',
+      qac_password: '14jan2004',
+      qac_role: 'QAC',
+    },
+  });
+  console.log('✅ QAC user created:', qac.qac_email);
+
+  // Create admin users with specific roles (User table)
   const users = [
     {
-      email: 'qac@admin.com',
-      name: 'QAC Admin',
-      role: UserRole.QAC,
-      dept_id: '', // QAC users don't belong to a specific department
-    },
-    {
-      email: 'hod@admin.com',
-      name: 'HOD Admin',
-      role: UserRole.HOD,
+      user_email: 'hod@jaipur.manipal.edu',
+      user_name: 'HOD Admin',
+      user_password: '14jan2004',
+      user_role: UserRole.HOD,
       dept_id: department.id,
     },
     {
-      email: 'faculty@admin.com',
-      name: 'Faculty Admin',
-      role: UserRole.FACULTY,
+      user_email: 'faculty@jaipur.manipal.edu',
+      user_name: 'Faculty Admin',
+      user_password: '14jan2004',
+      user_role: UserRole.FACULTY,
       dept_id: department.id,
     },
   ];
 
   for (const userData of users) {
     const user = await prisma.user.upsert({
-      where: { user_email: userData.email },
+      where: { user_email: userData.user_email },
       update: {
-        user_role: userData.role,
+        user_role: userData.user_role,
         dept_id: userData.dept_id,
+        user_password: '14jan2004',
       },
       create: {
-        user_email: userData.email,
-        user_name: userData.name,
-        user_password: '', // OTP-based authentication
-        user_role: userData.role,
+        user_email: userData.user_email,
+        user_name: userData.user_name,
+        user_password: '14jan2004',
+        user_role: userData.user_role,
         dept_id: userData.dept_id,
       },
     });
-    console.log(`✅ User created: ${user.user_email} (${user.user_role})`);
+    console.log('✅ User created:', user.user_email);
   }
-
-  // Create QAC user in the Qac table for QAC role mapping
-  const qac = await prisma.qac.upsert({
-    where: { qac_email: 'qac@admin.com' },
-    update: {},
-    create: {
-      qac_name: 'QAC Admin',
-      qac_email: 'qac@admin.com',
-      qac_password: '', // OTP-based authentication
-      qac_role: 'ADMIN',
-    },
-  });
-
-  console.log(`✅ QAC user created: ${qac.qac_email}`);
 
   console.log('🎉 Database seeding completed successfully!');
 }

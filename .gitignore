@@ -34,3 +34,23 @@ npm-debug.log*
 # Misc
 .DS_Store
 *.pem
+/packages/db/generated/client/default.d.ts
+/packages/db/generated/client/default.js
+/packages/db/generated/client/edge.d.ts
+/packages/db/generated/client/runtime/edge.js
+/packages/db/generated/client/edge.js
+/packages/db/generated/client/runtime/edge-esm.js
+/packages/db/generated/client/index.d.ts
+/packages/db/generated/client/index.js
+/packages/db/generated/client/runtime/index-browser.d.ts
+/packages/db/generated/client/runtime/index-browser.js
+/packages/db/generated/client/index-browser.js
+/packages/db/generated/client/runtime/library.d.ts
+/packages/db/generated/client/runtime/library.js
+/packages/db/generated/client/package.json
+/packages/db/generated/client/query_engine-windows.dll.node
+/packages/db/generated/client/runtime/react-native.js
+/packages/db/generated/client/schema.prisma
+/packages/db/generated/client/wasm.d.ts
+/packages/db/generated/client/runtime/wasm.js
+/packages/db/generated/client/wasm.js
