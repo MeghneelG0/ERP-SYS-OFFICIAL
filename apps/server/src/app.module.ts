@@ -22,8 +22,7 @@ import { config } from './common/config';
                 translateTime: 'yyyy-mm-dd HH:MM:ss.l',
                 hideObject: true,
                 ignore: 'pid,hostname',
-                messageFormat:
-                  '[{req.id}] {req.method} {req.url} - {msg}  {res.statusCode} {responseTime}',
+                messageFormat: '[{req.id}] {req.method} {req.url} - {msg}  {res.statusCode} {responseTime}',
               },
             },
             ...(process.env.NODE_ENV !== 'development'
