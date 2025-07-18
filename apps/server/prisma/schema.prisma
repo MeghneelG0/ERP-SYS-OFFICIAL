@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/client"
+  output   = "client"
 }
 
 datasource db {
@@ -14,12 +14,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-// Enum for user roles
 enum UserRole {
-  hod
-  kpi_coordinator
-  faculty
+  HOD
+  KPI_COORDINATOR
+  FACULTY
 }
 
 // QAC table - separate entity with full system access
@@ -54,7 +52,7 @@ model User {
   user_name     String
   user_email    String   @unique
   user_password String
-  user_role     UserRole @default(faculty) // hod, kpi_coordinator, faculty
+  user_role     UserRole @default(FACULTY) // hod, kpi_coordinator, faculty
   dept_id       String   @db.ObjectId // Required - every user must belong to a department
   created_at    DateTime @default(now())
   department    Department  @relation(fields: [dept_id], references: [id], onDelete: Cascade)
@@ -128,4 +126,15 @@ model DepartmentKpi {
   kpi_template      KpiTemplate      @relation(fields: [template_id], references: [id], onDelete: Cascade)
   @@unique([dept_pillar_id, template_id]) // One KPI template per pillar per department
   @@map("department_kpis")
+}
+
+model Otp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("otps")
 }
