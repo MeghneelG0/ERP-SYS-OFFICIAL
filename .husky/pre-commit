@@ -4,5 +4,9 @@
 pnpm lint
 pnpm format
 
-# Re-add only the files that were originally staged
-git diff --cached --name-only | xargs git add
+# Re-add only the files that were originally staged and still exist
+git diff --cached --name-only | while read file; do
+    if [ -f "$file" ]; then
+        git add "$file"
+    fi
+done
