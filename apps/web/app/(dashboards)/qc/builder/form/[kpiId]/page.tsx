@@ -83,7 +83,7 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
   // Handle going back to KPI list
   const handleGoBack = () => {
     // Navigate back to the KPI builder page
-    router.push("/qac/builder");
+    router.push("/qc/builder");
   };
 
   // Handle switching to edit mode

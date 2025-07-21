@@ -11,21 +11,31 @@ const credentialsAuthProvider = CredentialsProvider({
   name: "Credentials",
   credentials: {
     email: { label: "Email", type: "email" },
-    otp: { label: "OTP", type: "text" },
-    role: { label: "Role", type: "text" },
+    password: { label: "Password", type: "password", required: false },
+    otp: { label: "OTP", type: "text", required: false },
+    role: { label: "Role", type: "text", required: false },
   },
   async authorize(credentials) {
     try {
-      if (!credentials?.email || !credentials?.otp) {
-        throw new Error("Email and OTP required");
+      if (!credentials?.email) {
+        throw new Error("Email is required");
       }
-
-      const res = await AuthService.verifyOtp(
-        credentials.email,
-        credentials.otp,
-        credentials.role ? getExpectedRole(credentials.role) : undefined,
-      );
-
+      let res;
+      if (credentials.password) {
+        res = await AuthService.loginWithPassword(
+          credentials.email,
+          credentials.password,
+          credentials.role ? getExpectedRole(credentials.role) : undefined,
+        );
+      } else if (credentials.otp) {
+        res = await AuthService.verifyOtp(
+          credentials.email,
+          credentials.otp,
+          credentials.role ? getExpectedRole(credentials.role) : undefined,
+        );
+      } else {
+        throw new Error("Password or OTP required");
+      }
       if (res.data) {
         return {
           id: res.data.user.id,
@@ -35,7 +45,6 @@ const credentialsAuthProvider = CredentialsProvider({
           name: res.data.user.name ?? "Unknown",
         } satisfies User;
       }
-
       throw new Error("Invalid credentials");
     } catch (error) {
       throw new Error((error as Error)?.message || "Invalid credentials");

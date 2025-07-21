@@ -4,7 +4,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, UserIcon } from "lucide-react";
+import { Loader2, UserIcon, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -16,11 +16,6 @@ import {
   FormMessage,
 } from "@workspace/ui/components/form";
 import { Input } from "@workspace/ui/components/input";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@workspace/ui/components/input-otp";
 import {
   Card,
   CardHeader,
@@ -37,84 +32,41 @@ import {
 } from "@workspace/ui/components/tabs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { AuthService } from "@/services/auth.service";
 
-const emailSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-const otpSchema = emailSchema.extend({
-  otp: z.string().length(6, "OTP must be exactly 6 digits"),
-});
-
 export default function LoginPage() {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [showOTP, setShowOTP] = React.useState(false);
-  const [resendTimer, setResendTimer] = React.useState(0);
   const [activeTab, setActiveTab] = React.useState("qac");
+  const [showPassword, setShowPassword] = React.useState(false);
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof otpSchema>>({
-    resolver: zodResolver(otpSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      otp: "",
+      password: "",
     },
   });
 
-  const startResendTimer = () => {
-    setResendTimer(60);
-    const interval = setInterval(() => {
-      setResendTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const handleSendOTP = async (email: string) => {
-    setIsLoading(true);
-    const result = await AuthService.sendOtp(email);
-    setIsLoading(false);
-
-    if (result.error) {
-      toast.error(result.error.message);
-      return false;
-    }
-
-    toast.success("OTP sent successfully");
-    startResendTimer();
-    return true;
-  };
-
-  async function onSubmit(values: z.infer<typeof otpSchema>) {
-    if (!showOTP) {
-      const success = await handleSendOTP(values.email);
-      if (success) {
-        setShowOTP(true);
-      }
-      return;
-    }
-
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
     setIsLoading(true);
     const res = await signIn("credentials", {
       email: values.email,
-      otp: values.otp,
+      password: values.password,
       role: activeTab,
       redirect: false,
     });
 
     if (res?.error) {
-      toast.error("Invalid OTP");
+      toast.error("Invalid email or password");
     } else {
       // Redirect based on role
       const roleRoutes = {
-        qac: "/qac",
+        qac: "/qc",
         hod: "/hod",
         faculty: "/faculty",
       };
@@ -126,18 +78,8 @@ export default function LoginPage() {
     setIsLoading(false);
   }
 
-  const getRoleEmail = (role: string) => {
-    const roleEmails = {
-      qac: "qac@admin.com",
-      hod: "hod@admin.com",
-      faculty: "faculty@admin.com",
-    };
-    return roleEmails[role as keyof typeof roleEmails] || "";
-  };
-
   const handleRoleChange = (role: string) => {
     setActiveTab(role);
-    setShowOTP(false);
     form.reset();
   };
 
@@ -190,7 +132,7 @@ export default function LoginPage() {
                 <TabsTrigger value="faculty">Faculty</TabsTrigger>
               </TabsList>
 
-              {/* QAC Login */}
+              {/* QAC, HOD, Faculty Login (all use same form) */}
               <TabsContent value="qac">
                 <Form {...form}>
                   <form
@@ -210,7 +152,6 @@ export default function LoginPage() {
                                 placeholder="qac@admin.com"
                                 className="pl-10"
                                 {...field}
-                                disabled={showOTP}
                               />
                             </div>
                           </FormControl>
@@ -218,7 +159,6 @@ export default function LoginPage() {
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="password"
@@ -226,76 +166,35 @@ export default function LoginPage() {
                         <FormItem className="space-y-2">
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter your password"
-                              {...field}
-                              disabled={showOTP}
-                            />
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter your password"
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                tabIndex={-1}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                aria-label={
+                                  showPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                                }
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    <AnimatePresence mode="wait">
-                      {showOTP && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2 }}
-                          className="space-y-4"
-                        >
-                          <FormField
-                            control={form.control}
-                            name="otp"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel>Verification Code</FormLabel>
-                                <FormControl>
-                                  <InputOTP
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    maxLength={6}
-                                  >
-                                    <InputOTPGroup>
-                                      <InputOTPSlot index={0} />
-                                      <InputOTPSlot index={1} />
-                                      <InputOTPSlot index={2} />
-                                      <InputOTPSlot index={3} />
-                                      <InputOTPSlot index={4} />
-                                      <InputOTPSlot index={5} />
-                                    </InputOTPGroup>
-                                  </InputOTP>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <div className="text-center">
-                            {resendTimer > 0 ? (
-                              <p className="text-muted-foreground text-sm">
-                                Resend code in {resendTimer}s
-                              </p>
-                            ) : (
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="h-auto p-0 text-sm"
-                                onClick={() =>
-                                  handleSendOTP(form.getValues("email"))
-                                }
-                                disabled={isLoading}
-                              >
-                                Resend verification code
-                              </Button>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
                     <Button
                       type="submit"
                       className="w-full"
@@ -304,13 +203,11 @@ export default function LoginPage() {
                       {isLoading && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      {showOTP ? "Verify Code" : "Continue with Email"}
+                      Login
                     </Button>
                   </form>
                 </Form>
               </TabsContent>
-
-              {/* HOD Login */}
               <TabsContent value="hod">
                 <Form {...form}>
                   <form
@@ -330,7 +227,6 @@ export default function LoginPage() {
                                 placeholder="hod@admin.com"
                                 className="pl-10"
                                 {...field}
-                                disabled={showOTP}
                               />
                             </div>
                           </FormControl>
@@ -338,7 +234,6 @@ export default function LoginPage() {
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="password"
@@ -346,76 +241,35 @@ export default function LoginPage() {
                         <FormItem className="space-y-2">
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter your password"
-                              {...field}
-                              disabled={showOTP}
-                            />
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter your password"
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                tabIndex={-1}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                aria-label={
+                                  showPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                                }
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    <AnimatePresence mode="wait">
-                      {showOTP && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2 }}
-                          className="space-y-4"
-                        >
-                          <FormField
-                            control={form.control}
-                            name="otp"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel>Verification Code</FormLabel>
-                                <FormControl>
-                                  <InputOTP
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    maxLength={6}
-                                  >
-                                    <InputOTPGroup>
-                                      <InputOTPSlot index={0} />
-                                      <InputOTPSlot index={1} />
-                                      <InputOTPSlot index={2} />
-                                      <InputOTPSlot index={3} />
-                                      <InputOTPSlot index={4} />
-                                      <InputOTPSlot index={5} />
-                                    </InputOTPGroup>
-                                  </InputOTP>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <div className="text-center">
-                            {resendTimer > 0 ? (
-                              <p className="text-muted-foreground text-sm">
-                                Resend code in {resendTimer}s
-                              </p>
-                            ) : (
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="h-auto p-0 text-sm"
-                                onClick={() =>
-                                  handleSendOTP(form.getValues("email"))
-                                }
-                                disabled={isLoading}
-                              >
-                                Resend verification code
-                              </Button>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
                     <Button
                       type="submit"
                       className="w-full"
@@ -424,13 +278,11 @@ export default function LoginPage() {
                       {isLoading && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      {showOTP ? "Verify Code" : "Continue with Email"}
+                      Login
                     </Button>
                   </form>
                 </Form>
               </TabsContent>
-
-              {/* Faculty Login */}
               <TabsContent value="faculty">
                 <Form {...form}>
                   <form
@@ -450,7 +302,6 @@ export default function LoginPage() {
                                 placeholder="faculty@admin.com"
                                 className="pl-10"
                                 {...field}
-                                disabled={showOTP}
                               />
                             </div>
                           </FormControl>
@@ -458,7 +309,6 @@ export default function LoginPage() {
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="password"
@@ -466,76 +316,35 @@ export default function LoginPage() {
                         <FormItem className="space-y-2">
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter your password"
-                              {...field}
-                              disabled={showOTP}
-                            />
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter your password"
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                tabIndex={-1}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                aria-label={
+                                  showPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                                }
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    <AnimatePresence mode="wait">
-                      {showOTP && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2 }}
-                          className="space-y-4"
-                        >
-                          <FormField
-                            control={form.control}
-                            name="otp"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel>Verification Code</FormLabel>
-                                <FormControl>
-                                  <InputOTP
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    maxLength={6}
-                                  >
-                                    <InputOTPGroup>
-                                      <InputOTPSlot index={0} />
-                                      <InputOTPSlot index={1} />
-                                      <InputOTPSlot index={2} />
-                                      <InputOTPSlot index={3} />
-                                      <InputOTPSlot index={4} />
-                                      <InputOTPSlot index={5} />
-                                    </InputOTPGroup>
-                                  </InputOTP>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <div className="text-center">
-                            {resendTimer > 0 ? (
-                              <p className="text-muted-foreground text-sm">
-                                Resend code in {resendTimer}s
-                              </p>
-                            ) : (
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="h-auto p-0 text-sm"
-                                onClick={() =>
-                                  handleSendOTP(form.getValues("email"))
-                                }
-                                disabled={isLoading}
-                              >
-                                Resend verification code
-                              </Button>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
                     <Button
                       type="submit"
                       className="w-full"
@@ -544,7 +353,7 @@ export default function LoginPage() {
                       {isLoading && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       )}
-                      {showOTP ? "Verify Code" : "Continue with Email"}
+                      Login
                     </Button>
                   </form>
                 </Form>

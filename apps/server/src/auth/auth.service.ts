@@ -6,6 +6,7 @@ import { config } from 'src/common/config';
 import { generateOtp } from 'src/common/utils/auth.utils';
 import { MailService } from 'src/mail/mail.service';
 import { UserRole } from '@repo/db/prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -194,6 +195,55 @@ export class AuthService {
     const token = await this.jwtService.signAsync(jwtPayload, {
       expiresIn: config.jwt.expiresIn,
     });
+    return {
+      token,
+      user: {
+        id: user.id,
+        email: user.user_email,
+        name: user.user_name,
+        role: user.user_role,
+      },
+    };
+  }
+
+  async loginWithPassword(email: string, password: string, expectedRole?: string) {
+    this.logger.log(`[loginWithPassword] Attempting login for email: ${email}`);
+    // Find user by email
+    const user = await this.prismaService.user.findFirst({
+      where: { user_email: email },
+    });
+    if (!user) {
+      this.logger.warn(`[loginWithPassword] No user found for email: ${email}`);
+      throw new UnauthorizedException('Invalid email or password');
+    }
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.user_password);
+    this.logger.log(`[loginWithPassword] Password match for email ${email}: ${isMatch}`);
+    if (!isMatch) {
+      this.logger.warn(`[loginWithPassword] Password mismatch for email: ${email}`);
+      throw new UnauthorizedException('Invalid email or password');
+    }
+    // Validate role if expectedRole is provided
+    if (expectedRole && user.user_role !== expectedRole) {
+      this.logger.warn(
+        `[loginWithPassword] Role mismatch for email: ${email}. Expected: ${expectedRole}, Found: ${user.user_role}`,
+      );
+      throw new UnauthorizedException(
+        `Access denied. Expected role: ${expectedRole}, but user has role: ${user.user_role}`,
+      );
+    }
+    // Generate JWT
+    const jwtPayload = {
+      id: user.id,
+      email: user.user_email,
+      name: user.user_name,
+      role: user.user_role,
+      sub: user.id,
+    };
+    const token = await this.jwtService.signAsync(jwtPayload, {
+      expiresIn: config.jwt.expiresIn,
+    });
+    this.logger.log(`[loginWithPassword] Login successful for email: ${email}`);
     return {
       token,
       user: {

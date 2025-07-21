@@ -2,6 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { GoogleAuthDto, OtpAuthDto, VerifyOtpDto } from './dto/auth.dto';
+import { LoginDto } from './dto/auth.dto';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -23,5 +24,11 @@ export class AuthController {
   @Public()
   async verifyOtp(@Body() body: VerifyOtpDto) {
     return this.authService.verifyOtp(body.email, body.otp, body.expectedRole);
+  }
+
+  @Post('login')
+  @Public()
+  async loginWithPassword(@Body() body: LoginDto) {
+    return this.authService.loginWithPassword(body.email, body.password, body.expectedRole);
   }
 }

@@ -100,7 +100,7 @@ export function PillarKpiSection({
       <div className="">
         <PillarKpiTable
           onReviewKpi={(kpiId) => {
-            router.push(`/qac/builder/form/${kpiId}`);
+            router.push(`/qc/builder/form/${kpiId}`);
           }}
           showStatusColumn={false}
         />

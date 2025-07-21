@@ -28,3 +28,21 @@ export class VerifyOtpDto {
   @IsString()
   expectedRole?: string;
 }
+
+export class LoginDto {
+  @ApiProperty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @IsString()
+  password: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Expected role for role-based authentication',
+  })
+  @IsOptional()
+  @IsString()
+  expectedRole?: string;
+}
