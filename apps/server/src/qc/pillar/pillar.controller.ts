@@ -15,7 +15,7 @@ export class PillarController {
   constructor(private readonly pillarService: PillarService) {}
 
   @Post()
-  async addPillar(@CurrentUser() user: RequestUser, @Body() dto: CreatePillarDto) {
+  addPillar(@CurrentUser() user: RequestUser, @Body() dto: CreatePillarDto) {
     return this.pillarService.createPillar(user.id, user.role, dto);
   }
 
@@ -30,7 +30,7 @@ export class PillarController {
   }
 
   @Get()
-  async getPillars(@CurrentUser() user: RequestUser) {
+  getPillars(@CurrentUser() user: RequestUser) {
     return this.pillarService.getPillars(user.id, user.role);
   }
 }
