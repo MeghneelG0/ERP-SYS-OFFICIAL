@@ -14,7 +14,7 @@ export class PillarService {
     }
   }
 
-  async createPillar(userId: string, userRole: UserRole, dto: CreatePillarDto) {
+  createPillar(userId: string, userRole: UserRole, dto: CreatePillarDto) {
     if (!userId) throw new ForbiddenException('User not authenticated');
     this.assertQacRole(userRole);
     return this.prisma.pillarTemplate.create({
@@ -44,7 +44,7 @@ export class PillarService {
     return this.prisma.pillarTemplate.delete({ where: { id: pillarId } });
   }
 
-  async getPillars(userId: string, userRole: UserRole) {
+  getPillars(userId: string, userRole: UserRole) {
     this.assertQacRole(userRole);
     return this.prisma.pillarTemplate.findMany({ where: { created_by_qac: userId } });
   }
