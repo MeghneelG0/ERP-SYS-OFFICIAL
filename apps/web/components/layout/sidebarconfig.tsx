@@ -43,7 +43,7 @@ export function useSidebarConfig(): SidebarConfig {
         { icon: Home, label: "Dashboard", id: "qc-dashboard", path: "/qc/" },
         {
           icon: Hammer,
-          label: "KPI Builder",
+          label: "Pillar and KPI Builder",
           id: "form-builder",
           path: "/qc/builder",
         },
