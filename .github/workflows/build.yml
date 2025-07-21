@@ -28,11 +28,5 @@ jobs:
       - name: Check formatting
         run: pnpm run format:check
 
-      - name: Generate Prisma Client
-        run: cd apps/server && pnpm run db:generate
-
-      - name: Build Web project
-        run: cd apps/web && pnpm run typecheck
-
-      - name: Build Server project
-        run: cd apps/server && pnpm run typecheck
+      - name: Build project
+        run: pnpm run build

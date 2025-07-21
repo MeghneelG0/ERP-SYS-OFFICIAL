@@ -1,4 +1,4 @@
-import { UserRole } from 'prisma/client';
+import { UserRole } from '@repo/db/prisma/client';
 
 export interface RequestUser {
   id: string;
