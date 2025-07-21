@@ -15,4 +15,15 @@ export class AuthService {
   static async sendOtp(email: string) {
     return await ApiClient.post<boolean>("/api/auth/otp", { email });
   }
+  static async loginWithPassword(
+    email: string,
+    password: string,
+    expectedRole?: string,
+  ) {
+    return await ApiClient.post<LoginResponse>("/api/auth/login", {
+      email,
+      password,
+      expectedRole,
+    });
+  }
 }

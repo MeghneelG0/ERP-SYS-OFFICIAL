@@ -12,12 +12,22 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@workspace/ui/components/sidebar";
-import { ChevronDown, ChevronRight, Hammer, Check } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Hammer,
+  Check,
+  User,
+  LogOut,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { AppSidebarProps, SidebarItem } from "@/lib/types";
 import { useSidebarConfig } from "@/components/layout/sidebarconfig";
+import { useAuth } from "@/hooks/use-auth";
+import { signOut } from "next-auth/react";
+import { Button } from "@workspace/ui/components/button";
 
 export function MainAppSidebar({
   activeSection,
@@ -38,6 +48,7 @@ export function MainAppSidebar({
     title: string;
     items: SidebarItem[];
   };
+  const { user, isAuthenticated } = useAuth();
 
   // Prevent hydration mismatch by only rendering after mount
   useEffect(() => {
@@ -125,6 +136,31 @@ export function MainAppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
+      {/* Sidebar Footer for user info and logout */}
+      <div className="mt-auto px-4 pb-4 pt-2 flex flex-col items-center text-center gap-2">
+        {isAuthenticated && user && (
+          <>
+            <div className="flex items-center gap-2">
+              <User className="h-6 w-6 text-gray-400" />
+              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate max-w-[120px]">
+                {user.name}
+              </span>
+            </div>
+            <div className="text-xs text-gray-400 truncate max-w-[160px]">
+              {user.email}
+            </div>
+          </>
+        )}
+        <Button
+          onClick={() => signOut()}
+          variant="destructive"
+          className="mt-4 w-full flex items-center justify-center gap-2"
+          aria-label="Logout"
+        >
+          <LogOut className="h-4 w-4" />
+          Logout
+        </Button>
+      </div>
     </Sidebar>
   );
 }

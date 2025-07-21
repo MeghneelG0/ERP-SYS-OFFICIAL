@@ -227,7 +227,7 @@ export default function FormBuilder({
 
       saveForm(formData);
 
-      setTimeout(() => router.push("/qac/builder"), 2000);
+      setTimeout(() => router.push("/qc/builder"), 2000);
     } catch (error) {
       console.error("Unexpected error in handleSaveForm:", error);
       toast("Unexpected Error", {
