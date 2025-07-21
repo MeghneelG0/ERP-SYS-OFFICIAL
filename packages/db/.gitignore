@@ -1,0 +1,4 @@
+.env
+prisma/client
+node_modules    
+/prisma/client/client.d.ts

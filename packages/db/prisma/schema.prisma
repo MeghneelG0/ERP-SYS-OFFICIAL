@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  QAC
+  HOD
+  KPI_COORDINATOR
+  FACULTY
+}
+
+// QAC table - separate entity with full system access
+model Qac {
+  id               String           @id @default(uuid()) @map("_id") @db.Uuid
+  qac_name         String
+  qac_email        String           @unique
+  qac_password     String
+  qac_role         String
+  created_at       DateTime         @default(now())
+  pillar_templates PillarTemplate[]
+  kpi_templates    KpiTemplate[]
+
+  @@map("qac")
+}
+
+// Departments table
+model Department {
+  id                 String             @id @default(uuid()) @map("_id") @db.Uuid
+  dept_name          String             @unique
+  hod_id             String?            @db.Uuid
+  dept_creation      DateTime?          @default(now())
+  hod_name           String?
+  users              User[]
+  department_pillars DepartmentPillar[]
+  department_kpis    DepartmentKpi[]
+
+  @@map("departments")
+}
+
+// Users table - belongs to a department
+model User {
+  id            String     @id @default(uuid()) @map("_id") @db.Uuid
+  user_name     String
+  user_email    String     @unique
+  user_password String
+  user_role     UserRole   @default(FACULTY)
+  dept_id       String     @db.Uuid
+  created_at    DateTime   @default(now())
+  department    Department @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+
+  @@map("users")
+}
+
+// Pillar templates created by QAC
+model PillarTemplate {
+  id                 String             @id @default(uuid()) @map("_id") @db.Uuid
+  pillar_name        String
+  pillar_value       Float?
+  description        String?
+  created_by_qac     String             @db.Uuid
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
+  qac                Qac                @relation(fields: [created_by_qac], references: [id], onDelete: Cascade)
+  department_pillars DepartmentPillar[]
+
+  @@map("pillar_templates")
+}
+
+// KPI templates created by QAC
+model KpiTemplate {
+  id              String          @id @default(uuid()) @map("_id") @db.Uuid
+  kpi_name        String
+  kpi_description String?
+  form_data       Json
+  target_value    Float?
+  created_by_qac  String          @db.Uuid
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+  qac             Qac             @relation(fields: [created_by_qac], references: [id], onDelete: Cascade)
+  department_kpis DepartmentKpi[]
+
+  @@map("kpi_templates")
+}
+
+// Department-specific pillars (copies of templates)
+model DepartmentPillar {
+  id              String          @id @default(uuid()) @map("_id") @db.Uuid
+  dept_id         String          @db.Uuid
+  template_id     String          @db.Uuid
+  pillar_name     String
+  description     String?
+  assigned_date   DateTime        @default(now())
+  status          String          @default("active")
+  department      Department      @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  pillar_template PillarTemplate  @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  department_kpis DepartmentKpi[]
+
+  @@unique([dept_id, template_id])
+  @@map("department_pillars")
+}
+
+// Department-specific KPIs (copies of templates assigned to pillars)
+model DepartmentKpi {
+  id                String           @id @default(uuid()) @map("_id") @db.Uuid
+  dept_id           String           @db.Uuid
+  dept_pillar_id    String           @db.Uuid
+  template_id       String           @db.Uuid
+  kpi_name          String
+  kpi_description   String?
+  form_data         Json
+  target_value      Float?
+  current_value     Float?
+  kpi_status        String           @default("pending")
+  assigned_date     DateTime         @default(now())
+  due_date          DateTime?
+  completed_date    DateTime?
+  comments          String?
+  form_responses    Json?
+  department        Department       @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  department_pillar DepartmentPillar @relation(fields: [dept_pillar_id], references: [id], onDelete: Cascade)
+  kpi_template      KpiTemplate      @relation(fields: [template_id], references: [id], onDelete: Cascade)
+
+  @@unique([dept_pillar_id, template_id])
+  @@map("department_kpis")
+}
+
+model Otp {
+  id        String   @id @default(uuid()) @map("_id") @db.Uuid
+  email     String   @unique
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("otps")
+}
