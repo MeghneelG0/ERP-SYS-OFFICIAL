@@ -555,7 +555,6 @@ export default function QACSubmissionReview() {
                     <AccordionTrigger>{pillar}</AccordionTrigger>
                     <AccordionContent>
                       <PillarKpiTable
-                        pillar={pillar}
                         kpis={Array.isArray(kpis) ? kpis : []}
                         onReviewKpi={(kpiId) => {
                           const kpi = filteredKpis.find(
