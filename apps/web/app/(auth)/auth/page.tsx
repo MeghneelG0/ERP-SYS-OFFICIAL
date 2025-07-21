@@ -42,6 +42,7 @@ import { AuthService } from "@/services/auth.service";
 
 const emailSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const otpSchema = emailSchema.extend({
@@ -210,9 +211,27 @@ export default function LoginPage() {
                                 className="pl-10"
                                 {...field}
                                 disabled={showOTP}
-                                defaultValue={getRoleEmail("qc")}
                               />
                             </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Enter your password"
+                              {...field}
+                              disabled={showOTP}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -312,9 +331,27 @@ export default function LoginPage() {
                                 className="pl-10"
                                 {...field}
                                 disabled={showOTP}
-                                defaultValue={getRoleEmail("hod")}
                               />
                             </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Enter your password"
+                              {...field}
+                              disabled={showOTP}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -414,9 +451,27 @@ export default function LoginPage() {
                                 className="pl-10"
                                 {...field}
                                 disabled={showOTP}
-                                defaultValue={getRoleEmail("faculty")}
                               />
                             </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Enter your password"
+                              {...field}
+                              disabled={showOTP}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
