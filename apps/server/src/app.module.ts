@@ -5,7 +5,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
-import { config } from './common/config';
+import { QcModule } from './qc/qc.module';
 
 @Module({
   imports: [
@@ -31,6 +31,7 @@ import { config } from './common/config';
       },
     }),
     AuthModule,
+    QcModule,
   ],
   controllers: [AppController],
   providers: [
