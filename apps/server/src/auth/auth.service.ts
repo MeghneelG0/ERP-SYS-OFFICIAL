@@ -5,7 +5,7 @@ import { Auth, google } from 'googleapis';
 import { config } from 'src/common/config';
 import { generateOtp } from 'src/common/utils/auth.utils';
 import { MailService } from 'src/mail/mail.service';
-import { UserRole } from 'prisma/client';
+import { UserRole } from '@repo/db/prisma/client';
 
 @Injectable()
 export class AuthService {
