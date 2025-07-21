@@ -1,5 +1,5 @@
 import { Button } from "@workspace/ui/components/button";
-import { PillarKpiTable } from "@/components/qac/performance-sheet-table";
+import { PillarKpiTable } from "@/components/qc/performance-sheet-table";
 import React, { useEffect, useState } from "react";
 
 interface PillarKpiSectionProps {
@@ -31,6 +31,7 @@ export function PillarKpiSection({
           target: "25%",
           actual: "20%",
           percentAchieved: "80%",
+          value: "80",
           status: "pending review",
           kpiId: 1,
         },
@@ -41,6 +42,7 @@ export function PillarKpiSection({
           target: "10",
           actual: "8",
           percentAchieved: "80%",
+          value: "80",
           status: "approved",
           kpiId: 2,
         },
@@ -51,6 +53,7 @@ export function PillarKpiSection({
           target: "5",
           actual: "2",
           percentAchieved: "40%",
+          value: "40",
           status: "needs revision",
           kpiId: 3,
         },
@@ -96,8 +99,6 @@ export function PillarKpiSection({
       </div>
       <div className="">
         <PillarKpiTable
-          pillar={pillar.name}
-          kpis={kpis}
           onReviewKpi={(kpiId) => {
             router.push(`/qac/builder/form/${kpiId}`);
           }}

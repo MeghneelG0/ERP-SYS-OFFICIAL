@@ -50,12 +50,12 @@ import {
 import { Badge } from "@workspace/ui/components/badge";
 import { toast } from "sonner";
 import Link from "next/link";
-import KpiReviewTable from "@/components/qac/kpi-review-table";
+import KpiReviewTable from "@/components/qc/kpi-review-table";
 import {
   PillarKpiTable,
   PerformanceSheetTable,
   dummyPerformanceData,
-} from "@/components/qac/performance-sheet-table";
+} from "@/components/qc/performance-sheet-table";
 import {
   Accordion,
   AccordionItem,
@@ -413,12 +413,12 @@ export default function QACSubmissionReview() {
   // Group KPIs by pillar
   const kpisByPillar: Record<
     string,
-    import("@/components/qac/performance-sheet-table").PillarKpi[]
+    import("@/components/qc/performance-sheet-table").PillarKpi[]
   > = filteredKpis.reduce(
     (
       acc: Record<
         string,
-        import("@/components/qac/performance-sheet-table").PillarKpi[]
+        import("@/components/qc/performance-sheet-table").PillarKpi[]
       >,
       kpi: KpiData,
     ) => {
@@ -549,13 +549,12 @@ export default function QACSubmissionReview() {
               {Object.entries(kpisByPillar).map(
                 ([pillar, kpis]: [
                   string,
-                  import("@/components/qac/performance-sheet-table").PillarKpi[],
+                  import("@/components/qc/performance-sheet-table").PillarKpi[],
                 ]) => (
                   <AccordionItem key={pillar} value={pillar}>
                     <AccordionTrigger>{pillar}</AccordionTrigger>
                     <AccordionContent>
                       <PillarKpiTable
-                        pillar={pillar}
                         kpis={Array.isArray(kpis) ? kpis : []}
                         onReviewKpi={(kpiId) => {
                           const kpi = filteredKpis.find(

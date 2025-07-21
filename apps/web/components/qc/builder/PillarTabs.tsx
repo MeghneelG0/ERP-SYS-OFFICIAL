@@ -12,20 +12,30 @@ export function PillarTabs({
   selectedPillarId,
   onSelect,
 }: PillarTabsProps) {
+  // Calculate total weight
+  const totalWeight = pillars.reduce(
+    (sum, p) => sum + (Number(p.weight) || 0),
+    0,
+  );
   return (
     <Tabs value={String(selectedPillarId)} className="w-full">
-      <TabsList className="flex flex-wrap gap-2">
-        {pillars.map((pillar) => (
-          <TabsTrigger
-            key={pillar.id}
-            value={String(pillar.id)}
-            onClick={() => onSelect(pillar)}
-            className="capitalize"
-          >
-            {pillar.name} (w={pillar.weight})
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="flex items-center justify-between w-full">
+        <TabsList className="flex flex-wrap gap-2">
+          {pillars.map((pillar) => (
+            <TabsTrigger
+              key={pillar.id}
+              value={String(pillar.id)}
+              onClick={() => onSelect(pillar)}
+              className="capitalize"
+            >
+              {pillar.name} (w={pillar.weight})
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <span className="ml-4 font-semibold text-sm text-white whitespace-nowrap">
+          Total Weight: {totalWeight}
+        </span>
+      </div>
     </Tabs>
   );
 }
