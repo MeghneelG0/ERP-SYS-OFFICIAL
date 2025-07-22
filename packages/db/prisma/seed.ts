@@ -1,8 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient } from "./client";
-import { UserRole } from "../types/enums/enums";
+import { PrismaClient, UserRole } from "./client";
 
 const prisma = new PrismaClient();
 
@@ -21,32 +20,24 @@ async function main() {
 
   console.log("✅ Department created:", department.dept_name);
 
-  // Create QAC user (separate table)
-  const qac = await prisma.qac.upsert({
-    where: { qac_email: "qac@jaipur.manipal.edu" },
-    update: {
-      qac_password: "14jan2004",
-    },
-    create: {
-      qac_name: "QAC Admin",
-      qac_email: "qac@jaipur.manipal.edu",
-      qac_password: "14jan2004",
-      qac_role: "QAC",
-    },
-  });
-  console.log("✅ QAC user created:", qac.qac_email);
-
-  // Create admin users with specific roles (User table)
+  // Create admin users with specific roles (unified User table)
   const users = [
     {
-      user_email: "hod@jaipur.manipal.edu",
+      user_email: "qac@jaipur.manipur.edu",
+      user_name: "QAC Admin",
+      user_password: "14jan2004",
+      user_role: UserRole.QAC,
+      dept_id: null, // QAC users don't belong to a specific department
+    },
+    {
+      user_email: "hod@jaipur.manipur.edu",
       user_name: "HOD Admin",
       user_password: "14jan2004",
       user_role: UserRole.HOD,
       dept_id: department.id,
     },
     {
-      user_email: "faculty@jaipur.manipal.edu",
+      user_email: "faculty@jaipur.manipur.edu",
       user_name: "Faculty Admin",
       user_password: "14jan2004",
       user_role: UserRole.FACULTY,

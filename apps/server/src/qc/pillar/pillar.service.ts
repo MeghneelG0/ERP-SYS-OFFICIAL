@@ -20,7 +20,7 @@ export class PillarService {
     return this.prisma.pillarTemplate.create({
       data: {
         ...dto,
-        created_by_qac: userId,
+        created_by_user: userId,
       },
     });
   }
@@ -29,7 +29,7 @@ export class PillarService {
     this.assertQacRole(userRole);
     const pillar = await this.prisma.pillarTemplate.findUnique({ where: { id: pillarId } });
     if (!pillar) throw new NotFoundException('Pillar not found');
-    if (pillar.created_by_qac !== userId) throw new ForbiddenException('Not allowed');
+    if (pillar.created_by_user !== userId) throw new ForbiddenException('Not allowed');
     return this.prisma.pillarTemplate.update({
       where: { id: pillarId },
       data: dto,
@@ -40,12 +40,12 @@ export class PillarService {
     this.assertQacRole(userRole);
     const pillar = await this.prisma.pillarTemplate.findUnique({ where: { id: pillarId } });
     if (!pillar) throw new NotFoundException('Pillar not found');
-    if (pillar.created_by_qac !== userId) throw new ForbiddenException('Not allowed');
+    if (pillar.created_by_user !== userId) throw new ForbiddenException('Not allowed');
     return this.prisma.pillarTemplate.delete({ where: { id: pillarId } });
   }
 
   getPillars(userId: string, userRole: UserRole) {
     this.assertQacRole(userRole);
-    return this.prisma.pillarTemplate.findMany({ where: { created_by_qac: userId } });
+    return this.prisma.pillarTemplate.findMany({ where: { created_by_user: userId } });
   }
 }

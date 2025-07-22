@@ -1,133 +1,124 @@
 "use client";
-import { Button } from "@workspace/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-// import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-// import { toast } from "sonner";
-// import { useQueryClient } from "@tanstack/react-query";
-// import type { FormConfig } from "@/lib/types";
-import { KpiCard } from "@/components/qc/kpi-card";
-import { PillarCard } from "@/components/qc/pillar-card";
-import { PillarKpiTable } from "@/components/qc/performance-sheet-table";
-import { PillarTemplateModal } from "@/components/qc/builder/PillarTemplateModal";
-import { PillarTabs } from "@/components/qc/builder/PillarTabs";
-import { PillarKpiSection } from "@/components/qc/builder/PillarKpiSection";
+import { PillarTemplateModal } from "@/components/qc/pillar/PillarTemplateModal";
+import { PillarGrid } from "@/components/qc/pillar/PillarGrid";
+import { SelectedPillarKpis } from "@/components/qc/pillar/SelectedPillarKpis";
+import { useGetPillars, useDeletePillar } from "@/queries/qc/pillar";
+import { PillarInstance } from "@workspace/types/types";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { ErrorDisplay } from "@/components/common/ErrorDisplay";
 
 export default function KpiBuilderPage() {
   const router = useRouter();
-  // Dummy data for pillar templates
-  const [pillarTemplates, setPillarTemplates] = useState<any[]>([
-    { id: 1, name: "Academic Excellence", number: 1, weight: 0.3 },
-    { id: 2, name: "Research Progression", number: 2, weight: 0.2 },
-  ]);
+
+  // Fetch pillars from backend
+  const { data: pillarTemplates = [], isLoading, error } = useGetPillars();
+  const deletePillarMutation = useDeletePillar();
+
   const [creatingPillar, setCreatingPillar] = useState(false);
-  const [pillarName, setPillarName] = useState("");
-  const [pillarWeight, setPillarWeight] = useState("");
-  const [selectedPillarTemplate, setSelectedPillarTemplate] = useState<
-    any | null
-  >(pillarTemplates[0] ?? null);
-  const [editingPillar, setEditingPillar] = useState<any | null>(null);
-  // TODO: Remove dummy data when API is implemented.
-  const [kpiTemplates, setKpiTemplates] = useState<any[]>([
-    {
-      id: "kpi-1",
-      kpi_name: "Student Awards",
-      kpi_description: "Number of awards won by students",
-      pillarId: "pillar-1",
-    },
-    {
-      id: "kpi-2",
-      kpi_name: "Research Papers",
-      kpi_description: "Number of research papers published",
-      pillarId: "pillar-2",
-    },
-  ]);
+  const [selectedPillarTemplate, setSelectedPillarTemplate] =
+    useState<PillarInstance | null>(null);
+  const [editingPillar, setEditingPillar] = useState<PillarInstance | null>(
+    null,
+  );
 
-  // Handlers for view/edit/delete (dummy)
-  const handleViewEdit = (id: number) =>
-    alert(`View/Edit Pillar Template ${id}`);
-  const handleDelete = (id: number) =>
-    setPillarTemplates((prev) => prev.filter((p) => p.id !== id));
+  // Calculate KPI counts from backend data
+  const kpiCounts = Array.isArray(pillarTemplates)
+    ? pillarTemplates.reduce(
+        (acc, pillar) => {
+          acc[pillar.id] = pillar.counts?.assignedkpi ?? 0;
+          return acc;
+        },
+        {} as Record<number, number>,
+      )
+    : {};
 
-  // Handler for form submit (dummy)
-  const handleAddPillar = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!pillarName || !pillarWeight) return;
-    setPillarTemplates((prev) => [
-      ...prev,
-      {
-        id: Math.max(0, ...prev.map((p: any) => p.id)) + 1,
-        name: pillarName,
-        number: Number(pillarWeight),
-        weight: Number(pillarWeight),
+  const handleDelete = (id: number) => {
+    deletePillarMutation.mutate(String(id), {
+      onSuccess: () => {
+        // If the deleted pillar was selected, clear the selection
+        if (selectedPillarTemplate?.id === id) {
+          setSelectedPillarTemplate(null);
+        }
       },
-    ]);
-    setPillarName("");
-    setPillarWeight("");
-    setCreatingPillar(false);
+    });
   };
 
-  // Handler for edit (preload values)
-  const handleEditPillar = (pillar: any) => {
-    setPillarName(pillar.name);
-    setPillarWeight(String(pillar.weight));
+  const handleEditPillar = (pillar: PillarInstance) => {
     setEditingPillar(pillar);
     setCreatingPillar(true);
   };
 
+  const handleCreateKpi = (pillar: PillarInstance) => {
+    const params = new URLSearchParams({
+      pillarId: String(pillar.id),
+      pillarName: pillar.name,
+    }).toString();
+    router.push(`/qc/builder/create?${params}`);
+  };
+
   return (
-    <main className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">KPI Builder</h1>
-      {/* Pillar Template List and Create */}
+    <main className="container mx-auto py-8 px-4 max-w-7xl">
       <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <h2 className="text-xl font-semibold">Pillar Templates</h2>
-          <Button variant="outline" onClick={() => setCreatingPillar(true)}>
-            + Create Pillar Template
-          </Button>
-        </div>
-        <PillarTemplateModal
-          open={creatingPillar}
-          onOpenChange={(open) => {
-            setCreatingPillar(open);
-            if (!open) {
-              setEditingPillar(null);
-              setPillarName("");
-              setPillarWeight("");
-            }
-          }}
-          pillarName={pillarName}
-          setPillarName={setPillarName}
-          pillarWeight={pillarWeight}
-          setPillarWeight={setPillarWeight}
-          handleAddPillar={handleAddPillar}
-        />
-        {/* Pillar Template Cards */}
-        <PillarTabs
-          pillars={pillarTemplates}
-          selectedPillarId={
-            selectedPillarTemplate?.id ?? pillarTemplates[0]?.id
+        <h1 className="text-4xl font-bold tracking-tight mb-2">KPI Builder</h1>
+        <p className="text-muted-foreground text-lg">
+          Create and manage your Key Performance Indicators across different
+          pillars
+        </p>
+      </div>
+
+      <PillarTemplateModal
+        open={creatingPillar}
+        onOpenChange={(open) => {
+          setCreatingPillar(open);
+          if (!open) {
+            setEditingPillar(null);
           }
-          onSelect={setSelectedPillarTemplate}
-        />
-        {/* Show KPIs for selected pillar below cards */}
-        <PillarKpiSection
+        }}
+        editingPillar={editingPillar}
+        existingPillars={pillarTemplates}
+      />
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <LoadingSpinner message="Loading pillars..." size="lg" />
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center py-12">
+          <ErrorDisplay
+            title="Error loading pillars"
+            message="Failed to load pillar data"
+            error={error}
+            onRetry={() => window.location.reload()}
+          />
+        </div>
+      ) : selectedPillarTemplate ? (
+        <SelectedPillarKpis
           pillar={selectedPillarTemplate}
-          onViewEdit={(id) => {
-            const pillar = pillarTemplates.find((p) => p.id === id);
-            if (pillar) handleEditPillar(pillar);
-          }}
-          onDelete={handleDelete}
+          onBack={() => setSelectedPillarTemplate(null)}
+          onEditPillar={handleEditPillar}
+          onDeletePillar={handleDelete}
+          onCreateKpi={handleCreateKpi}
           router={router}
         />
-      </div>
+      ) : (
+        <PillarGrid
+          pillars={pillarTemplates}
+          selectedPillar={selectedPillarTemplate}
+          onSelectPillar={setSelectedPillarTemplate}
+          onEditPillar={handleEditPillar}
+          onDeletePillar={handleDelete}
+          onCreateKpi={handleCreateKpi}
+          onCreatePillar={() => setCreatingPillar(true)}
+          kpiCounts={kpiCounts}
+          deletingPillarId={
+            deletePillarMutation.isPending && deletePillarMutation.variables
+              ? Number(deletePillarMutation.variables)
+              : null
+          }
+        />
+      )}
     </main>
   );
 }

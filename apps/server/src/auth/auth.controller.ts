@@ -1,8 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { GoogleAuthDto, OtpAuthDto, VerifyOtpDto } from './dto/auth.dto';
-import { LoginDto } from './dto/auth.dto';
+import { GoogleAuthDto, LoginDto } from './dto/auth.dto';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -12,18 +11,6 @@ export class AuthController {
   @Public()
   async googleAuth(@Body() body: GoogleAuthDto) {
     return this.authService.handleGoogleAuth(body.idToken);
-  }
-
-  @Post('otp')
-  @Public()
-  otpAuth(@Body() body: OtpAuthDto) {
-    return this.authService.handleOtpAuth(body.email);
-  }
-
-  @Post('otp/verify')
-  @Public()
-  async verifyOtp(@Body() body: VerifyOtpDto) {
-    return this.authService.verifyOtp(body.email, body.otp, body.expectedRole);
   }
 
   @Post('login')

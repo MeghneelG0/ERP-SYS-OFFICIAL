@@ -1,27 +1,55 @@
 import { ApiClient } from "@/lib/api-client";
-import { CreatePillarTemplateInput } from "@workspace/types/types";
+import {
+  CreatePillarTemplateInput,
+  PillarInstance,
+} from "@workspace/types/types";
+import { ApiError } from "@/types/error";
 
 export const getPillars = async () => {
-  return ApiClient.get<CreatePillarTemplateInput[]>("/qc/pillar");
+  try {
+    const response = await ApiClient.get<PillarInstance[]>("/qc/pillar");
+    return response;
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    throw error;
+  }
 };
 
 export const addPillar = async (data: CreatePillarTemplateInput) => {
-  return ApiClient.post<CreatePillarTemplateInput, CreatePillarTemplateInput>(
-    "/qc/pillar",
-    data,
-  );
+  try {
+    const response = await ApiClient.post<
+      CreatePillarTemplateInput,
+      CreatePillarTemplateInput
+    >("/qc/pillar", data);
+    return response;
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    throw error;
+  }
 };
 
 export const updatePillar = async (
   id: string,
   data: Partial<CreatePillarTemplateInput>,
 ) => {
-  return ApiClient.patch<
-    CreatePillarTemplateInput,
-    Partial<CreatePillarTemplateInput>
-  >(`/qc/pillar/${id}`, data);
+  try {
+    const response = await ApiClient.patch<
+      PillarInstance,
+      Partial<CreatePillarTemplateInput>
+    >(`/qc/pillar/${id}`, data);
+    return response;
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    throw error;
+  }
 };
 
 export const deletePillar = async (id: string) => {
-  return ApiClient.delete<null>(`/qc/pillar/${id}`);
+  try {
+    const response = await ApiClient.delete<null>(`/qc/pillar/${id}`);
+    return response;
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    throw error;
+  }
 };
