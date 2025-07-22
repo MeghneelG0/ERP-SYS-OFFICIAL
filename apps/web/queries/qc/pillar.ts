@@ -5,15 +5,28 @@ import {
   updatePillar,
   deletePillar,
 } from "@/services/qc/pillar.service";
-import { CreatePillarTemplateInput } from "@workspace/types/types";
+import {
+  PillarInstance,
+  CreatePillarTemplateInput,
+} from "@workspace/types/types";
+import { toast } from "sonner";
 
 export function useGetPillars() {
-  return useQuery<CreatePillarTemplateInput[]>({
+  return useQuery<PillarInstance[]>({
     queryKey: ["pillars"],
     queryFn: async () => {
       const res = await getPillars();
-      if (res.data) return res.data;
-      throw new Error(res.error?.message || "Failed to fetch pillars");
+      if (res.data) {
+        // Map backend fields to PillarInstance shape
+        return res.data.map((pillar: any) => ({
+          ...pillar,
+          name: pillar.name || pillar.pillar_name || `Pillar #${pillar.id}`,
+          pillar_value: pillar.pillar_value ?? pillar.weight ?? 0,
+          description: pillar.description ?? "",
+          counts: pillar.counts ?? { assignedkpi: 0 },
+        }));
+      }
+      return [];
     },
   });
 }
@@ -21,9 +34,17 @@ export function useGetPillars() {
 export function useAddPillar() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: addPillar,
+    mutationFn: async (data: CreatePillarTemplateInput) => {
+      const res = await addPillar(data);
+      if (res.data) return res.data;
+      throw new Error(res.error?.message || "Failed to add pillar");
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pillars"] });
+      toast.success("Pillar added successfully");
+    },
+    onError: () => {
+      toast.error("Failed to add pillar");
     },
   });
 }
@@ -31,15 +52,23 @@ export function useAddPillar() {
 export function useUpdatePillar() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
-      data,
+      ...data
     }: {
-      id: string;
-      data: Partial<CreatePillarTemplateInput>;
-    }) => updatePillar(id, data),
+      id: string | number;
+      [key: string]: any;
+    }): Promise<PillarInstance> => {
+      const res = await updatePillar(String(id), data);
+      if (res.data) return res.data;
+      throw new Error(res.error?.message || "Failed to update pillar");
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pillars"] });
+      toast.success("Pillar updated successfully");
+    },
+    onError: () => {
+      toast.error("Failed to update pillar");
     },
   });
 }
@@ -47,9 +76,24 @@ export function useUpdatePillar() {
 export function useDeletePillar() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => deletePillar(id),
+    mutationFn: async (id: string | number): Promise<PillarInstance | null> => {
+      const res: {
+        data?: PillarInstance | null;
+        error?: {
+          message: string;
+          status: number;
+          details?: Record<string, unknown>;
+        };
+      } = await deletePillar(String(id));
+      if (res.data !== undefined) return res.data;
+      throw new Error(res.error?.message || "Failed to delete pillar");
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pillars"] });
+      toast.success("Pillar deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete pillar");
     },
   });
 }

@@ -16,21 +16,6 @@ enum UserRole {
   FACULTY
 }
 
-// QAC table - separate entity with full system access
-model Qac {
-  id               String           @id @default(uuid()) @map("_id") @db.Uuid
-  qac_name         String
-  qac_email        String           @unique
-  qac_password     String
-  qac_role         String
-  created_at       DateTime         @default(now())
-  pillar_templates PillarTemplate[]
-  kpi_templates    KpiTemplate[]
-
-  @@map("qac")
-}
-
-// Departments table
 model Department {
   id                 String             @id @default(uuid()) @map("_id") @db.Uuid
   dept_name          String             @unique
@@ -44,16 +29,20 @@ model Department {
   @@map("departments")
 }
 
-// Users table - belongs to a department
+// Unified Users table - all users including QAC
 model User {
   id            String     @id @default(uuid()) @map("_id") @db.Uuid
   user_name     String
   user_email    String     @unique
   user_password String
   user_role     UserRole   @default(FACULTY)
-  dept_id       String     @db.Uuid
+  dept_id       String?    @db.Uuid  // Optional for QAC users
   created_at    DateTime   @default(now())
-  department    Department @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  department    Department? @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  
+  // Relations for QAC users
+  pillar_templates PillarTemplate[]
+  kpi_templates    KpiTemplate[]
 
   @@map("users")
 }
@@ -64,10 +53,10 @@ model PillarTemplate {
   pillar_name        String
   pillar_value       Float?
   description        String?
-  created_by_qac     String             @db.Uuid
+  created_by_user    String             @db.Uuid
   created_at         DateTime           @default(now())
   updated_at         DateTime           @updatedAt
-  qac                Qac                @relation(fields: [created_by_qac], references: [id], onDelete: Cascade)
+  user               User               @relation(fields: [created_by_user], references: [id], onDelete: Cascade)
   department_pillars DepartmentPillar[]
 
   @@map("pillar_templates")
@@ -80,10 +69,10 @@ model KpiTemplate {
   kpi_description String?
   form_data       Json
   target_value    Float?
-  created_by_qac  String          @db.Uuid
+  created_by_user String          @db.Uuid
   created_at      DateTime        @default(now())
   updated_at      DateTime        @updatedAt
-  qac             Qac             @relation(fields: [created_by_qac], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [created_by_user], references: [id], onDelete: Cascade)
   department_kpis DepartmentKpi[]
 
   @@map("kpi_templates")

@@ -1,4 +1,7 @@
 import { LucideIcon } from "lucide-react";
+import { PillarInstance } from "@workspace/types/types";
+
+export type { PillarInstance } from "@workspace/types/types";
 
 type ErrorName = "PROCESSING_ERROR";
 
@@ -38,14 +41,6 @@ export interface FormElementInstance {
   id: string;
   type: FormElementType;
   attributes: Record<string, any>;
-}
-
-export interface PillarInstance {
-  id: number;
-  name: string;
-  counts: {
-    assignedkpi: number;
-  };
 }
 
 export interface AssignKpiPayload {
