@@ -11,21 +11,6 @@ import { QcModule } from './qc/qc.module';
   imports: [
     LoggerModule.forRoot({
       pinoHttp: {
-        transport: {
-          targets: [
-            {
-              target: 'pino-pretty',
-              options: {
-                colorize: true,
-                singleLine: false,
-                translateTime: 'yyyy-mm-dd HH:MM:ss.l',
-                hideObject: true,
-                ignore: 'pid,hostname',
-                messageFormat: '[{req.id}] {req.method} {req.url} - {msg}  {res.statusCode} {responseTime}',
-              },
-            },
-          ],
-        },
         redact: ['req.headers', 'res.headers'],
         level: 'debug',
       },
