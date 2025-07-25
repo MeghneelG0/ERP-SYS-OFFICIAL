@@ -77,14 +77,16 @@ export function MainAppSidebar({
                 : "/MUJ-Logo.png"
             }
             alt="MUJ Logo"
-            className="h-20 w-auto object-contain"
+            className="h-13 w-auto object-contain mx-auto"
           />
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>
-            <div>{title}</div>
+            <div className="text-lg font-bold text-center w-full py-2">
+              {title}
+            </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
