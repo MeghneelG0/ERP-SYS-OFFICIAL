@@ -19,7 +19,7 @@ interface DeleteConfirmationModalProps {
   onClose: () => void;
   onConfirm: () => void;
   itemName: string;
-  itemType: "pillar" | "KPI";
+  itemType: "Pillar" | "KPI";
   title?: string;
   description?: string;
   isLoading?: boolean;
