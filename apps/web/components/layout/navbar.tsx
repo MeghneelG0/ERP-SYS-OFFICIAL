@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, HelpCircle, Search } from "lucide-react";
+import { Bell, HelpCircle, Search, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
 
 import {
@@ -13,6 +13,15 @@ import { Input } from "@workspace/ui/components/input";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
+import { signOut } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@workspace/ui/components/dropdown-menu";
 
 export interface NavbarProps {
   appTitle?: string;
@@ -41,6 +50,7 @@ export function Navbar({
 }: NavbarProps) {
   const pathname = usePathname();
   const hideNotifications = pathname.startsWith("/qc");
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px]">
@@ -77,10 +87,47 @@ export function Navbar({
 
         {showThemeToggle && <ThemeToggle />}
 
-        <Avatar className="h-8 w-8">
-          <AvatarImage src={userAvatar} alt="User" />
-          <AvatarFallback>{userInitials}</AvatarFallback>
-        </Avatar>
+        {isAuthenticated && user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarImage src={userAvatar} alt="User" />
+                <AvatarFallback>
+                  {user.name
+                    ? user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                    : userInitials}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="flex flex-col items-center gap-1 p-3">
+                <span className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate max-w-[120px]">
+                  {user.name === "QAC Admin" ? "QC Admin" : user.name}
+                </span>
+                <span className="text-xs text-gray-400 truncate max-w-[160px]">
+                  {user.email}
+                </span>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => signOut()}
+                variant="destructive"
+                className="flex items-center gap-2 justify-center cursor-pointer"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={userAvatar} alt="User" />
+            <AvatarFallback>{userInitials}</AvatarFallback>
+          </Avatar>
+        )}
       </div>
     </header>
   );
