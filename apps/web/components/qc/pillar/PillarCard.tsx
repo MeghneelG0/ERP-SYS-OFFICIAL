@@ -12,7 +12,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Edit2, Trash2, Plus } from "lucide-react";
 
 import { PillarInstance } from "@workspace/types/types";
-import { DeleteConfirmationModal } from "@/components/qc/delete-confirmation";
+import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmation";
 
 interface PillarCardProps {
   pillar: PillarInstance;
