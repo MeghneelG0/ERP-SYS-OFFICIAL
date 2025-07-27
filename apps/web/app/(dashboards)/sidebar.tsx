@@ -77,14 +77,16 @@ export function MainAppSidebar({
                 : "/MUJ-Logo.png"
             }
             alt="MUJ Logo"
-            className="h-20 w-auto object-contain"
+            className="h-13 w-auto object-contain mx-auto"
           />
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>
-            <div>{title}</div>
+            <div className="text-lg font-bold text-center w-full py-2">
+              {title}
+            </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -136,31 +138,6 @@ export function MainAppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
-      {/* Sidebar Footer for user info and logout */}
-      <div className="mt-auto px-4 pb-4 pt-2 flex flex-col items-center text-center gap-2">
-        {isAuthenticated && user && (
-          <>
-            <div className="flex items-center gap-2">
-              <User className="h-6 w-6 text-gray-400" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate max-w-[120px]">
-                {user.name}
-              </span>
-            </div>
-            <div className="text-xs text-gray-400 truncate max-w-[160px]">
-              {user.email}
-            </div>
-          </>
-        )}
-        <Button
-          onClick={() => signOut()}
-          variant="destructive"
-          className="mt-4 w-full flex items-center justify-center gap-2"
-          aria-label="Logout"
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </Button>
-      </div>
     </Sidebar>
   );
 }
