@@ -6,10 +6,10 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy root package configuration files
+# Copy workspace files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 
-# Copy package.json files for dependency installation (only existing packages)
+# Copy all package.json files first for better caching
 COPY packages/db/package.json ./packages/db/package.json
 COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
 COPY packages/types/package.json ./packages/types/package.json
@@ -17,8 +17,8 @@ COPY packages/typescript-config/package.json ./packages/typescript-config/packag
 COPY packages/ui/package.json ./packages/ui/package.json
 COPY apps/server/package.json ./apps/server/package.json
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install all dependencies
+RUN pnpm install
 
 # Copy source code
 COPY . .
@@ -29,7 +29,7 @@ RUN pnpm --filter=@repo/db db:generate
 # Build the server
 RUN pnpm --filter=server build
 
-# Production stage
+# Production stage - simplified approach
 FROM node:20-alpine AS production
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -37,24 +37,14 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy workspace configuration files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy everything from build stage first
+COPY --from=base /app ./
 
-# Copy ALL package.json files needed for workspace resolution
-COPY packages/db/package.json ./packages/db/package.json
-COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
-COPY packages/types/package.json ./packages/types/package.json
-COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
-COPY packages/ui/package.json ./packages/ui/package.json
-COPY apps/server/package.json ./apps/server/package.json
+# Remove non-production files to reduce size
+RUN rm -rf apps/web apps/server/src packages/*/src
 
-# Install production dependencies
+# Install only production dependencies
 RUN pnpm install --prod --frozen-lockfile
-
-# Copy built application and Prisma client
-COPY --from=base /app/apps/server/dist ./apps/server/dist
-COPY --from=base /app/packages/db ./packages/db
-COPY --from=base /app/node_modules/.prisma ./node_modules/.prisma
 
 # Set working directory to server
 WORKDIR /app/apps/server
