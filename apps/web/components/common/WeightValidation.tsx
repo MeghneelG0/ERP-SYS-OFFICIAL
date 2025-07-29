@@ -101,8 +101,8 @@ export function WeightValidation({
 
 // Hook for weight validation logic
 export function useWeightValidation(
-  existingPillars: Array<{ id: number; pillar_value?: number }>,
-  editingPillarId?: number,
+  existingPillars: PillarInstance[] | undefined,
+  editingPillarId?: string | undefined,
 ) {
   const getCurrentTotalWeight = (): number => {
     return existingPillars.reduce((sum, pillar) => {

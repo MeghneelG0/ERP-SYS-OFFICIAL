@@ -17,7 +17,7 @@ interface SelectedPillarKpisProps {
   pillar: PillarInstance;
   onBack: () => void;
   onEditPillar: (pillar: PillarInstance) => void;
-  onDeletePillar: (pillarId: number) => void;
+  onDeletePillar: (pillarId: string) => void;
   onCreateKpi: (pillar: PillarInstance) => void;
   router: any;
 }

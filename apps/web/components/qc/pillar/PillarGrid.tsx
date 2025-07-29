@@ -10,11 +10,11 @@ interface PillarGridProps {
   selectedPillar: PillarInstance | null;
   onSelectPillar: (pillar: PillarInstance) => void;
   onEditPillar: (pillar: PillarInstance) => void;
-  onDeletePillar: (pillarId: number) => void;
+  onDeletePillar: (pillarId: string) => void;
   onCreateKpi: (pillar: PillarInstance) => void;
   onCreatePillar: () => void;
-  kpiCounts?: Record<number, number>;
-  deletingPillarId?: number | null;
+  kpiCounts?: Record<string, number>;
+  deletingPillarId?: string | number | null;
 }
 
 export function PillarGrid({

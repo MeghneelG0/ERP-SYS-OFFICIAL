@@ -30,15 +30,15 @@ export default function KpiBuilderPage() {
           acc[pillar.id] = pillar.counts?.assignedkpi ?? 0;
           return acc;
         },
-        {} as Record<number, number>,
+        {} as Record<string, number>,
       )
     : {};
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string | number) => {
     deletePillarMutation.mutate(String(id), {
       onSuccess: () => {
         // If the deleted pillar was selected, clear the selection
-        if (selectedPillarTemplate?.id === id) {
+        if (selectedPillarTemplate?.id === String(id)) {
           setSelectedPillarTemplate(null);
         }
       },
@@ -114,7 +114,7 @@ export default function KpiBuilderPage() {
           kpiCounts={kpiCounts}
           deletingPillarId={
             deletePillarMutation.isPending && deletePillarMutation.variables
-              ? Number(deletePillarMutation.variables)
+              ? deletePillarMutation.variables
               : null
           }
         />
