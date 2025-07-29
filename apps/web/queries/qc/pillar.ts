@@ -19,10 +19,12 @@ export function useGetPillars() {
       if (res.data) {
         // Map backend fields to PillarInstance shape
         return res.data.map((pillar: any) => ({
-          ...pillar,
-          name: pillar.name || pillar.pillar_name || `Pillar #${pillar.id}`,
-          pillar_value: pillar.pillar_value ?? pillar.weight ?? 0,
+          id: pillar.id,
+          name: pillar.pillar_name || `Pillar #${pillar.id}`,
+          pillar_value: pillar.pillar_value ?? 0,
           description: pillar.description ?? "",
+          percentage_target_achieved: pillar.percentage_target_achieved ?? 0,
+          performance: pillar.performance ?? 0,
           counts: pillar.counts ?? { assignedkpi: 0 },
         }));
       }

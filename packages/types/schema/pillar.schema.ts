@@ -10,5 +10,4 @@ export const PillarSchema = z.object({
   description: z.string().optional(),
   percentage_target_achieved: z.number().min(0).max(100).optional(),
   performance: z.number().min(0).max(100).optional(),
-  academic_year: z.number().int(),
 });

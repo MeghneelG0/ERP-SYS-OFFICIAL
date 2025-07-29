@@ -20,6 +20,7 @@ export class PillarService {
     return this.prisma.pillarTemplate.create({
       data: {
         ...dto,
+        academic_year: new Date().getFullYear(),
         created_by_user: userId,
       },
     });
