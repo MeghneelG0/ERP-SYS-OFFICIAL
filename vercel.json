@@ -1,32 +1,30 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "apps/web/package.json",
-      "use": "@vercel/next"
+  "buildCommand": "npx turbo build",
+  "installCommand": "npm install -g pnpm && pnpm install",
+  "functions": {
+    "apps/server/dist/main.js": {
+      "runtime": "nodejs18.x",
+      "memory": 1024,
+      "maxDuration": 30
     },
-    {
-      "src": "apps/server/package.json",
-      "use": "@vercel/node"
+    "apps/web/app/api/**/*.ts": {
+      "memory": 512,
+      "maxDuration": 30
     }
-  ],
+  },
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "apps/server/$1"
+      "src": "/api/server/(.*)",
+      "dest": "apps/server/dist/main.js"
     },
     {
       "src": "/(.*)",
       "dest": "apps/web/$1"
     }
   ],
+  "outputDirectory": "apps/web/.next",
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "apps/server/src/main.ts": {
-      "runtime": "nodejs18.x"
-    }
   }
 }
-
