@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/turbo.json">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/turbo.json" />
+              <option name="originalContent" value="{&#10;  &quot;$schema&quot;: &quot;https://turbo.build/schema.json&quot;,&#10;  &quot;ui&quot;: &quot;tui&quot;,&#10;  &quot;globalEnv&quot;: [&#10;    &quot;NODE_ENV&quot;,&#10;    &quot;NEXTAUTH_SECRET&quot;,&#10;    &quot;NEXTAUTH_URL&quot;,&#10;    &quot;NEXT_PUBLIC_APP_URL&quot;,&#10;    &quot;NEXT_PUBLIC_API_URL&quot;&#10;  ],&#10;  &quot;tasks&quot;: {&#10;    &quot;build&quot;: {&#10;      &quot;dependsOn&quot;: [&quot;^build&quot;, &quot;^db:generate&quot;],&#10;      &quot;inputs&quot;: [&quot;$TURBO_DEFAULT$&quot;, &quot;.env*&quot;],&#10;      &quot;outputs&quot;: [&quot;.next/**&quot;, &quot;!.next/cache/**&quot;]&#10;    },&#10;    &quot;lint&quot;: {&#10;      &quot;dependsOn&quot;: [&quot;^lint&quot;]&#10;    },&#10;    &quot;check-types&quot;: {&#10;      &quot;dependsOn&quot;: [&quot;^check-types&quot;]&#10;    },&#10;    &quot;dev&quot;: {&#10;      &quot;cache&quot;: false,&#10;      &quot;dependsOn&quot;: [&quot;^db:generate&quot;],&#10;      &quot;persistent&quot;: true&#10;    },&#10;    &quot;db:generate&quot;: {&#10;      &quot;cache&quot;: false&#10;    },&#10;    &quot;db:migrate&quot;: {&#10;      &quot;cache&quot;: false,&#10;      &quot;persistent&quot;: true&#10;    },&#10;    &quot;db:deploy&quot;: {&#10;      &quot;cache&quot;: false&#10;    }&#10;  }&#10;}&#10;" />
+              <option name="updatedContent" value="{&#10;  &quot;$schema&quot;: &quot;https://turbo.build/schema.json&quot;,&#10;  &quot;ui&quot;: &quot;tui&quot;,&#10;  &quot;globalEnv&quot;: [&#10;    &quot;NODE_ENV&quot;,&#10;    &quot;NEXTAUTH_SECRET&quot;,&#10;    &quot;NEXTAUTH_URL&quot;,&#10;    &quot;NEXT_PUBLIC_APP_URL&quot;,&#10;    &quot;NEXT_PUBLIC_API_URL&quot;,&#10;    &quot;GOOGLE_CLIENT_ID&quot;,&#10;    &quot;GOOGLE_CLIENT_SECRET&quot;,&#10;    &quot;DATABASE_URL&quot;,&#10;    &quot;DIRECT_URL&quot;,&#10;    &quot;PORT&quot;,&#10;    &quot;JWT_SECRET&quot;,&#10;    &quot;JWT_EXPIRES_IN&quot;,&#10;    &quot;SMTP_HOST&quot;,&#10;    &quot;SMTP_PORT&quot;,&#10;    &quot;SMTP_USER&quot;,&#10;    &quot;SMTP_PASSWORD&quot;,&#10;    &quot;MAIL_FROM&quot;,&#10;    &quot;SMTP_FROM_NAME&quot;&#10;  ],&#10;  &quot;tasks&quot;: {&#10;    &quot;build&quot;: {&#10;      &quot;dependsOn&quot;: [&quot;^build&quot;, &quot;^db:generate&quot;],&#10;      &quot;inputs&quot;: [&quot;$TURBO_DEFAULT$&quot;, &quot;.env*&quot;],&#10;      &quot;outputs&quot;: [&quot;.next/**&quot;, &quot;!.next/cache/**&quot;]&#10;    },&#10;    &quot;lint&quot;: {&#10;      &quot;dependsOn&quot;: [&quot;^lint&quot;]&#10;    },&#10;    &quot;check-types&quot;: {&#10;      &quot;dependsOn&quot;: [&quot;^check-types&quot;]&#10;    },&#10;    &quot;dev&quot;: {&#10;      &quot;cache&quot;: false,&#10;      &quot;dependsOn&quot;: [&quot;^db:generate&quot;],&#10;      &quot;persistent&quot;: true&#10;    },&#10;    &quot;db:generate&quot;: {&#10;      &quot;cache&quot;: false&#10;    },&#10;    &quot;db:migrate&quot;: {&#10;      &quot;cache&quot;: false,&#10;      &quot;persistent&quot;: true&#10;    },&#10;    &quot;db:deploy&quot;: {&#10;      &quot;cache&quot;: false&#10;    }&#10;  }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
