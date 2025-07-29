@@ -94,7 +94,7 @@ export default function LoginPage() {
           loop
           playsInline
         >
-          <source src="./mujvideo.mp4" type="video/mp4" />
+          <source src="/mujvideo.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
