@@ -1,26 +1,6 @@
 {
-  "version": 2,
-  "buildCommand": "npx turbo build",
+  "buildCommand": "npx turbo build --filter=web",
   "installCommand": "npm install -g pnpm && pnpm install",
   "outputDirectory": "apps/web/.next",
-  "functions": {
-    "apps/server/dist/main.js": {
-      "runtime": "nodejs18.x",
-      "memory": 1024,
-      "maxDuration": 30
-    }
-  },
-  "routes": [
-    {
-      "src": "/api/server/(.*)",
-      "dest": "apps/server/dist/main.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "apps/web/$1"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "framework": "nextjs"
 }
