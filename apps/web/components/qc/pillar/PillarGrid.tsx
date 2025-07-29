@@ -4,7 +4,6 @@ import { Plus, AlertTriangle } from "lucide-react";
 import { Separator } from "@workspace/ui/components/separator";
 import { Badge } from "@workspace/ui/components/badge";
 import { PillarInstance } from "@workspace/types/types";
-import { WeightValidation } from "@/components/common/WeightValidation";
 
 interface PillarGridProps {
   pillars: PillarInstance[];
@@ -75,16 +74,6 @@ export function PillarGrid({
       </div>
 
       <Separator />
-
-      {/* Weight validation component */}
-      {/* Only show WeightValidation if not valid; otherwise, render nothing */}
-      {pillars.length > 0 && !isWeightValid && (
-        <WeightValidation
-          currentWeight={totalWeight}
-          showDetails={false}
-          className="bg-muted/50 p-4 rounded-lg"
-        />
-      )}
 
       {pillars.length === 0 ? (
         <div className="text-center py-12">

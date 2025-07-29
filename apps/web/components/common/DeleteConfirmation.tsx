@@ -67,7 +67,7 @@ export function DeleteConfirmationModal({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-red-600">
+          <DialogTitle className="flex items-center gap-2 text-black">
             <Trash2 className="h-5 w-5" />
             {title || defaultTitle}
           </DialogTitle>
@@ -75,28 +75,26 @@ export function DeleteConfirmationModal({
 
         <div className="space-y-4">
           {/* Warning Alert */}
-          <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950">
+          <Alert className="border-red-200 bg-red-50">
             <AlertTriangle className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-800 dark:text-red-200">
+            <AlertDescription className="text-black">
               {description || defaultDescription}
             </AlertDescription>
           </Alert>
 
           {/* Item Name Display */}
-          <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+          <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="text-sm text-gray-600 mb-1">
               {itemType} to be deleted:
             </div>
-            <div className="font-semibold text-gray-900 dark:text-gray-100">
-              {itemName}
-            </div>
+            <div className="font-semibold text-gray-900">{itemName}</div>
           </div>
 
           {/* Confirmation Input */}
           <div className="space-y-2">
             <Label htmlFor="confirmation-input" className="text-sm font-medium">
               Type{" "}
-              <span className="font-mono bg-gray-100 dark:bg-gray-800 px-1 rounded">
+              <span className="font-mono bg-gray-100 px-1 rounded font-bold">
                 {itemName}
               </span>{" "}
               to confirm:
@@ -107,11 +105,9 @@ export function DeleteConfirmationModal({
               value={confirmationText}
               onChange={(e) => handleInputChange(e.target.value)}
               placeholder={`Type "${itemName}" here`}
-              className={`${
-                showError && !isConfirmationValid
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                  : ""
-              }`}
+              className={
+                showError && !isConfirmationValid ? "border-red-500" : ""
+              }
               disabled={isLoading}
             />
             {showError && !isConfirmationValid && (
@@ -121,21 +117,6 @@ export function DeleteConfirmationModal({
               </p>
             )}
           </div>
-
-          {/* Progress indicator */}
-          {confirmationText && (
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {confirmationText === itemName ? (
-                <span className="text-green-600 dark:text-green-400">
-                  ✓ Confirmation text matches
-                </span>
-              ) : (
-                <span>
-                  {confirmationText.length}/{itemName.length} characters
-                </span>
-              )}
-            </div>
-          )}
         </div>
 
         <DialogFooter className="flex gap-2">
@@ -146,7 +127,6 @@ export function DeleteConfirmationModal({
             variant="destructive"
             onClick={handleConfirm}
             disabled={!isConfirmationValid || isLoading}
-            className="bg-red-600 hover:bg-red-700"
           >
             {isLoading ? (
               <>
