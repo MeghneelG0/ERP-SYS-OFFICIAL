@@ -2,14 +2,11 @@
   "version": 2,
   "buildCommand": "npx turbo build",
   "installCommand": "npm install -g pnpm && pnpm install",
+  "outputDirectory": "apps/web/.next",
   "functions": {
     "apps/server/dist/main.js": {
       "runtime": "nodejs18.x",
       "memory": 1024,
-      "maxDuration": 30
-    },
-    "apps/web/app/api/**/*.ts": {
-      "memory": 512,
       "maxDuration": 30
     }
   },
@@ -23,7 +20,6 @@
       "dest": "apps/web/$1"
     }
   ],
-  "outputDirectory": "apps/web/.next",
   "env": {
     "NODE_ENV": "production"
   }
