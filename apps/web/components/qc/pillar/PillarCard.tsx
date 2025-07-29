@@ -39,22 +39,19 @@ export function PillarCard({
   return (
     <>
       <Card
-        className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
+        className={`cursor-pointer transition-all duration-200 hover:shadow-lg h-full flex flex-col ${
           isSelected
             ? "ring-2 ring-primary bg-primary/5 border-primary"
             : "hover:border-primary/50"
         }`}
         onClick={() => onSelect(pillar)}
       >
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-2 flex-shrink-0">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="text-lg font-semibold">
                 {pillar.name}
               </CardTitle>
-              <CardDescription className="mt-1">
-                Pillar #{pillar.id}
-              </CardDescription>
             </div>
             <div className="flex flex-col items-end gap-1">
               {pillar.counts?.assignedkpi > 0 && (
@@ -71,10 +68,10 @@ export function PillarCard({
           </div>
         </CardHeader>
 
-        <CardContent className="pt-0">
-          <div className="space-y-3">
+        <CardContent className="pt-0 flex-1 flex flex-col">
+          <div className="flex-1">
             {pillar.description && (
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground mb-3">
                 <p
                   className="overflow-hidden"
                   style={{
@@ -89,7 +86,10 @@ export function PillarCard({
                 </p>
               </div>
             )}
+          </div>
 
+          {/* Fixed bottom section */}
+          <div className="mt-auto space-y-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">KPI Count:</span>
               <span className="font-medium">{kpiCount}</span>

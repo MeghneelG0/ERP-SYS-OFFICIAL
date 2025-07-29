@@ -54,10 +54,10 @@ export function useUpdatePillar() {
   return useMutation({
     mutationFn: async ({
       id,
-      ...data
+      data,
     }: {
       id: string | number;
-      [key: string]: any;
+      data: Partial<CreatePillarTemplateInput>;
     }): Promise<PillarInstance> => {
       const res = await updatePillar(String(id), data);
       if (res.data) return res.data;

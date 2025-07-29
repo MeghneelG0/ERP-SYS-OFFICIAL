@@ -81,10 +81,16 @@ function FormField({
         <Input
           id={name}
           type={type}
-          {...form.register(
-            name,
-            type === "number" ? { valueAsNumber: true } : {},
-          )}
+          {...form.register(name, {
+            onChange: (e) => {
+              if (type === "number") {
+                const value = parseFloat(e.target.value);
+                if (value > 1) {
+                  e.target.value = "1";
+                }
+              }
+            },
+          })}
           className="w-full"
           placeholder={placeholder}
           min={min}
@@ -221,15 +227,13 @@ export function PillarTemplateModal({
             />
 
             {/* Weight Validation Component */}
-            {watchedWeight !== undefined &&
-              watchedWeight > 0 &&
-              !validateTotalWeight(watchedWeight) && (
-                <WeightValidation
-                  currentWeight={getCurrentTotalWeight()}
-                  newWeight={watchedWeight}
-                  className="mt-2"
-                />
-              )}
+            {watchedWeight !== undefined && watchedWeight > 0 && (
+              <WeightValidation
+                currentWeight={getCurrentTotalWeight()}
+                newWeight={watchedWeight}
+                className="mt-2"
+              />
+            )}
 
             <FormField
               label="Description"
