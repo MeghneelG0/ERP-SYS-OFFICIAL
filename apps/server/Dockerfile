@@ -37,10 +37,16 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy package files
+# Copy workspace configuration files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/server/package.json ./apps/server/package.json
+
+# Copy ALL package.json files needed for workspace resolution
 COPY packages/db/package.json ./packages/db/package.json
+COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
+COPY packages/types/package.json ./packages/types/package.json
+COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY apps/server/package.json ./apps/server/package.json
 
 # Install production dependencies
 RUN pnpm install --prod --frozen-lockfile
