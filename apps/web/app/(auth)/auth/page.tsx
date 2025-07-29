@@ -149,7 +149,7 @@ export default function LoginPage() {
                             <div className="relative">
                               <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                               <Input
-                                placeholder="qac@admin.com"
+                                placeholder="qc@admin.com"
                                 className="pl-10"
                                 {...field}
                               />
