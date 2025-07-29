@@ -8,4 +8,7 @@ export const PillarSchema = z.object({
     .max(1, "Weight cannot exceed 1")
     .optional(),
   description: z.string().optional(),
+  percentage_target_achieved: z.number().min(0).max(100).optional(),
+  performance: z.number().min(0).max(100).optional(),
+  academic_year: z.number().int(),
 });

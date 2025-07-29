@@ -7,13 +7,8 @@ export enum UserRole {
 
 export enum KpiStatus {
   PENDING = "PENDING",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
   OVERDUE = "OVERDUE",
-}
-
-export enum PillarStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  COMPLETED = "COMPLETED",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  REVISION = "REVISION",
 }
