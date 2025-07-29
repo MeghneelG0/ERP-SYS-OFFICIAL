@@ -1,19 +1,21 @@
 # Use Node.js LTS version
 FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
 # Install pnpm
 RUN npm install -g pnpm
 
-# Set working directory
-WORKDIR /app
+# Copy root package configuration files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 
-# Copy root package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY turbo.json ./
-
-# Copy all package.json files for proper dependency resolution
-COPY packages/*/package.json ./packages/*/
-COPY apps/*/package.json ./apps/*/
+# Copy package.json files for dependency installation (only existing packages)
+COPY packages/db/package.json ./packages/db/package.json
+COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
+COPY packages/types/package.json ./packages/types/package.json
+COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY apps/server/package.json ./apps/server/package.json
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
@@ -29,26 +31,30 @@ RUN pnpm --filter=server build
 
 # Production stage
 FROM node:20-alpine AS production
-
-RUN npm install -g pnpm
-
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
 
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/server/package.json ./apps/server/
-COPY packages/db/package.json ./packages/db/
+COPY apps/server/package.json ./apps/server/package.json
+COPY packages/db/package.json ./packages/db/package.json
 
 # Install production dependencies
 RUN pnpm install --prod --frozen-lockfile
 
-# Copy built application
+# Copy built application and Prisma client
 COPY --from=base /app/apps/server/dist ./apps/server/dist
 COPY --from=base /app/packages/db ./packages/db
 COPY --from=base /app/node_modules/.prisma ./node_modules/.prisma
+
+# Set working directory to server
+WORKDIR /app/apps/server
 
 # Expose port
 EXPOSE 3001
 
 # Start the application
-CMD ["node", "apps/server/dist/main.js"]
+CMD ["node", "dist/main.js"]
