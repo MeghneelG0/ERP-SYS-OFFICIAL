@@ -31,5 +31,8 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm run generate
         
-      - name: Build project
-        run: pnpm run build
+      - name: Build Web
+        run: pnpm --filter web run build
+
+      - name: Build Server
+        run: pnpm --filter server run build
