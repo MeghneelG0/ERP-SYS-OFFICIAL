@@ -1,13 +1,11 @@
-import { CreateKpiTemplateInput } from '@workspace/types/types';
-import { IsString, IsOptional, IsNumber, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsNumber, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
+import { KpiDataDto } from './kpi-data.dto';
+import { KpiCalculatedMetricsDto } from './kpi-calculated-metrics.dto';
+import type { CreateKpiRequestData } from '@workspace/types/types';
 
-export class CreateKpiDto implements CreateKpiTemplateInput {
-  @IsOptional()
-  @IsUUID()
-  @ApiPropertyOptional({ description: 'ID of the pillar template this KPI belongs to' })
-  pillar_template_id?: string;
-
+export class CreateKpiDto implements CreateKpiRequestData {
   @IsNumber()
   @ApiProperty({ description: 'KPI number/identifier', example: 1 })
   kpi_number: number;
@@ -41,13 +39,23 @@ export class CreateKpiDto implements CreateKpiTemplateInput {
   @ApiPropertyOptional({ description: 'Data source for this KPI' })
   data_provided_by?: string;
 
-  @ApiProperty({ description: 'KPI data in JSON format' })
-  kpi_data: Record<string, unknown>;
+  @ValidateNested()
+  @Type(() => KpiDataDto)
+  @ApiProperty({
+    description: 'Dynamic form elements configuration for KPI data collection',
+    type: KpiDataDto,
+  })
+  kpi_data: KpiDataDto;
 
   @IsNumber()
   @ApiProperty({ description: 'Academic year', example: 2024 })
   academic_year: number;
 
-  @ApiProperty({ description: 'Calculated metrics in JSON format' })
-  kpi_calculated_metrics: Record<string, unknown>;
+  @ValidateNested()
+  @Type(() => KpiCalculatedMetricsDto)
+  @ApiProperty({
+    description: 'Calculated metrics and formulas for KPI evaluation',
+    type: KpiCalculatedMetricsDto,
+  })
+  kpi_calculated_metrics: KpiCalculatedMetricsDto;
 }
