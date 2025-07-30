@@ -23,22 +23,11 @@ export default function KpiBuilderPage() {
     null,
   );
 
-  // Calculate KPI counts from backend data
-  const kpiCounts = Array.isArray(pillarTemplates)
-    ? pillarTemplates.reduce(
-        (acc, pillar) => {
-          acc[pillar.id] = pillar.counts?.assignedkpi ?? 0;
-          return acc;
-        },
-        {} as Record<number, number>,
-      )
-    : {};
-
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string | number) => {
     deletePillarMutation.mutate(String(id), {
       onSuccess: () => {
         // If the deleted pillar was selected, clear the selection
-        if (selectedPillarTemplate?.id === id) {
+        if (selectedPillarTemplate?.id === String(id)) {
           setSelectedPillarTemplate(null);
         }
       },
@@ -53,7 +42,7 @@ export default function KpiBuilderPage() {
   const handleCreateKpi = (pillar: PillarInstance) => {
     const params = new URLSearchParams({
       pillarId: String(pillar.id),
-      pillarName: pillar.name,
+      pillarName: pillar.pillar_name,
     }).toString();
     router.push(`/qc/builder/create?${params}`);
   };
@@ -111,10 +100,9 @@ export default function KpiBuilderPage() {
           onDeletePillar={handleDelete}
           onCreateKpi={handleCreateKpi}
           onCreatePillar={() => setCreatingPillar(true)}
-          kpiCounts={kpiCounts}
           deletingPillarId={
             deletePillarMutation.isPending && deletePillarMutation.variables
-              ? Number(deletePillarMutation.variables)
+              ? deletePillarMutation.variables
               : null
           }
         />

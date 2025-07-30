@@ -1,5 +1,6 @@
 import { Badge } from "@workspace/ui/components/badge";
 import { AlertCircle, CheckCircle } from "lucide-react";
+import { PillarInstance } from "@workspace/types/types";
 
 interface WeightValidationProps {
   currentWeight: number;
@@ -101,8 +102,8 @@ export function WeightValidation({
 
 // Hook for weight validation logic
 export function useWeightValidation(
-  existingPillars: Array<{ id: number; pillar_value?: number }>,
-  editingPillarId?: number,
+  existingPillars: PillarInstance[] = [],
+  editingPillarId?: string,
 ) {
   const getCurrentTotalWeight = (): number => {
     return existingPillars.reduce((sum, pillar) => {

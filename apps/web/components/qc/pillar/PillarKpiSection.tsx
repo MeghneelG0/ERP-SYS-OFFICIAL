@@ -65,14 +65,16 @@ export function PillarKpiSection({
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-lg font-bold tracking-tight">{pillar.name} KPIs</h3>
+        <h3 className="text-lg font-bold tracking-tight">
+          {pillar.pillar_name} KPIs
+        </h3>
         <div className="flex gap-2">
           <Button
             size="sm"
             onClick={() => {
               const params = new URLSearchParams({
                 pillarId: pillar.id,
-                pillarName: pillar.name,
+                pillarName: pillar.pillar_name,
                 pillarNumber: pillar.number,
                 pillarWeight: pillar.weight,
               }).toString();

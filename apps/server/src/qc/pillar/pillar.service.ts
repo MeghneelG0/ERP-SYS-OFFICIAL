@@ -14,15 +14,28 @@ export class PillarService {
     }
   }
 
-  createPillar(userId: string, userRole: UserRole, dto: CreatePillarDto) {
+  async createPillar(userId: string, userRole: UserRole, dto: CreatePillarDto) {
     if (!userId) throw new ForbiddenException('User not authenticated');
     this.assertQacRole(userRole);
-    return this.prisma.pillarTemplate.create({
+
+    await this.prisma.pillarTemplate.create({
       data: {
-        ...dto,
+        pillar_name: dto.pillar_name,
+        description: dto.description,
+        pillar_value: dto.pillar_value,
+        percentage_target_achieved: dto.percentage_target_achieved,
+        performance: dto.performance,
+        academic_year: new Date().getFullYear(),
         created_by_user: userId,
       },
+      include: {
+        kpi_templates: true,
+      },
     });
+
+    return {
+      message: 'Pillar created successfully',
+    };
   }
 
   async updatePillar(userId: string, userRole: UserRole, pillarId: string, dto: UpdatePillarDto) {
@@ -30,9 +43,19 @@ export class PillarService {
     const pillar = await this.prisma.pillarTemplate.findUnique({ where: { id: pillarId } });
     if (!pillar) throw new NotFoundException('Pillar not found');
     if (pillar.created_by_user !== userId) throw new ForbiddenException('Not allowed');
+
     return this.prisma.pillarTemplate.update({
       where: { id: pillarId },
-      data: dto,
+      data: {
+        pillar_name: dto.pillar_name,
+        description: dto.description,
+        pillar_value: dto.pillar_value,
+        percentage_target_achieved: dto.percentage_target_achieved,
+        performance: dto.performance,
+      },
+      include: {
+        kpi_templates: true,
+      },
     });
   }
 
@@ -44,8 +67,13 @@ export class PillarService {
     return this.prisma.pillarTemplate.delete({ where: { id: pillarId } });
   }
 
-  getPillars(userId: string, userRole: UserRole) {
+  async getPillars(userId: string, userRole: UserRole) {
     this.assertQacRole(userRole);
-    return this.prisma.pillarTemplate.findMany({ where: { created_by_user: userId } });
+    return await this.prisma.pillarTemplate.findMany({
+      where: { created_by_user: userId },
+      include: {
+        kpi_templates: true,
+      },
+    });
   }
 }

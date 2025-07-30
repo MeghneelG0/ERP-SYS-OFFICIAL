@@ -1,8 +1,9 @@
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import { PillarInstance } from "@workspace/types/types";
 import React from "react";
 
 interface PillarTabsProps {
-  pillars: any[];
+  pillars: PillarInstance[];
   selectedPillarId: number | string;
   onSelect: (pillar: any) => void;
 }
@@ -14,7 +15,7 @@ export function PillarTabs({
 }: PillarTabsProps) {
   // Calculate total weight
   const totalWeight = pillars.reduce(
-    (sum, p) => sum + (Number(p.weight) || 0),
+    (sum, p) => sum + (Number(p.pillar_value) || 0),
     0,
   );
   return (
@@ -28,7 +29,7 @@ export function PillarTabs({
               onClick={() => onSelect(pillar)}
               className="capitalize"
             >
-              {pillar.name} (w={pillar.weight})
+              {pillar.pillar_name} (w={pillar.pillar_value})
             </TabsTrigger>
           ))}
         </TabsList>

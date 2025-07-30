@@ -17,14 +17,7 @@ export function useGetPillars() {
     queryFn: async () => {
       const res = await getPillars();
       if (res.data) {
-        // Map backend fields to PillarInstance shape
-        return res.data.map((pillar: any) => ({
-          ...pillar,
-          name: pillar.name || pillar.pillar_name || `Pillar #${pillar.id}`,
-          pillar_value: pillar.pillar_value ?? pillar.weight ?? 0,
-          description: pillar.description ?? "",
-          counts: pillar.counts ?? { assignedkpi: 0 },
-        }));
+        return res.data;
       }
       return [];
     },

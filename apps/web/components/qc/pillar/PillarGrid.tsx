@@ -10,11 +10,10 @@ interface PillarGridProps {
   selectedPillar: PillarInstance | null;
   onSelectPillar: (pillar: PillarInstance) => void;
   onEditPillar: (pillar: PillarInstance) => void;
-  onDeletePillar: (pillarId: number) => void;
+  onDeletePillar: (pillarId: string) => void;
   onCreateKpi: (pillar: PillarInstance) => void;
   onCreatePillar: () => void;
-  kpiCounts?: Record<number, number>;
-  deletingPillarId?: number | null;
+  deletingPillarId?: string | number | null;
 }
 
 export function PillarGrid({
@@ -25,7 +24,6 @@ export function PillarGrid({
   onDeletePillar,
   onCreateKpi,
   onCreatePillar,
-  kpiCounts = {},
   deletingPillarId = null,
 }: PillarGridProps) {
   // Calculate total weight
@@ -100,7 +98,6 @@ export function PillarGrid({
               onEdit={onEditPillar}
               onDelete={onDeletePillar}
               onCreateKpi={onCreateKpi}
-              kpiCount={kpiCounts[pillar.id] || 0}
               isDeleting={deletingPillarId === pillar.id}
             />
           ))}

@@ -1,3 +1,16 @@
+/**
+ * Prisma schema for ERP-SYS database
+ * Models:
+ * - Department: Academic departments with HOD, users, and assigned pillars/KPIs
+ * - User: Unified table for QAC, HOD, KPI_COORDINATOR, and FACULTY roles
+ * - PillarTemplate: QAC-managed pillar definitions tagged by academic_year
+ * - KpiTemplate: QAC-managed KPI definitions tagged by academic_year
+ * - DepartmentPillar: Department-specific pillar assignments per academic_year
+ * - DepartmentKpi: Department-specific KPI assignments per academic_year, supports optional user_ids and assigned_users
+ * - Otp: One-time-password storage for email verification flows
+ * - Session: User JWT and refresh token sessions with expiry tracking
+ */
+
 generator client {
   provider = "prisma-client-js"
   output   = "client"
@@ -16,6 +29,65 @@ enum UserRole {
   FACULTY
 }
 
+enum KpiStatus {
+  APPROVED
+  OVERDUE
+  REJECTED
+  REVISION
+  PENDING
+}
+
+model User {
+  id                       String          @id @default(uuid()) @map("_id") @db.Uuid
+  user_name                String
+  user_email               String          @unique
+  user_password            String
+  user_role                UserRole        @default(FACULTY)
+  dept_id                  String?         @db.Uuid
+  created_at               DateTime        @default(now())
+  department               Department?     @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  assigned_department_kpis DepartmentKpi[] @relation("DepartmentKpiAssignedUsers")
+
+  @@map("users")
+}
+
+model PillarTemplate {
+  id                         String       @id @default(uuid()) @map("_id") @db.Uuid
+  pillar_name                String
+  description                String?
+  pillar_value               Float?
+  percentage_target_achieved Float?
+  performance                Float?
+  academic_year              Int
+  created_by_user            String       @db.Uuid
+  created_at                 DateTime     @default(now())
+  updated_at                 DateTime     @updatedAt
+  kpi_templates              KpiTemplate[]
+
+  @@map("pillar_templates")
+}
+
+model KpiTemplate {
+  id                         String       @id @default(uuid()) @map("_id") @db.Uuid
+  pillar_template_id          String?      @db.Uuid
+  kpi_number                 Int
+  kpi_metric_name            String
+  kpi_description            String?
+  kpi_value                  Float?
+  percentage_target_achieved Float?
+  performance                Float?
+  data_provided_by           String?
+  kpi_data                   Json
+  academic_year              Int
+  kpi_calculated_metrics     Json
+  created_by_user            String       @db.Uuid
+  created_at                 DateTime     @default(now())
+  updated_at                 DateTime     @updatedAt
+  pillar_template            PillarTemplate? @relation(fields: [pillar_template_id], references: [id], onDelete: Cascade)
+
+  @@map("kpi_templates")
+}
+
 model Department {
   id                 String             @id @default(uuid()) @map("_id") @db.Uuid
   dept_name          String             @unique
@@ -29,92 +101,50 @@ model Department {
   @@map("departments")
 }
 
-// Unified Users table - all users including QAC
-model User {
-  id            String     @id @default(uuid()) @map("_id") @db.Uuid
-  user_name     String
-  user_email    String     @unique
-  user_password String
-  user_role     UserRole   @default(FACULTY)
-  dept_id       String?    @db.Uuid  // Optional for QAC users
-  created_at    DateTime   @default(now())
-  department    Department? @relation(fields: [dept_id], references: [id], onDelete: Cascade)
-  
-  // Relations for QAC users
-  pillar_templates PillarTemplate[]
-  kpi_templates    KpiTemplate[]
-
-  @@map("users")
-}
-
-// Pillar templates created by QAC
-model PillarTemplate {
-  id                 String             @id @default(uuid()) @map("_id") @db.Uuid
-  pillar_name        String
-  pillar_value       Float?
-  description        String?
-  created_by_user    String             @db.Uuid
-  created_at         DateTime           @default(now())
-  updated_at         DateTime           @updatedAt
-  user               User               @relation(fields: [created_by_user], references: [id], onDelete: Cascade)
-  department_pillars DepartmentPillar[]
-
-  @@map("pillar_templates")
-}
-
-// KPI templates created by QAC
-model KpiTemplate {
-  id              String          @id @default(uuid()) @map("_id") @db.Uuid
-  kpi_name        String
-  kpi_description String?
-  form_data       Json
-  target_value    Float?
-  created_by_user String          @db.Uuid
-  created_at      DateTime        @default(now())
-  updated_at      DateTime        @updatedAt
-  user            User            @relation(fields: [created_by_user], references: [id], onDelete: Cascade)
-  department_kpis DepartmentKpi[]
-
-  @@map("kpi_templates")
-}
-
-// Department-specific pillars (copies of templates)
 model DepartmentPillar {
-  id              String          @id @default(uuid()) @map("_id") @db.Uuid
-  dept_id         String          @db.Uuid
-  template_id     String          @db.Uuid
-  pillar_name     String
-  description     String?
-  assigned_date   DateTime        @default(now())
-  status          String          @default("active")
-  department      Department      @relation(fields: [dept_id], references: [id], onDelete: Cascade)
-  pillar_template PillarTemplate  @relation(fields: [template_id], references: [id], onDelete: Cascade)
-  department_kpis DepartmentKpi[]
+  id                         String          @id @default(uuid()) @map("_id") @db.Uuid
+  dept_id                    String          @db.Uuid
+  template_id                String          @db.Uuid
+  pillar_name                String
+  description                String?
+  pillar_weight              Float?
+  percentage_target_achieved Float?
+  performance                Float?
+  academic_year              Int
+  assigned_date              DateTime        @default(now())
+  status                     String          @default("active")
+  department                 Department      @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  department_kpis            DepartmentKpi[]
 
   @@unique([dept_id, template_id])
   @@map("department_pillars")
 }
 
-// Department-specific KPIs (copies of templates assigned to pillars)
 model DepartmentKpi {
-  id                String           @id @default(uuid()) @map("_id") @db.Uuid
-  dept_id           String           @db.Uuid
-  dept_pillar_id    String           @db.Uuid
-  template_id       String           @db.Uuid
-  kpi_name          String
-  kpi_description   String?
-  form_data         Json
-  target_value      Float?
-  current_value     Float?
-  kpi_status        String           @default("pending")
-  assigned_date     DateTime         @default(now())
-  due_date          DateTime?
-  completed_date    DateTime?
-  comments          String?
-  form_responses    Json?
-  department        Department       @relation(fields: [dept_id], references: [id], onDelete: Cascade)
-  department_pillar DepartmentPillar @relation(fields: [dept_pillar_id], references: [id], onDelete: Cascade)
-  kpi_template      KpiTemplate      @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  id                         String           @id @default(uuid()) @map("_id") @db.Uuid
+  dept_id                    String           @db.Uuid
+  dept_pillar_id             String           @db.Uuid
+  template_id                String           @db.Uuid
+  kpi_number                 Int
+  kpi_metric_name            String
+  kpi_description            String?
+  kpi_value                  Float?
+  percentage_target_achieved Float?
+  performance                Float?
+  data_provided_by           String?
+  kpi_data                   Json
+  academic_year              Int
+  kpi_calculated_metrics     Json
+  kpi_status                 KpiStatus        @default(PENDING)
+  assigned_date              DateTime         @default(now())
+  due_date                   DateTime?
+  completed_date             DateTime?
+  comments                   String?
+  form_responses             Json?
+  user_ids                   String[]         @default([]) @db.Uuid
+  department                 Department       @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  department_pillar          DepartmentPillar @relation(fields: [dept_pillar_id], references: [id], onDelete: Cascade)
+  assigned_users             User[]           @relation("DepartmentKpiAssignedUsers")
 
   @@unique([dept_pillar_id, template_id])
   @@map("department_kpis")
