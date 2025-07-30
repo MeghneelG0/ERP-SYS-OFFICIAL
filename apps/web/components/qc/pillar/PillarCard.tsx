@@ -19,7 +19,7 @@ interface PillarCardProps {
   isSelected: boolean;
   onSelect: (pillar: PillarInstance) => void;
   onEdit: (pillar: PillarInstance) => void;
-  onDelete: (pillarId: number) => void;
+  onDelete: (pillarId: string) => void;
   onCreateKpi: (pillar: PillarInstance) => void;
   kpiCount?: number;
   isDeleting?: boolean;

@@ -18,7 +18,7 @@ export const getPillars = async () => {
 export const addPillar = async (data: CreatePillarTemplateInput) => {
   try {
     const response = await ApiClient.post<
-      CreatePillarTemplateInput,
+      PillarInstance,
       CreatePillarTemplateInput
     >("/qc/pillar", data);
     return response;
@@ -46,7 +46,7 @@ export const updatePillar = async (
 
 export const deletePillar = async (id: string) => {
   try {
-    const response = await ApiClient.delete<null>(`/qc/pillar/${id}`);
+    const response = await ApiClient.delete<PillarInstance>(`/qc/pillar/${id}`);
     return response;
   } catch (error: unknown) {
     const apiError = error as ApiError;

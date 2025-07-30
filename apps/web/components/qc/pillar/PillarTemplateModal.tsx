@@ -82,10 +82,11 @@ function FormField({
           id={name}
           type={type}
           {...form.register(name, {
+            valueAsNumber: type === "number",
             onChange: (e) => {
               if (type === "number") {
-                const value = parseFloat(e.target.value);
-                if (value > 1) {
+                const val = parseFloat(e.target.value);
+                if (val > 1) {
                   e.target.value = "1";
                 }
               }
@@ -117,12 +118,15 @@ export function PillarTemplateModal({
   const addPillarMutation = useAddPillar();
   const updatePillarMutation = useUpdatePillar();
 
+  const currentYear = new Date().getFullYear();
   const form = useForm<CreatePillarTemplateInput>({
     resolver: zodResolver(PillarSchema),
     defaultValues: {
       pillar_name: "",
       pillar_value: undefined,
       description: "",
+      percentage_target_achieved: 0,
+      performance: 0,
     },
   });
 
@@ -133,12 +137,16 @@ export function PillarTemplateModal({
         pillar_name: editingPillar.name,
         pillar_value: editingPillar.pillar_value,
         description: editingPillar.description || "",
+        percentage_target_achieved: editingPillar.percentage_target_achieved,
+        performance: editingPillar.performance,
       });
     } else {
       form.reset({
         pillar_name: "",
         pillar_value: undefined,
         description: "",
+        percentage_target_achieved: 0,
+        performance: 0,
       });
     }
   }, [editingPillar, form]);
