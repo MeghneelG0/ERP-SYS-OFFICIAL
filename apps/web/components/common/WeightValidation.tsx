@@ -8,6 +8,7 @@ interface WeightValidationProps {
   maxWeight?: number;
   className?: string;
   showDetails?: boolean;
+  showProgressBar?: boolean;
 }
 
 export function WeightValidation({
@@ -16,6 +17,7 @@ export function WeightValidation({
   maxWeight = 1.0,
   className = "",
   showDetails = true,
+  showProgressBar = true,
 }: WeightValidationProps) {
   const totalWeight = currentWeight + newWeight;
   const isValid = totalWeight <= maxWeight;
@@ -75,17 +77,19 @@ export function WeightValidation({
         </div>
       )}
 
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className={`h-2 rounded-full transition-all duration-300 ${
-            isValid ? "bg-green-500" : "bg-red-500"
-          }`}
-          style={{
-            width: `${Math.min(percentageTotal, 100)}%`,
-          }}
-        />
-      </div>
+      {/* Progress Bar - Only show if showProgressBar is true */}
+      {showProgressBar && (
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className={`h-2 rounded-full transition-all duration-300 ${
+              isValid ? "bg-green-500" : "bg-red-500"
+            }`}
+            style={{
+              width: `${Math.min(percentageTotal, 100)}%`,
+            }}
+          />
+        </div>
+      )}
 
       {/* Error Message */}
       {!isValid && (

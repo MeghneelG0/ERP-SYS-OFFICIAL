@@ -46,13 +46,6 @@ export class KpiCalculatedMetricsDto implements KpiCalculatedMetrics {
 
   @IsOptional()
   @IsObject()
-  @ApiPropertyOptional({
-    description: 'Aggregation method configuration',
-    example: {
-      method: 'weighted_average',
-      customFormula: 'sum(weighted_scores) / total_weight',
-    },
-  })
   aggregation?: {
     method: 'sum' | 'average' | 'weighted_average' | 'custom';
     customFormula?: string;
