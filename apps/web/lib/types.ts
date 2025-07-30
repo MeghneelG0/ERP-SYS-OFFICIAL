@@ -26,22 +26,13 @@ export class ProcessError extends Error {
   }
 }
 
-export type FormElementType =
-  | "text"
-  | "textarea"
-  | "number"
-  | "select"
-  | "checkbox"
-  | "radio"
-  | "date"
-  | "email"
-  | "file";
-
-export interface FormElementInstance {
-  id: string;
-  type: FormElementType;
-  attributes: Record<string, any>;
-}
+// Import shared types from workspace
+export type {
+  FormElementType,
+  FormElementInstance,
+  KpiFormData,
+  KpiCalculatedMetrics,
+} from "@workspace/types/types";
 
 export interface AssignKpiPayload {
   pillarId: string;
