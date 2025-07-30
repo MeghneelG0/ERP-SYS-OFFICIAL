@@ -10,7 +10,16 @@ import {
   TableHead,
   TableBody,
   TableCell,
+  TableFooter,
 } from "@workspace/ui/components/table";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 
 export default function DepartmentProfilePage() {
   const FacultyName = "FOSTA"; // This should be replaced with the actual department name variable
@@ -53,203 +62,197 @@ export default function DepartmentProfilePage() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     // Save logic here (API integration later)
+    console.log("Saving Data:", { data, yearData });
     alert("Saved!");
   };
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Department Profile</h1>
-      <h2 className="text-xl font-semibold mb-2">{FacultyName}</h2>
-      <h3 className="text-lg font-medium mb-4 text-muted-foreground">
-        {schoolName}
-      </h3>
-      <form
-        onSubmit={handleSave}
-        className="rounded-lg shadow p-6 max-w-2xl w-full"
-      >
-        <h4 className="text-lg font-semibold mb-4">Department Name</h4>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Field</TableHead>
-              <TableHead>Value</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>Number of UG Programs Offered</TableCell>
-              <TableCell>
+      <form onSubmit={handleSave}>
+        <Card className="w-full max-w-4xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold">{FacultyName}</CardTitle>
+            <CardDescription className="text-lg">
+              {schoolName} - Department Profile
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* Section 1: General Information */}
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold mb-4 border-b pb-3">
+                General Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <div>
+                  <label className="text-sm font-medium">
+                    UG Programs Offered
+                  </label>
+                  <Input
+                    name="ugPrograms"
+                    type="number"
+                    value={data.ugPrograms}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    PG Programs Offered
+                  </label>
+                  <Input
+                    name="pgPrograms"
+                    type="number"
+                    value={data.pgPrograms}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    Total Courses (All Semesters)
+                  </label>
+                  <Input
+                    name="totalCourses"
+                    type="number"
+                    value={data.totalCourses}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    Total Credits (Jan-Jun 2025)
+                  </label>
+                  <Input
+                    name="evenSemCreditsJanJun"
+                    type="number"
+                    value={data.evenSemCreditsJanJun}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    Total Credits (Jul-Dec 2025)
+                  </label>
+                  <Input
+                    name="evenSemCreditsJulDec"
+                    type="number"
+                    value={data.evenSemCreditsJulDec}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    Students Eligible for Internship
+                  </label>
+                  <Input
+                    name="studentsInternship"
+                    type="number"
+                    value={data.studentsInternship}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    Students Eligible for Project
+                  </label>
+                  <Input
+                    name="studentsProject"
+                    type="number"
+                    value={data.studentsProject}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Student Strength */}
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold mb-4 border-b pb-3">
+                Year-wise Student Strength
+              </h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Year</TableHead>
+                    <TableHead>Sanctioned Intake</TableHead>
+                    <TableHead>Admitted Students</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {yearData.map((row, idx) => (
+                    <TableRow key={row.year}>
+                      <TableCell className="font-medium">{`Year ${row.year}`}</TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          value={row.intake}
+                          onChange={(e) =>
+                            handleYearChange(
+                              idx,
+                              "intake",
+                              Number(e.target.value),
+                            )
+                          }
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          value={row.admitted}
+                          onChange={(e) =>
+                            handleYearChange(
+                              idx,
+                              "admitted",
+                              Number(e.target.value),
+                            )
+                          }
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={2} className="text-right font-bold">
+                      Total Admitted
+                    </TableCell>
+                    <TableCell className="font-bold">{totalAdmitted}</TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </div>
+
+            {/* Section 3: Faculty Information */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 border-b pb-3">
+                Faculty Information
+              </h3>
+              <div>
+                <label className="text-sm font-medium">
+                  Full-Time Teachers During the Year
+                </label>
                 <Input
-                  name="ugPrograms"
+                  name="fullTimeTeachers"
                   type="number"
-                  value={data.ugPrograms}
+                  value={data.fullTimeTeachers}
                   onChange={handleChange}
+                  className="mt-1 max-w-xs"
                 />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Number of PG Programs Offered</TableCell>
-              <TableCell>
-                <Input
-                  name="pgPrograms"
-                  type="number"
-                  value={data.pgPrograms}
-                  onChange={handleChange}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Total Number of Courses (including even and odd Sem.)
-              </TableCell>
-              <TableCell>
-                <Input
-                  name="totalCourses"
-                  type="number"
-                  value={data.totalCourses}
-                  onChange={handleChange}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Total Theory course credits in all programs during Even Sem
-                (Jan-Jun 2025)
-              </TableCell>
-              <TableCell>
-                <Input
-                  name="evenSemCreditsJanJun"
-                  type="number"
-                  value={data.evenSemCreditsJanJun}
-                  onChange={handleChange}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Total Theory course credits in all programs during Even Sem
-                (July-Dec 2025)
-              </TableCell>
-              <TableCell>
-                <Input
-                  name="evenSemCreditsJulDec"
-                  type="number"
-                  value={data.evenSemCreditsJulDec}
-                  onChange={handleChange}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Total number of students eligible for Internship (if applicable)
-              </TableCell>
-              <TableCell>
-                <Input
-                  name="studentsInternship"
-                  type="number"
-                  value={data.studentsInternship}
-                  onChange={handleChange}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Total number of students eligible for Project (if applicable)
-              </TableCell>
-              <TableCell>
-                <Input
-                  name="studentsProject"
-                  type="number"
-                  value={data.studentsProject}
-                  onChange={handleChange}
-                />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-        <Button type="submit" className="mt-4">
-          Save
-        </Button>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="border-t mt-8 pt-6 flex justify-end">
+            <Button type="submit" size="lg">
+              Save Changes
+            </Button>
+          </CardFooter>
+        </Card>
       </form>
-
-      {/* Year wise students strength table */}
-      <div className="rounded-lg shadow p-6 max-w-2xl w-full mt-8">
-        <h4 className="text-lg font-semibold mb-4">
-          Year wise students strength (all programs)
-        </h4>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Year</TableHead>
-              <TableHead>Intake</TableHead>
-              <TableHead>Admitted</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {yearData.map((row, idx) => (
-              <TableRow key={row.year}>
-                <TableCell>{row.year}</TableCell>
-                <TableCell>
-                  <Input
-                    type="number"
-                    value={row.intake}
-                    onChange={(e) =>
-                      handleYearChange(idx, "intake", Number(e.target.value))
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="number"
-                    value={row.admitted}
-                    onChange={(e) =>
-                      handleYearChange(idx, "admitted", Number(e.target.value))
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <tfoot>
-            <TableRow>
-              <TableCell className="font-semibold">Total</TableCell>
-              <TableCell></TableCell>
-              <TableCell className="font-semibold">{totalAdmitted}</TableCell>
-            </TableRow>
-          </tfoot>
-        </Table>
-        <Button onClick={() => alert("Saved!")} className="mt-4">
-          Save
-        </Button>
-      </div>
-
-      {/* Number of full time teachers table */}
-      <div className="rounded-lg shadow p-6 max-w-2xl w-full mt-8">
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                Number of full time-teachers during the year:
-              </TableCell>
-              <TableCell>
-                <Input
-                  type="number"
-                  value={data.fullTimeTeachers ?? 0}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      fullTimeTeachers: Number(e.target.value),
-                    })
-                  }
-                />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-        <Button onClick={() => alert("Saved!")} className="mt-4">
-          Save
-        </Button>
-      </div>
     </main>
   );
 }
