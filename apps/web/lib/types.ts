@@ -27,17 +27,24 @@ export class ProcessError extends Error {
 }
 
 // Import shared types from workspace
-export type {
-  FormElementType,
-  FormElementInstance,
-  KpiFormData,
-  KpiCalculatedMetrics,
-} from "@workspace/types/types";
+export type { KpiCalculatedMetrics } from "@workspace/types/types";
 
-export interface AssignKpiPayload {
-  pillarId: string;
-  departmentId: string;
-  kpiIds: string[];
+// Local types for web app compatibility
+export type FormElementType =
+  | "text"
+  | "textarea"
+  | "number"
+  | "select"
+  | "checkbox"
+  | "radio"
+  | "date"
+  | "email"
+  | "file";
+
+export interface FormElementInstance {
+  id: string;
+  type: FormElementType;
+  attributes: Record<string, any>;
 }
 
 export interface KpiFormData {
@@ -45,6 +52,12 @@ export interface KpiFormData {
   formData: {
     entries: Record<string, any>[];
   };
+}
+
+export interface AssignKpiPayload {
+  pillarId: string;
+  departmentId: string;
+  kpiIds: string[];
 }
 
 export interface FormConfig {
