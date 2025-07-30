@@ -17,14 +17,7 @@ export function useGetPillars() {
     queryFn: async () => {
       const res = await getPillars();
       if (res.data) {
-        return res.data.map((pillar: any) => ({
-          id: pillar.id,
-          name: pillar.pillar_name || `Pillar #${pillar.id}`,
-          pillar_value: pillar.pillar_value ?? 0,
-          description: pillar.description ?? "",
-          percentage_target_achieved: pillar.percentage_target_achieved ?? 0,
-          performance: pillar.performance ?? 0,
-        }));
+        return res.data;
       }
       return [];
     },

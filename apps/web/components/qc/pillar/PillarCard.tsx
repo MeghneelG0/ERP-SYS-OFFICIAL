@@ -51,7 +51,7 @@ export function PillarCard({
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="text-lg font-semibold">
-                {pillar.name}
+                {pillar.pillar_name}
               </CardTitle>
             </div>
             <div className="flex flex-col items-end gap-1">
@@ -143,7 +143,7 @@ export function PillarCard({
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => onDelete(pillar.id)}
-        itemName={pillar.name}
+        itemName={pillar.pillar_name}
         itemType="Pillar"
         isLoading={isDeleting}
       />
