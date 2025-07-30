@@ -431,7 +431,7 @@ export default function QACSubmissionReview() {
         actual: "20%", // dummy value
         percentAchieved: "80%", // dummy value
         status: kpi.kpi_status,
-        kpiId: kpi.assigned_kpi_id,
+        kpiId: kpi.assigned_kpi_id.toString(),
       });
       return acc;
     },
