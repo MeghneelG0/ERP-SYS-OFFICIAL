@@ -27,13 +27,13 @@ export type PillarKpi = {
   percentAchieved: string | number;
   value?: string | number;
   status?: string;
-  kpiId?: number;
+  kpiId?: string;
 };
 
 export interface PillarTableProps {
   pillar: string;
   kpis: PillarKpi[];
-  onReviewKpi?: (kpiId: number) => void;
+  onReviewKpi?: (kpiId: string) => void;
   showStatusColumn?: boolean;
 }
 
@@ -47,7 +47,7 @@ export const dummyKpiData: PillarKpi[] = [
     percentAchieved: "80%",
     value: "80",
     status: "pending review",
-    kpiId: 1,
+    kpiId: "1",
   },
   {
     kpi_no: 2,
@@ -58,7 +58,7 @@ export const dummyKpiData: PillarKpi[] = [
     percentAchieved: "80%",
     value: "80",
     status: "approved",
-    kpiId: 2,
+    kpiId: "2",
   },
   {
     kpi_no: 3,
@@ -69,7 +69,7 @@ export const dummyKpiData: PillarKpi[] = [
     percentAchieved: "40%",
     value: "40",
     status: "needs revision",
-    kpiId: 3,
+    kpiId: "3",
   },
 ];
 

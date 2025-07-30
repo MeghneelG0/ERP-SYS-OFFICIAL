@@ -47,7 +47,7 @@ export function SelectedPillarKpis({
     actual: kpi.percentage_target_achieved?.toString() || "0",
     percentAchieved: kpi.percentage_target_achieved?.toString() || "0",
     value: kpi.kpi_value?.toString() || "0", // This is now 0-1 scale
-    status: kpi.kpi_status?.toLowerCase() || "pending",
+    status: "pending", // Default status since KpiTemplateInstance doesn't have kpi_status
     kpiId: kpi.id,
   }));
 
