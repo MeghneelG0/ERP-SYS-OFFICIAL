@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const KpiTemplateSchema = z.object({
-  pillar_template_id: z.string().uuid("Invalid pillar template ID").optional(),
+  pillar_template_id: z.string().uuid("Invalid pillar template ID"),
   kpi_number: z.number().int().min(1),
   kpi_metric_name: z
     .string()

@@ -26,6 +26,10 @@ export class ProcessError extends Error {
   }
 }
 
+// Import shared types from workspace
+export type { KpiCalculatedMetrics } from "@workspace/types/types";
+
+// Local types for web app compatibility
 export type FormElementType =
   | "text"
   | "textarea"
@@ -43,17 +47,17 @@ export interface FormElementInstance {
   attributes: Record<string, any>;
 }
 
-export interface AssignKpiPayload {
-  pillarId: string;
-  departmentId: string;
-  kpiIds: string[];
-}
-
 export interface KpiFormData {
   id: string;
   formData: {
     entries: Record<string, any>[];
   };
+}
+
+export interface AssignKpiPayload {
+  pillarId: string;
+  departmentId: string;
+  kpiIds: string[];
 }
 
 export interface FormConfig {
