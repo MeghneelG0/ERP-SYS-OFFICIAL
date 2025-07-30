@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { KpiTemplateSchema } from "./kpi.schema";
 
 export const PillarSchema = z.object({
   pillar_name: z.string().min(1, "Name is required").max(255, "Name too long"),

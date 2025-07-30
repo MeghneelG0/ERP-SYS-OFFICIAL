@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
@@ -21,7 +20,6 @@ interface PillarCardProps {
   onEdit: (pillar: PillarInstance) => void;
   onDelete: (pillarId: string) => void;
   onCreateKpi: (pillar: PillarInstance) => void;
-  kpiCount?: number;
   isDeleting?: boolean;
 }
 
@@ -32,10 +30,13 @@ export function PillarCard({
   onEdit,
   onDelete,
   onCreateKpi,
-  kpiCount = 0,
   isDeleting = false,
 }: PillarCardProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // Calculate KPI count from the kpi_templates array
+  const kpiCount = pillar.kpi_templates?.length || 0;
+
   return (
     <>
       <Card
@@ -54,9 +55,9 @@ export function PillarCard({
               </CardTitle>
             </div>
             <div className="flex flex-col items-end gap-1">
-              {pillar.counts?.assignedkpi > 0 && (
+              {kpiCount > 0 && (
                 <Badge variant="secondary" className="text-xs">
-                  KPIs: {pillar.counts.assignedkpi}
+                  KPIs: {kpiCount}
                 </Badge>
               )}
               {pillar.pillar_value !== undefined && (

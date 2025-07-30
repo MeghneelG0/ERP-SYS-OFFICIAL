@@ -109,7 +109,7 @@ export function SelectedPillarKpis({
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-sm">
-                KPIs: {pillar.counts.assignedkpi}
+                KPIs: {pillar.kpi_templates?.length || 0}
               </Badge>
               <div className="flex gap-2">
                 <Button

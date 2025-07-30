@@ -17,7 +17,6 @@ export function useGetPillars() {
     queryFn: async () => {
       const res = await getPillars();
       if (res.data) {
-        // Map backend fields to PillarInstance shape
         return res.data.map((pillar: any) => ({
           id: pillar.id,
           name: pillar.pillar_name || `Pillar #${pillar.id}`,
@@ -25,7 +24,6 @@ export function useGetPillars() {
           description: pillar.description ?? "",
           percentage_target_achieved: pillar.percentage_target_achieved ?? 0,
           performance: pillar.performance ?? 0,
-          counts: pillar.counts ?? { assignedkpi: 0 },
         }));
       }
       return [];

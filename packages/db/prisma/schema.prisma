@@ -3,7 +3,6 @@
  * Models:
  * - Department: Academic departments with HOD, users, and assigned pillars/KPIs
  * - User: Unified table for QAC, HOD, KPI_COORDINATOR, and FACULTY roles
- * - QcTemplate: Grouping of QAC-created PillarTemplate and KpiTemplate entries
  * - PillarTemplate: QAC-managed pillar definitions tagged by academic_year
  * - KpiTemplate: QAC-managed KPI definitions tagged by academic_year
  * - DepartmentPillar: Department-specific pillar assignments per academic_year
@@ -52,14 +51,6 @@ model User {
   @@map("users")
 }
 
-model QcTemplate {
-  id              String           @id @default(uuid()) @map("_id") @db.Uuid
-  kpiTemplates    KpiTemplate[]    @relation("QcKpiRelation")
-  pillarTemplates PillarTemplate[] @relation("QcPillarRelation")
-
-  @@map("qc_templates")
-}
-
 model PillarTemplate {
   id                         String       @id @default(uuid()) @map("_id") @db.Uuid
   pillar_name                String
@@ -71,13 +62,14 @@ model PillarTemplate {
   created_by_user            String       @db.Uuid
   created_at                 DateTime     @default(now())
   updated_at                 DateTime     @updatedAt
-  qcTemplates                QcTemplate[] @relation("QcPillarRelation")
+  kpi_templates              KpiTemplate[]
 
   @@map("pillar_templates")
 }
 
 model KpiTemplate {
   id                         String       @id @default(uuid()) @map("_id") @db.Uuid
+  pillar_template_id          String?      @db.Uuid
   kpi_number                 Int
   kpi_metric_name            String
   kpi_description            String?
@@ -91,7 +83,7 @@ model KpiTemplate {
   created_by_user            String       @db.Uuid
   created_at                 DateTime     @default(now())
   updated_at                 DateTime     @updatedAt
-  qcTemplates                QcTemplate[] @relation("QcKpiRelation")
+  pillar_template            PillarTemplate? @relation(fields: [pillar_template_id], references: [id], onDelete: Cascade)
 
   @@map("kpi_templates")
 }

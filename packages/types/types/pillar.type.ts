@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PillarSchema } from "../schema";
+import { KpiTemplateInstance } from "./kpi.type";
 
 export type CreatePillarTemplateInput = z.infer<typeof PillarSchema>;
 
@@ -10,7 +11,9 @@ export interface PillarInstance {
   description?: string; // Description of the pillar
   percentage_target_achieved?: number;
   performance?: number;
-  counts: {
-    assignedkpi: number;
-  };
+  academic_year: number;
+  created_by_user: string;
+  created_at: string;
+  updated_at: string;
+  kpi_templates?: KpiTemplateInstance[];
 }
