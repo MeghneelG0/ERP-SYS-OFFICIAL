@@ -1,2 +1,2 @@
 export * from "./pillar.schema";
-export * from "./kpiTemplate.schema";
+export * from "./kpi.schema";

@@ -101,7 +101,7 @@ export function SelectedPillarKpis({
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="text-2xl font-bold">
-                {pillar.name}
+                {pillar.pillar_name}
               </CardTitle>
               <CardDescription className="mt-2">
                 Pillar #{pillar.id} • {kpis.length} KPIs
@@ -109,7 +109,7 @@ export function SelectedPillarKpis({
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-sm">
-                KPIs: {pillar.counts.assignedkpi}
+                KPIs: {pillar.kpi_templates?.length || 0}
               </Badge>
               <div className="flex gap-2">
                 <Button
@@ -141,7 +141,7 @@ export function SelectedPillarKpis({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl font-semibold">
-                {pillar.name} KPIs
+                {pillar.pillar_name} KPIs
               </CardTitle>
               <CardDescription>
                 Manage and review key performance indicators for this pillar

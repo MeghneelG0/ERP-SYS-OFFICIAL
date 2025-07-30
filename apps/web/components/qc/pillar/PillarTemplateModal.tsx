@@ -118,7 +118,6 @@ export function PillarTemplateModal({
   const addPillarMutation = useAddPillar();
   const updatePillarMutation = useUpdatePillar();
 
-  const currentYear = new Date().getFullYear();
   const form = useForm<CreatePillarTemplateInput>({
     resolver: zodResolver(PillarSchema),
     defaultValues: {
@@ -134,7 +133,7 @@ export function PillarTemplateModal({
   useEffect(() => {
     if (editingPillar) {
       form.reset({
-        pillar_name: editingPillar.name,
+        pillar_name: editingPillar.pillar_name,
         pillar_value: editingPillar.pillar_value,
         description: editingPillar.description || "",
         percentage_target_achieved: editingPillar.percentage_target_achieved,
