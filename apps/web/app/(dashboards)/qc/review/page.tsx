@@ -325,7 +325,7 @@ export default function QACSubmissionReview() {
   const [qacRemark, setQacRemark] = useState("");
   const [localData, setLocalData] = useState<any>(ENHANCED_DUMMY_DATA);
   const [rowComments, setRowComments] = useState<
-    Record<number, Record<number, { status: string; comment: string }>>
+    Record<string, Record<number, { status: string; comment: string }>>
   >({});
 
   // Filter KPIs based on selected department
@@ -386,7 +386,7 @@ export default function QACSubmissionReview() {
   };
 
   const handleRowReview = (
-    kpiId: number,
+    kpiId: string,
     rowIndex: number,
     status: "approved" | "rejected",
     comment: string,
@@ -558,7 +558,8 @@ export default function QACSubmissionReview() {
                         kpis={Array.isArray(kpis) ? kpis : []}
                         onReviewKpi={(kpiId) => {
                           const kpi = filteredKpis.find(
-                            (k: KpiData) => k.assigned_kpi_id === kpiId,
+                            (k: KpiData) =>
+                              k.assigned_kpi_id === parseInt(kpiId),
                           );
                           if (kpi) handleOpenDialog(kpi);
                         }}
@@ -613,14 +614,16 @@ export default function QACSubmissionReview() {
                           formData={selectedKpi.form_input}
                           onRowReview={(rowIndex, status, comment) =>
                             handleRowReview(
-                              selectedKpi.assigned_kpi_id,
+                              selectedKpi.assigned_kpi_id.toString(),
                               rowIndex,
                               status,
                               comment,
                             )
                           }
                           existingComments={
-                            rowComments[selectedKpi.assigned_kpi_id] || {}
+                            rowComments[
+                              selectedKpi.assigned_kpi_id.toString()
+                            ] || {}
                           }
                         />
                       ) : (
