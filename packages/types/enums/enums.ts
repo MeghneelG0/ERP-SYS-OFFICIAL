@@ -12,3 +12,8 @@ export enum KpiStatus {
   REJECTED = "REJECTED",
   REVISION = "REVISION",
 }
+
+export enum TotalCalculationType {
+  ADMITTED = "ADMITTED",
+  SANCTIONED = "SANCTIONED",
+}
