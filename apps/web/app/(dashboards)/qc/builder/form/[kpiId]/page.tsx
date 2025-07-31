@@ -3,14 +3,27 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
-import { ArrowLeft, Edit, Save, X } from "lucide-react";
-// import { useFormById } from "@/hooks/forms";
+import { ArrowLeft, Edit, Save, X, Trash2 } from "lucide-react";
 import FormPreview from "@/components/formbuilder/form-preview";
 import FormBuilder from "@/components/formbuilder/form-builder";
-import type { FormElementInstance, FormConfig } from "@/lib/types";
+import type { FormElementInstance } from "@/lib/types";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import React from "react";
+import { useGetKpiById, useUpdateKpi, useDeleteKpi } from "@/queries/qc/kpi";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { ErrorDisplay } from "@/components/common/ErrorDisplay";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@workspace/ui/components/alert-dialog";
 
 // This interface defines the props our component will receive
 interface KpiDetailPageProps {
@@ -21,68 +34,21 @@ interface KpiDetailPageProps {
 
 export default function KpiDetailPage({ params }: KpiDetailPageProps) {
   const { kpiId } = React.use(params);
-  // State to track if we're in edit mode or view mode
   const searchParams = useSearchParams();
+  const pillarId = searchParams.get("pillarId") || "";
   const mode = searchParams.get("mode");
   const [isEditMode, setIsEditMode] = useState(mode === "edit");
 
   // Get the router for navigation
   const router = useRouter();
 
-  // Mock data for testing (remove when backend is ready)
-  const mockData = {
-    kpi: {
-      kpi_id: kpiId,
-      kpi_name: `KPI ${kpiId}`,
-      kpi_description:
-        "This is a mock KPI for testing purposes. The backend will provide real data later.",
-      kpi_value: 95,
-      elements: [
-        {
-          id: "element-1",
-          type: "text" as const,
-          attributes: {
-            label: "Student Name",
-            placeholder: "Enter student name",
-            required: true,
-          },
-        },
-        {
-          id: "element-2",
-          type: "number" as const,
-          attributes: {
-            label: "Score",
-            placeholder: "Enter score",
-            min: 0,
-            max: 100,
-            required: true,
-          },
-        },
-        {
-          id: "element-3",
-          type: "textarea" as const,
-          attributes: {
-            label: "Comments",
-            placeholder: "Enter additional comments",
-            rows: 3,
-            required: false,
-          },
-        },
-      ] as FormElementInstance[],
-    },
-  };
-
-  // Use mock data for now (replace with real API call when backend is ready)
-  // const { data, isLoading, error } = useFormById(kpiId);
-
-  // For testing: use mock data instead of API response
-  const testData = mockData;
-  const testIsLoading = false;
-  const testError = null;
+  // Fetch real KPI data
+  const { data: kpi, isLoading, error } = useGetKpiById(pillarId, kpiId);
+  const updateKpiMutation = useUpdateKpi();
+  const deleteKpiMutation = useDeleteKpi();
 
   // Handle going back to KPI list
   const handleGoBack = () => {
-    // Navigate back to the KPI builder page
     router.push("/qc/builder");
   };
 
@@ -98,78 +64,59 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
 
   // Handle saving changes
   const handleSave = () => {
-    // The FormBuilder component handles its own saving
-    // We just need to exit edit mode
     setIsEditMode(false);
-    // Show success feedback
     toast.success("KPI updated successfully", {
       description: "Your changes have been saved.",
     });
   };
 
+  // Handle deleting KPI
+  const handleDelete = () => {
+    deleteKpiMutation.mutate(
+      { pillarId, kpiId },
+      {
+        onSuccess: () => {
+          toast.success("KPI deleted successfully");
+          router.push("/qc/builder");
+        },
+        onError: () => {
+          toast.error("Failed to delete KPI");
+        },
+      },
+    );
+  };
+
   // Show loading state while data is being fetched
-  if (testIsLoading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-lg text-muted-foreground">
-              Loading KPI details...
-            </p>
-          </div>
+          <LoadingSpinner message="Loading KPI details..." size="lg" />
         </div>
       </div>
     );
   }
 
   // Show error state if data fetching failed
-  if (testError) {
+  if (error || !kpi) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h2 className="text-xl font-semibold mb-2">Error Loading KPI</h2>
-            <p className="text-muted-foreground mb-4">
-              Failed to load KPI details
-            </p>
-            <Button onClick={handleGoBack} variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Go Back
-            </Button>
-          </div>
+          <ErrorDisplay
+            title="Error Loading KPI"
+            message="Failed to load KPI details"
+            error={error}
+            onRetry={() => window.location.reload()}
+          />
         </div>
       </div>
     );
   }
 
-  // If no data is found
-  if (!testData || !testData.kpi) {
-    return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-gray-400 text-6xl mb-4">📄</div>
-            <h2 className="text-xl font-semibold mb-2">KPI Not Found</h2>
-            <p className="text-muted-foreground mb-4">
-              The KPI you're looking for doesn't exist or has been removed.
-            </p>
-            <Button onClick={handleGoBack} variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Go Back
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Extract KPI data
-  const kpi = testData.kpi;
-  const kpiName = kpi.kpi_name || "Untitled KPI";
+  // Extract KPI data from real API response
+  const kpiName = kpi.kpi_metric_name || "Untitled KPI";
   const kpiDescription = kpi.kpi_description || "No description available";
-  const elements = kpi.elements || [];
+  const elements = kpi.kpi_data?.elements || [];
   const value = kpi.kpi_value;
 
   return (
@@ -183,13 +130,41 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
             Back
           </Button>
 
-          {/* Edit/Save/Cancel Buttons */}
+          {/* Edit/Save/Cancel/Delete Buttons */}
           <div className="flex gap-2">
             {!isEditMode ? (
-              <Button onClick={handleEditMode} size="sm">
-                <Edit className="mr-2 h-4 w-4" />
-                Edit KPI
-              </Button>
+              <>
+                <Button onClick={handleEditMode} size="sm">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit KPI
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm">
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete KPI
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete KPI</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete this KPI? This action
+                        cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleDelete}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
             ) : (
               <>
                 <Button onClick={handleSave} size="sm">
@@ -236,14 +211,15 @@ export default function KpiDetailPage({ params }: KpiDetailPageProps) {
           // Edit Mode - Show Form Builder
           <div>
             <FormBuilder
+              pillarId={pillarId}
+              kpiId={kpiId}
+              existingKpis={[]} // For edit mode, we don't need to validate against existing KPIs
               initialForm={{
-                id: kpiId,
-                title: kpiName,
-                description: kpiDescription,
-                value: value || 0,
+                kpi_number: kpi.kpi_number,
+                kpi_metric_name: kpi.kpi_metric_name,
+                data_provided_by: kpi.data_provided_by,
+                kpi_value: kpi.kpi_value,
                 elements: elements,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
               }}
             />
           </div>

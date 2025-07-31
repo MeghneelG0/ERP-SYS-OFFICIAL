@@ -28,39 +28,65 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 import FormPreview from "./form-preview";
-import type {
-  FormElementType,
-  FormElementInstance,
-  FormConfig,
-} from "@/lib/types";
+import type { FormElementType, FormElementInstance } from "@/lib/types";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { toast } from "sonner";
 import { Loader2, Save } from "lucide-react";
-import { useSaveForm } from "@/hooks/forms";
+import { useAddKpi, useUpdateKpi } from "@/queries/qc/kpi";
 import { useRouter } from "next/navigation";
+import { WeightValidation } from "@/components/common/WeightValidation";
+import { CreateKpiRequestData } from "@workspace/types/types";
+
+interface FormBuilderProps {
+  pillarId: string;
+  kpiId?: string; // Optional - if provided, we're in edit mode
+  existingKpis?: Array<{ id: string; kpi_value?: number }>;
+  initialForm?: {
+    kpi_number?: number;
+    kpi_metric_name?: string;
+    data_provided_by?: string;
+    kpi_value?: number;
+    elements?: FormElementInstance[];
+  };
+}
 
 export default function FormBuilder({
+  pillarId,
+  kpiId,
+  existingKpis = [],
   initialForm,
-}: {
-  initialForm?: FormConfig;
-}) {
-  const [kpiNo, setKpiNo] = useState(initialForm?.kpiNo || "");
-  const [metric, setMetric] = useState(initialForm?.metric || "");
+}: FormBuilderProps) {
+  const [kpiNo, setKpiNo] = useState(initialForm?.kpi_number?.toString() || "");
+  const [metric, setMetric] = useState(initialForm?.kpi_metric_name || "");
   const [dataProvidedBy, setDataProvidedBy] = useState(
-    initialForm?.dataProvidedBy || "",
+    initialForm?.data_provided_by || "",
   );
-  const [target2025, setTarget2025] = useState(initialForm?.target2025 || "");
-  const [value, setValue] = useState(initialForm?.value || 0);
+  const [kpiValue, setKpiValue] = useState(initialForm?.kpi_value || 0);
   const [elements, setElements] = useState<FormElementInstance[]>(
     initialForm?.elements || [],
   );
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeElement, setActiveElement] =
     useState<FormElementInstance | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const { mutate: saveForm } = useSaveForm();
+
+  const { mutate: addKpi, isPending: isSavingAdd } = useAddKpi();
+  const { mutate: updateKpi, isPending: isSavingUpdate } = useUpdateKpi();
   const router = useRouter();
+
+  const isEditMode = !!kpiId;
+  const isSaving = isSavingAdd || isSavingUpdate;
+
+  // Calculate current total weight from existing KPIs (values are already 0-1)
+  // In edit mode, exclude the current KPI from the calculation
+  const currentTotalWeight = existingKpis.reduce((sum, kpi) => {
+    if (isEditMode && kpi.id === kpiId) {
+      return sum; // Exclude current KPI from calculation in edit mode
+    }
+    return sum + (kpi.kpi_value || 0);
+  }, 0);
+  const newWeight = kpiValue; // kpiValue is already 0-1
+  const isValidWeight = currentTotalWeight + newWeight <= 1.0;
 
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
@@ -194,13 +220,38 @@ export default function FormBuilder({
     setElements(elements.filter((element) => element.id !== id));
   }
 
-  const handleSaveForm = () => {
-    if (!kpiNo.trim() || kpiNo.trim() === "KPI") {
-      toast.error("Empty KPI Number", {
-        description: "Form title must include a KPI number.",
-      });
+  const handleSaveKpi = () => {
+    // Validation
+    if (!kpiNo.trim()) {
+      toast.error("KPI Number is required");
       return;
     }
+
+    if (!metric.trim()) {
+      toast.error("KPI Metric Name is required");
+      return;
+    }
+
+    if (!dataProvidedBy.trim()) {
+      toast.error("Data Provider is required");
+      return;
+    }
+
+    if (kpiValue <= 0) {
+      toast.error("KPI Value must be greater than 0");
+      return;
+    }
+
+    if (kpiValue > 1) {
+      toast.error("KPI Value cannot exceed 1.0");
+      return;
+    }
+
+    if (!isValidWeight) {
+      toast.error("Total weight exceeds 1.0. Please reduce the KPI value.");
+      return;
+    }
+
     if (elements.length === 0) {
       toast.warning("Cannot save empty form", {
         description: "Please add at least one element to your form",
@@ -208,31 +259,78 @@ export default function FormBuilder({
       return;
     }
 
-    try {
-      const formData: FormConfig = {
-        id: `form-${Date.now()}`,
-        title: kpiNo,
-        elements,
-        description: metric,
-        value: 0, // Value is not directly mapped from new fields, keep as 0 or calculate
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        kpiNo: kpiNo,
-        metric: metric,
-        dataProvidedBy: dataProvidedBy,
-        target2025: target2025,
-        actuals2025: "", // Removed actuals2025 input, set to empty string
-        percentAchieved: "", // Removed percentAchieved input, set to empty string
-      };
+    // Prepare KPI data
+    const kpiData: CreateKpiRequestData = {
+      kpi_number: parseInt(kpiNo),
+      kpi_metric_name: metric,
+      kpi_description: metric, // Using metric as description
+      kpi_value: kpiValue,
+      data_provided_by: dataProvidedBy,
+      academic_year: new Date().getFullYear(),
+      kpi_data: {
+        elements: elements,
+        metadata: {
+          version: "1.0",
+          form_title: `KPI ${kpiNo} - ${metric}`,
+          form_description: metric,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        layout: {
+          columns: 1,
+          sections: [
+            {
+              title: "KPI Data Collection",
+              elementIds: elements.map((el) => el.id),
+            },
+          ],
+        },
+      },
+      kpi_calculated_metrics: {
+        formulas: {
+          target_calculation: "sum(submitted_forms) / total_expected * 100",
+          performance_rating:
+            "if(percentage_achieved >= 90, 'Excellent', if(percentage_achieved >= 75, 'Good', 'Needs Improvement'))",
+        },
+        thresholds: {
+          excellent: 90,
+          good: 75,
+          satisfactory: 60,
+          minimum: 50,
+        },
+        weights: {},
+        aggregation: {
+          method: "weighted_average",
+        },
+      },
+    };
 
-      saveForm(formData);
-
-      setTimeout(() => router.push("/qc/builder"), 2000);
-    } catch (error) {
-      console.error("Unexpected error in handleSaveForm:", error);
-      toast("Unexpected Error", {
-        description: "An unexpected error occurred. Please try again.",
-      });
+    // Save KPI
+    if (isEditMode) {
+      updateKpi(
+        {
+          pillarId,
+          kpiId: kpiId!,
+          data: kpiData,
+        },
+        {
+          onSuccess: () => {
+            setTimeout(() => router.push("/qc/builder"), 2000);
+          },
+        },
+      );
+    } else {
+      addKpi(
+        {
+          pillarId,
+          data: kpiData,
+        },
+        {
+          onSuccess: () => {
+            setTimeout(() => router.push("/qc/builder"), 2000);
+          },
+        },
+      );
     }
   };
 
@@ -263,6 +361,7 @@ export default function FormBuilder({
               required
             />
           </div>
+
           {/* Metric */}
           <div className="flex flex-col">
             <Label className="text-lg font-medium mb-2">Metric</Label>
@@ -279,6 +378,7 @@ export default function FormBuilder({
               required
             />
           </div>
+
           {/* Data Provided by */}
           <div className="flex flex-col">
             <Label className="text-lg font-medium mb-2">Data Provided by</Label>
@@ -292,34 +392,37 @@ export default function FormBuilder({
               required
             />
           </div>
-          {/* KPI Value */}
+
+          {/* KPI Value with Weight Validation */}
           <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">KPI Value</Label>
-            <p className="text-sm text-gray-500 mb-2">E.g., 100, 75.5, etc.</p>
+            <Label className="text-lg font-medium mb-2">KPI Value (0-1)</Label>
+            <p className="text-sm text-gray-500 mb-2">
+              Weight of this KPI (0-1). Total weight of all KPIs in this pillar
+              cannot exceed 1.0.
+            </p>
             <Input
               id="kpi-value"
               type="number"
-              value={value}
-              onChange={(e) => setValue(Number(e.target.value))}
+              min={0}
+              max={1}
+              step={0.01}
+              value={kpiValue}
+              onChange={(e) => setKpiValue(Number(e.target.value))}
               className="text-lg font-medium"
-              placeholder="Enter KPI Value"
+              placeholder="Enter KPI Value (0-1)"
               required
             />
-          </div>
-          {/* Target 2025 */}
-          <div className="flex flex-col">
-            <Label className="text-lg font-medium mb-2">Target 2025</Label>
-            <p className="text-sm text-gray-500 mb-2">
-              E.g., 25%, 2/dept per year, etc.
-            </p>
-            <Input
-              id="target-2025"
-              value={target2025}
-              onChange={(e) => setTarget2025(e.target.value)}
-              className="text-lg font-medium"
-              placeholder="Enter Target 2025"
-              required
-            />
+
+            {/* Weight Validation Component */}
+            <div className="mt-3">
+              <WeightValidation
+                currentWeight={currentTotalWeight}
+                newWeight={newWeight}
+                maxWeight={1.0}
+                showDetails={true}
+                showProgressBar={false}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -336,7 +439,10 @@ export default function FormBuilder({
               </TabsList>
 
               <div className="flex gap-2">
-                <Button onClick={handleSaveForm} disabled={isSaving}>
+                <Button
+                  onClick={handleSaveKpi}
+                  disabled={isSaving || !isValidWeight}
+                >
                   {isSaving ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -349,7 +455,6 @@ export default function FormBuilder({
                     </>
                   )}
                 </Button>
-                {/* Removed: Upload KPI Template button */}
               </div>
             </div>
 
