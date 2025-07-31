@@ -26,9 +26,9 @@ export interface CreateKpiRequestData {
   percentage_target_achieved?: number;
   performance?: number;
   data_provided_by?: string;
-  kpi_data: KpiFormData;
+  kpi_data: Record<string, any>;
   academic_year: number;
-  kpi_calculated_metrics: KpiCalculatedMetrics;
+  kpi_calculated_metrics: Record<string, any>;
 }
 
 export interface KpiTemplateInstance extends CreateKpiTemplateData {

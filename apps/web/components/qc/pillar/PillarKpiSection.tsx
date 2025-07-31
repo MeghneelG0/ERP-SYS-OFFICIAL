@@ -33,7 +33,7 @@ export function PillarKpiSection({
           percentAchieved: "80%",
           value: "80",
           status: "pending review",
-          kpiId: 1,
+          kpiId: "1",
         },
         {
           kpi_no: 2,
@@ -44,7 +44,7 @@ export function PillarKpiSection({
           percentAchieved: "80%",
           value: "80",
           status: "approved",
-          kpiId: 2,
+          kpiId: "2",
         },
         {
           kpi_no: 3,
@@ -55,7 +55,7 @@ export function PillarKpiSection({
           percentAchieved: "40%",
           value: "40",
           status: "needs revision",
-          kpiId: 3,
+          kpiId: "3",
         },
       ]);
     }

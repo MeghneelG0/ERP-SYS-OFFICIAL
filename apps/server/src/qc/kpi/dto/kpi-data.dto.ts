@@ -59,7 +59,7 @@ export class KpiDataDto implements KpiFormData {
   @Type(() => FormElementDto)
   @ApiProperty({
     description: 'Array of dynamic form elements',
-    type: [FormElementDto],
+    type: () => [FormElementDto],
     example: [
       {
         id: 'element-1744113099828',
@@ -111,18 +111,6 @@ export class KpiDataDto implements KpiFormData {
   };
 
   @IsOptional()
-  @ApiPropertyOptional({
-    description: 'Layout configuration for the form',
-    example: {
-      columns: 2,
-      sections: [
-        {
-          title: 'Basic Information',
-          elementIds: ['element-1744113099828', 'element-1744113105193'],
-        },
-      ],
-    },
-  })
   layout?: {
     columns?: number;
     sections?: Array<{
