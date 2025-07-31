@@ -37,6 +37,11 @@ enum KpiStatus {
   PENDING
 }
 
+enum TotalCalculationType {
+  ADMITTED
+  SANCTIONED
+}
+
 model User {
   id                       String          @id @default(uuid()) @map("_id") @db.Uuid
   user_name                String
@@ -97,9 +102,40 @@ model Department {
   users              User[]
   department_pillars DepartmentPillar[]
   department_kpis    DepartmentKpi[]
+  department_info    DepartmentInfo?
 
   @@map("departments")
 }
+
+model DepartmentInfo {
+  id                  String            @id @default(uuid()) @map("_id") @db.Uuid
+  ugPrograms          Int               @default(0) @map("ug_programs")
+  pgPrograms          Int               @default(0) @map("pg_programs")
+  totalCourses        Int               @default(0) @map("total_courses")
+  creditsEven         Int               @default(0) @map("credits_even")
+  creditsOdd          Int               @default(0) @map("credits_odd")
+  studentsInternship  Int               @default(0) @map("students_internship")
+  studentsProject     Int               @default(0) @map("students_project")
+  fullTimeTeachers    Int               @default(0) @map("full_time_teachers")
+  department          Department        @relation(fields: [departmentId], references: [id])
+  departmentId        String            @map("department_id") @db.Uuid @unique
+  studentStrength     StudentStrength[]
+  totalCalculationType TotalCalculationType @default(ADMITTED) @map("total_calculation_type")
+
+  @@map("department_info")
+}
+
+model StudentStrength {
+  id                  String            @id @default(uuid()) @map("_id") @db.Uuid
+  year                Int               
+  intake              Int               @default(0) // Sanctioned intake
+  admitted            Int               @default(0) // Admitted students
+  departmentInfo      DepartmentInfo    @relation(fields: [departmentInfoId], references: [id])
+  departmentInfoId    String            @map("department_info_id") @db.Uuid
+
+  @@map("student_strength_records")
+}
+
 
 model DepartmentPillar {
   id                         String          @id @default(uuid()) @map("_id") @db.Uuid
